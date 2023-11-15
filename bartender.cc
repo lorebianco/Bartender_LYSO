@@ -14,10 +14,8 @@ using namespace std;
 using namespace TMath;
 
 
-
-TRandom3 *randT = new TRandom3(0);
-
 TRandom3 *randAll = new TRandom3(0);
+TRandom3 *randNoise = new TRandom3(0);
 
 
 TH1D *hA, *hTauRise, *hTauDec;
@@ -88,21 +86,133 @@ void SetDistros(const char *dataFilename, Double_t cutChargeMin = DBL_MIN, Doubl
 
 
 
+class Sample
+{
+public:
+    Sample()
+    {
+        for(Int_t i = 0; i < 1024; i++)
+        {
+            fBins[i] = i;
+        }
+    }
+    ~Sample() {; }
+
+    void SetSamples(TF1 *FinalWave)
+    {
+        for(Int_t i = 0; i < 1024; i++)
+        {
+            fSamples[i] = FinalWave->Eval(fBins[i]);
+        }
+    }
+
+    void DrawSampling()
+    {
+        TGraph *gWaveform = new TGraph(1024, fBins, fSamples);
+        new TCanvas("cGraph");
+        
+        //gWaveform->SetMarkerStyle(20);
+        gWaveform->Draw();
+    }
+
+    void SaveSampling(const char* outputFilename)
+    {
+        ofstream outputFile(outputFilename, ios::out | ios::trunc);
+        if (outputFile.is_open())
+        {
+            //Header of the file
+            outputFile << "#bin\tvoltage [V]\n";
+
+            //Writing data
+            for (Int_t i = 0; i < 1024; i++)
+            {
+                outputFile << fBins[i] << "\t" << fSamples[i] << "\n";
+            }
+
+            outputFile.close();
+
+            cout << "Data saved in sampling_data.txt" << endl;
+        }
+        else
+        {
+            cerr << "Can't open the output file!" << endl;
+        }
+    }
+
+private:
+    Double_t fBins[1024];
+    Double_t fSamples[1024];
+
+};
+
+
+
+
+class Event
+{
+public:
+    Event() { ;}
+    ~Event() { ;}
+
+    Sample fFront[116];
+    Sample fBack[116];
+
+    void SetChannel(const char *ForB, Int_t channel, TF1 *FinalWave)
+    {
+        if(strcmp(ForB, "F") == 0 && channel >= 0 && channel <= 1023)
+        {
+            fFront[channel].SetSamples(FinalWave);
+        }
+        else if((ForB, "B") == 0 && channel >= 0 && channel <= 1023)
+        {
+            fBack[channel].SetSamples(FinalWave);
+        }
+        else
+        {
+            cerr << "Invalid settings! Valid settings are \"F\" or \"B\" and 0 <= channel <= 1023 !" << endl;
+        }
+        return;
+    }
+
+    void DrawChannel(const char *ForB, Int_t channel)
+    {
+        if(strcmp(ForB, "F") == 0 && channel >= 0 && channel <= 1023)
+        {
+            fFront[channel].DrawSampling();
+        }
+        else if((ForB, "B") == 0 && channel >= 0 && channel <= 1023)
+        {
+            fBack[channel].DrawSampling();
+        }
+        else
+        {
+            cerr << "Invalid settings! Valid settings are \"F\" or \"B\" and 0 <= channel <= 1023 !" << endl;
+        }
+        return;
+    }
+};
+
+
+
+
+Double_t Add_Noise(Double_t *x, Double_t *par) {    return randNoise->Gaus(0, par[0]); }
+
+
+
 
 struct SumWaves
 { 
-    SumWaves(const std::vector<TF1 *> & flist) : fFuncList(flist) {}
+    SumWaves(const vector<TF1 *> & flist) : fFuncList(flist) {}
 
-    double operator() (const double * x, const double *p)
+    double operator() (const double *x, const double *p)
     {
         double result = 0;
         for (unsigned int i = 0; i < fFuncList.size(); ++i) 
             result += fFuncList[i]->EvalPar(x,p); 
-
         return result; 
     }
 
-    std::vector<TF1*> fFuncList;
+    vector<TF1*> fFuncList;
       
 };
 
@@ -113,9 +223,13 @@ Double_t Wave_OnePhel(Double_t *x, Double_t *par)
 {
     Double_t funcVal;
     Double_t expRise = Exp(-(x[0]-par[3])/par[1]);
-    if(expRise > DBL_MAX) expRise = 0; //It happens sometimes when x < start, so it's just a numerical fixing
+    Double_t expDec = Exp(-(x[0]-par[3])/par[2]);
 
-    funcVal = (-par[0]*(Exp(-(x[0]-par[3])/par[2])-expRise))*((x[0]>par[3]) ? 1:0);
+    //It happens sometimes when x < start, so it's just a numerical fixing
+    if(expRise > DBL_MAX || expRise < DBL_MIN) expRise = 0;
+    if(expDec > DBL_MAX || expDec < DBL_MIN) expDec = 0;
+
+    funcVal = (-par[0]*(expDec-expRise))*((x[0]>par[3]) ? 1:0);
 
     return funcVal;
 }
@@ -125,37 +239,36 @@ Double_t Wave_OnePhel(Double_t *x, Double_t *par)
 
 Double_t Bartender(Int_t N_phel, Int_t *times)
 { 
-    std::vector<TF1 *> v;
+    vector<TF1 *> v;
+
+    //First of all set a baseline with noise
+    TF1 *noise = new TF1("Noise", Add_Noise, 0, 1023, 1);
+    noise->SetParameter(0, 0.02);
+    v.push_back(noise);
 
     for(Int_t i = 0; i < N_phel; i++)
     {
         Double_t A, tau_rise, tau_dec;
 
         hAll->GetRandom3(A, tau_rise, tau_dec, randAll);
-
-        //cout << A << " " << tau_rise << " " << tau_dec << " " << fT << endl;
-
-        TF1 *wave = new TF1("wave", Wave_OnePhel, 400, 800, 4);
+        TF1 *wave = new TF1("wave", Wave_OnePhel, 0, 1023, 4);
         wave->SetParameters(A, tau_rise, tau_dec, times[i]);
         
         v.push_back(wave);
-
-        //new TCanvas();
-        //wave->Draw();
     } 
     
+    TF1 *FinalWave = new TF1("FinalWave", SumWaves(v), 0, 1023, 0);
 
-    TF1 *FinalWave = new TF1("FinalWave", SumWaves(v), 400, 800, 0);
-    
-    //cout << FinalWave->Integral(400, 600, 1E-3) << endl;
-    //cout << FinalWave->Integral(400, 600, 1E-6) << endl;
+    //new TCanvas("C_Tot");
+    //FinalWave->SetNpx(1024);
+    //FinalWave->SetMarkerStyle(20);
+    //FinalWave->SetMarkerColor(kRed);
+    //FinalWave->Draw("L");               
 
-
-    new TCanvas("C_Tot");
-    FinalWave->SetNpx(400);
-    FinalWave->SetMarkerStyle(20);
-    FinalWave->SetMarkerColor(kRed);
-    FinalWave->Draw("L");               
+    Sample sample;
+    sample.SetSamples(FinalWave);
+    sample.DrawSampling();
+    sample.SaveSampling("output.txt");
 
     //return -FinalWave->Integral(400, 600);
     return 0;
@@ -163,13 +276,13 @@ Double_t Bartender(Int_t N_phel, Int_t *times)
 
 
 
-int main()
+int Start(Int_t EVENT, Int_t CHANNEL)
 {
-    Int_t EVENT = 0;
-    Int_t CHANNEL = 80;
-
     //TH1D *hCharge = new TH1D("hCharge", "Charge", 29, 0, 1.4);
-    SetDistros("/home/lorenzo/MEG_Project/Acquisizioni/Studio_SIPM/Preamp_Ext/Dati19_10/Dati_root/dati_spectrum_T20_V5478_1pe_fit_params.txt", 0, 1.5);
+    if(hAll==nullptr)
+    {
+        SetDistros("/home/lorenzo/MEG_Project/Acquisizioni/Studio_SIPM/Preamp_Ext/Dati19_10/Dati_root/dati_spectrum_T20_V5478_1pe_fit_params.txt", 0, 1.5);
+    }
 
     //ROOT::EnableImplicitMT(16);
     
@@ -192,7 +305,7 @@ int main()
     tCry->SetBranchStatus("fTin", true);
 
 
-    Int_t fEvent_front, fEvent_back, fChannel_front, fChannel_back, fEntries_front, fEntries_back;
+    Int_t fEvent_front, fEvent_back, fChannel_front, fChannel_back;
     Double_t fT_front, fT_back;
 
     tFront->SetBranchAddress("fEvent", &fEvent_front);
@@ -206,7 +319,10 @@ int main()
     
     
     //hCharge->Fill(Bartender(3000));
-    Int_t N_phel = tFront->GetEntries("fEvent == 0");
+    string selection = "fEvent == " + to_string(EVENT) + " && fChannel == " + to_string(CHANNEL);
+    const char *charSelection = selection.c_str();
+
+    Int_t N_phel = tFront->GetEntries(charSelection);
     Int_t *times = new Int_t[N_phel];
     
     cout << "Summed " << N_phel << " photons" << endl;
@@ -216,7 +332,7 @@ int main()
     {
         tFront->GetEntry(i);
         
-        if(fEvent_front == EVENT )
+        if(fEvent_front == EVENT && fChannel_front == CHANNEL)
         {
             times[indexTimes] = Nint(fT_front+450); 
             indexTimes++; 
@@ -229,5 +345,6 @@ int main()
     //new TCanvas();
     //hCharge->Draw();
 
+    mcFile->Close();
     return 0;
 }
