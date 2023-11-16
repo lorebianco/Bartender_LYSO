@@ -140,10 +140,8 @@ public:
         }
     }
 
-private:
     Double_t fBins[1024];
     Double_t fSamples[1024];
-
 };
 
 
@@ -209,6 +207,63 @@ public:
     ~Run() { delete[] fEvents;}
 
     Event *fEvents;
+
+    void SaveRunData(const char* outputFilename)
+    {
+        ofstream outputFile(outputFilename, ios::out | ios::trunc);
+        if (outputFile.is_open())
+        {
+            for (Int_t eventNum = 0; eventNum < fNumberofEvents; eventNum++)
+            {
+                outputFile << "#Event number " << eventNum << "\n#\n";
+
+                // Writing Front Detector data for the event
+                outputFile << "#Front Detector\n#bin\t";
+                for (Int_t ch = 0; ch < CHANNELS; ++ch)
+                {
+                    outputFile << "ch" << ch << " [V]\t";
+                }
+                outputFile << "\n";
+
+                for (Int_t i = 0; i < 1024; ++i)
+                {
+                    outputFile << fEvents[eventNum].fFront[0].fBins[i] << "\t";
+                    for (Int_t ch = 0; ch < CHANNELS; ++ch)
+                    {
+                        outputFile << fEvents[eventNum].fFront[ch].fSamples[i] << "\t";
+                    }
+                    outputFile << "\n";
+                }
+                outputFile << "\n";
+
+                // Writing Back Detector data for the event
+                outputFile << "#Back Detector\n#bin\t";
+                for (Int_t ch = 0; ch < CHANNELS; ++ch)
+                {
+                    outputFile << "ch" << ch << " [V]\t";
+                }
+                outputFile << "\n";
+
+                for (Int_t i = 0; i < 1024; ++i)
+                {
+                    outputFile << fEvents[eventNum].fBack[0].fBins[i] << "\t";
+                    for (Int_t ch = 0; ch < CHANNELS; ++ch)
+                    {
+                        outputFile << fEvents[eventNum].fBack[ch].fSamples[i] << "\t";
+                    }
+                    outputFile << "\n";
+                }
+                outputFile << "\n";
+            }
+
+            outputFile.close();
+            cout << "Data saved in " << outputFilename << endl;
+        }
+        else
+        {
+            cerr << "Can't open the output file!" << endl;
+        }
+    }
 
 private:
     Int_t fNumberofEvents;
@@ -337,7 +392,7 @@ Int_t Start(const char *inputFilename)
 
     for(Int_t i = 0; i < nEvents; i++)
     {
-        for(Int_t j = 79; j < 81; j++)
+        for(Int_t j = 0; j < CHANNELS; j++)
         {
             string selection = "fEvent == " + to_string(i) + " && fChannel == " + to_string(j);
             const char *charSelection = selection.c_str();
@@ -371,14 +426,15 @@ Int_t Start(const char *inputFilename)
             }
             
             run.fEvents[i].SetChannel(0, j, Bartender(N_phel_front, times_front));
-            if(j >= 79) run.fEvents[i].DrawChannel(0, j);
+            if(j == 79) run.fEvents[i].DrawChannel(0, j);
             run.fEvents[i].SetChannel(1, j, Bartender(N_phel_back, times_back));
 
-            delete[] times_front;
-            delete[] times_back;
+            //delete[] times_front;
+            //delete[] times_back;
         }
     }
 
+    run.SaveRunData("output.txt");
 
     mcFile->Close();
     return 0;
