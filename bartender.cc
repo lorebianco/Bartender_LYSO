@@ -13,6 +13,7 @@
 using namespace std;
 using namespace TMath;
 
+#define CHANNELS 116
 
 TRandom3 *randAll = new TRandom3(0);
 TRandom3 *randNoise = new TRandom3(0);
@@ -109,7 +110,7 @@ public:
     void DrawSampling()
     {
         TGraph *gWaveform = new TGraph(1024, fBins, fSamples);
-        new TCanvas("cGraph");
+        //new TCanvas("cGraph");
         
         //gWaveform->SetMarkerStyle(20);
         gWaveform->Draw();
@@ -154,42 +155,63 @@ public:
     Event() { ;}
     ~Event() { ;}
 
-    Sample fFront[116];
-    Sample fBack[116];
+    Sample fFront[CHANNELS];
+    Sample fBack[CHANNELS];
 
-    void SetChannel(const char *ForB, Int_t channel, TF1 *FinalWave)
+    void SetChannel(Int_t ForB, Int_t channel, TF1 *FinalWave)
     {
-        if(strcmp(ForB, "F") == 0 && channel >= 0 && channel <= 1023)
+        if(ForB == 0 && channel >= 0 && channel < CHANNELS)
         {
             fFront[channel].SetSamples(FinalWave);
         }
-        else if((ForB, "B") == 0 && channel >= 0 && channel <= 1023)
+        else if(ForB == 1 && channel >= 0 && channel < CHANNELS)
         {
             fBack[channel].SetSamples(FinalWave);
         }
         else
         {
-            cerr << "Invalid settings! Valid settings are \"F\" or \"B\" and 0 <= channel <= 1023 !" << endl;
+            cerr << "Invalid settings! Valid settings are 0 for Front or 1 for Back and 0 <= channel < 116 !" << endl;
         }
         return;
     }
 
-    void DrawChannel(const char *ForB, Int_t channel)
+    void DrawChannel(Int_t ForB, Int_t channel)
     {
-        if(strcmp(ForB, "F") == 0 && channel >= 0 && channel <= 1023)
+        if(ForB == 0 && channel >= 0 && channel < CHANNELS)
         {
+            new TCanvas();
             fFront[channel].DrawSampling();
         }
-        else if((ForB, "B") == 0 && channel >= 0 && channel <= 1023)
+        else if(ForB == 1 && channel >= 0 && channel < CHANNELS)
         {
+            new TCanvas();
             fBack[channel].DrawSampling();
         }
         else
         {
-            cerr << "Invalid settings! Valid settings are \"F\" or \"B\" and 0 <= channel <= 1023 !" << endl;
+            cerr << "Invalid settings! Valid settings are 0 for Front or 1 for Back and 0 <= channel < 116 !" << endl;
         }
         return;
     }
+};
+
+
+
+
+class Run
+{
+public:
+    Run(Int_t nEvents)
+    { 
+        fEvents = new Event[nEvents];
+        fNumberofEvents = nEvents;
+    }
+    ~Run() { delete[] fEvents;}
+
+    Event *fEvents;
+
+private:
+    Int_t fNumberofEvents;
 };
 
 
@@ -204,11 +226,11 @@ struct SumWaves
 { 
     SumWaves(const vector<TF1 *> & flist) : fFuncList(flist) {}
 
-    double operator() (const double *x, const double *p)
+    Double_t operator() (const Double_t *x, const Double_t *p)
     {
-        double result = 0;
-        for (unsigned int i = 0; i < fFuncList.size(); ++i) 
-            result += fFuncList[i]->EvalPar(x,p); 
+        Double_t result = 0;
+        for (Int_t i = 0; i < fFuncList.size(); i++) 
+            result += fFuncList[i]->EvalPar(x,p);
         return result; 
     }
 
@@ -225,7 +247,7 @@ Double_t Wave_OnePhel(Double_t *x, Double_t *par)
     Double_t expRise = Exp(-(x[0]-par[3])/par[1]);
     Double_t expDec = Exp(-(x[0]-par[3])/par[2]);
 
-    //It happens sometimes when x < start, so it's just a numerical fixing
+    //It happens sometimes when x << start or x >> start, so it's just a numerical fixing
     if(expRise > DBL_MAX || expRise < DBL_MIN) expRise = 0;
     if(expDec > DBL_MAX || expDec < DBL_MIN) expDec = 0;
 
@@ -237,14 +259,14 @@ Double_t Wave_OnePhel(Double_t *x, Double_t *par)
 
 
 
-Double_t Bartender(Int_t N_phel, Int_t *times)
-{ 
-    vector<TF1 *> v;
+TF1* Bartender(Int_t N_phel, Int_t *times)
+{
+    vector<TF1 *> bar;
 
     //First of all set a baseline with noise
     TF1 *noise = new TF1("Noise", Add_Noise, 0, 1023, 1);
     noise->SetParameter(0, 0.02);
-    v.push_back(noise);
+    bar.push_back(noise);
 
     for(Int_t i = 0; i < N_phel; i++)
     {
@@ -254,29 +276,121 @@ Double_t Bartender(Int_t N_phel, Int_t *times)
         TF1 *wave = new TF1("wave", Wave_OnePhel, 0, 1023, 4);
         wave->SetParameters(A, tau_rise, tau_dec, times[i]);
         
-        v.push_back(wave);
+        bar.push_back(wave);
     } 
     
-    TF1 *FinalWave = new TF1("FinalWave", SumWaves(v), 0, 1023, 0);
+    TF1 *FinalWave = new TF1("FinalWave", SumWaves(bar), 0, 1023, 0);
 
-    //new TCanvas("C_Tot");
-    //FinalWave->SetNpx(1024);
-    //FinalWave->SetMarkerStyle(20);
-    //FinalWave->SetMarkerColor(kRed);
-    //FinalWave->Draw("L");               
-
-    Sample sample;
-    sample.SetSamples(FinalWave);
-    sample.DrawSampling();
-    sample.SaveSampling("output.txt");
-
-    //return -FinalWave->Integral(400, 600);
-    return 0;
+    return FinalWave;
 }
 
 
 
-int Start(Int_t EVENT, Int_t CHANNEL)
+
+Int_t Start(const char *inputFilename)
+{
+    if(hAll==nullptr)
+    {
+        SetDistros("/home/lorenzo/MEG_Project/Acquisizioni/Studio_SIPM/Preamp_Ext/Dati19_10/Dati_root/dati_spectrum_T20_V5478_1pe_fit_params.txt", 0, 1.5);
+    }
+
+    TFile *mcFile = TFile::Open(inputFilename, "READ");
+    TTree *tFront = mcFile->Get<TTree>("F");
+    TTree *tBack = mcFile->Get<TTree>("B");
+    TTree *tCry = mcFile->Get<TTree>("Cry");
+
+    tFront->SetBranchStatus("*", false);
+    tBack->SetBranchStatus("*", false);
+    tCry->SetBranchStatus("*", false);
+
+    tFront->SetBranchStatus("fEvent", true);
+    tFront->SetBranchStatus("fT", true);
+    tFront->SetBranchStatus("fChannel", true);
+    tBack->SetBranchStatus("fEvent", true);
+    tBack->SetBranchStatus("fT", true);
+    tBack->SetBranchStatus("fChannel", true);
+    tCry->SetBranchStatus("fEvent", true);
+    tCry->SetBranchStatus("fTin", true);
+
+
+    Int_t fEvent_front, fEvent_back, fChannel_front, fChannel_back;
+    Double_t fT_front, fT_back;
+
+    tFront->SetBranchAddress("fEvent", &fEvent_front);
+    tBack->SetBranchAddress("fEvent", &fEvent_back);
+
+    tFront->SetBranchAddress("fChannel", &fChannel_front);
+    tBack->SetBranchAddress("fChannel", &fChannel_back);
+
+    tFront->SetBranchAddress("fT", &fT_front);
+    tBack->SetBranchAddress("fT", &fT_back);
+
+    if(!(tFront->GetMaximum("fEvent") == tBack->GetMaximum("fEvent") && tBack->GetMaximum("fEvent") == tCry->GetMaximum("fEvent"))) 
+    {
+        cerr << "Error: something wrong in the MC file happened: events in trees are not the same" << endl;
+        return 1;
+    }
+
+    Int_t nEvents = tFront->GetMaximum("fEvent") + 1;
+
+    Run run(nEvents);
+
+    for(Int_t i = 0; i < nEvents; i++)
+    {
+        for(Int_t j = 79; j < 81; j++)
+        {
+            string selection = "fEvent == " + to_string(i) + " && fChannel == " + to_string(j);
+            const char *charSelection = selection.c_str();
+
+            Int_t N_phel_front = tFront->GetEntries(charSelection);
+            Int_t *times_front = new Int_t[N_phel_front];
+
+            Int_t N_phel_back = tBack->GetEntries(charSelection);
+            Int_t *times_back = new Int_t[N_phel_back];
+
+            Int_t indexTimes_front = 0, indexTimes_back = 0;
+
+            for(Int_t k = 0; k < tFront->GetEntries(); k++)
+            {
+                tFront->GetEntry(k);
+                if(fEvent_front == i && fChannel_front == j)
+                {
+                    times_front[indexTimes_front] = Nint(fT_front+450); 
+                    indexTimes_front++;
+                }
+            }
+            for(Int_t k = 0; k < tBack->GetEntries(); k++)
+            {
+                tBack->GetEntry(k);
+
+                if(fEvent_back == i && fChannel_back == j)
+                {
+                    times_back[indexTimes_back] = Nint(fT_back+450); 
+                    indexTimes_back++; 
+                }
+            }
+            
+            run.fEvents[i].SetChannel(0, j, Bartender(N_phel_front, times_front));
+            if(j >= 79) run.fEvents[i].DrawChannel(0, j);
+            run.fEvents[i].SetChannel(1, j, Bartender(N_phel_back, times_back));
+
+            delete[] times_front;
+            delete[] times_back;
+        }
+    }
+
+
+    mcFile->Close();
+    return 0;
+} 
+
+
+
+
+
+
+/*
+Int_t Single_Start(Int_t EVENT, Int_t CHANNEL)
 {
     //TH1D *hCharge = new TH1D("hCharge", "Charge", 29, 0, 1.4);
     if(hAll==nullptr)
@@ -348,3 +462,4 @@ int Start(Int_t EVENT, Int_t CHANNEL)
     mcFile->Close();
     return 0;
 }
+*/
