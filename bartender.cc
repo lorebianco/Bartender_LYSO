@@ -25,13 +25,14 @@
 
 #include "globals.hh"
 #include "functions.hh"
-#include "event.hh"
-#include "sample.hh"
+#include "run.hh"
 
 using namespace std;
 using namespace TMath;
 
-
+TH3D *hAll;
+TRandom3 *randAll = new TRandom3(0);
+TRandom3 *randNoise = new TRandom3(0);
 
 
 int main(int argc, char** argv)
@@ -84,56 +85,60 @@ int main(int argc, char** argv)
         return 1;
     }
 
+    cout << "Trees loaded. Now there will be the Bartender" << endl;
+
     Int_t fNumberofEvents = tFront->GetMaximum("fEvent") + 1;
-    vector<Int_t> fTimesFront[fNumberofEvents][CHANNELS];
-    vector<Int_t> fTimesBack[fNumberofEvents][CHANNELS];
+    Run *run = new Run(fNumberofEvents);
 
-    cout << "Trees loaded. Now it will be assignment" << endl;
-
+    Int_t evIdx;
     for(Int_t k = 0; k < tFront->GetEntries(); k++)
     {
         tFront->GetEntry(k);
-        fTimesFront[fEvent_front][fChannel_front].push_back(Nint(fT_front+ZERO_TIME_BIT));
+
+        Double_t A, tau_rise, tau_dec;
+        hAll->GetRandom3(A, tau_rise, tau_dec, randAll);
+        
+        run->SetFrontWaveform(fEvent_front, fChannel_front, A, tau_rise, tau_dec, fT_front);
+
+        if(k == 0) evIdx = fEvent_front;
+        if(k!= 0 && evIdx != fEvent_front)
+        {
+            cout << "Processed Front Event " << evIdx << endl;
+            evIdx = fEvent_front;
+        }
     }
+    cout << "Processed Front Event " << evIdx << endl;
+    cout << "Done Front Detector" << endl;
+
+    run->DrawFront(0, 54);
+
 
     for(Int_t k = 0; k < tBack->GetEntries(); k++)
     {
         tBack->GetEntry(k);
-        fTimesBack[fEvent_back][fChannel_back].push_back(Nint(fT_back+ZERO_TIME_BIT));
-    }
-    
-    cout << "Assignment done" << endl;
 
-    delete tFront;
-    delete tBack;
-    delete tCry;
+        Double_t A, tau_rise, tau_dec;
+        hAll->GetRandom3(A, tau_rise, tau_dec, randAll);
+        
+        run->SetBackWaveform(fEvent_back, fChannel_back, A, tau_rise, tau_dec, fT_back);
+
+        if(k == 0) evIdx = fEvent_back;
+        if(k!= 0 && evIdx != fEvent_back)
+        {
+            cout << "Processed Back Event " << evIdx << endl;
+            evIdx = fEvent_back;
+        }
+    }
+    cout << "Processed Back Event " << evIdx << endl;
+    cout << "Done Back Detector" << endl;
+
+    //SaveRun("output.txt");
+
     mcFile->Close();
 
-    cout << "Start of Bartender for full run" << endl;
-
-    Event *event = new Event();
-
-    for (Int_t i = 0; i < 5; i++)
-    {
-        for (Int_t j = 0; j < CHANNELS; j++)
-        {
-            Int_t N_phel_front = fTimesFront[i][j].size();
-            Int_t N_phel_back = fTimesBack[i][j].size();
-
-            event->SetFrontChannel(j, Bartender(N_phel_front, fTimesFront[i][j]));
-            event->SetBackChannel(j, Bartender(N_phel_back, fTimesBack[i][j]));
-        }
-
-        //event->DrawFrontChannel(80);
-
-        //event->SaveEventData(i, "output.txt");
-        cout << "Processed event number " << i << endl;
-    }
-
-
+    delete run;
     delete randAll, randNoise;
     delete hAll;
-    delete event;
 
     return 0;
 } 

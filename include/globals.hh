@@ -18,6 +18,10 @@ using namespace TMath;
 
 #define CHANNELS 115
 #define SAMPLINGS 1024
+
 #define ZERO_TIME_BIT 450
+
+#define SIGMA_NOISE 0.02
+
 
 #endif
