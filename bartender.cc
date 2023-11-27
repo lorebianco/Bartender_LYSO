@@ -110,8 +110,6 @@ int main(int argc, char** argv)
     cout << "Processed Front Event " << evIdx << endl;
     cout << "Done Front Detector" << endl;
 
-    run->DrawFront(0, 54);
-
 
     for(Int_t k = 0; k < tBack->GetEntries(); k++)
     {
@@ -132,7 +130,7 @@ int main(int argc, char** argv)
     cout << "Processed Back Event " << evIdx << endl;
     cout << "Done Back Detector" << endl;
 
-    //SaveRun("output.txt");
+    run->SaveRun("output.txt");
 
     mcFile->Close();
 

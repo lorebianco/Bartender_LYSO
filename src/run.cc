@@ -129,74 +129,85 @@ void Run::DrawFront(Int_t event, Int_t channel)
 
 
 
-/*void Run::DrawBackChannel(Int_t channel)
+
+void Run::DrawBack(Int_t event, Int_t channel)
 {
+    //Add conditions about event
     if(channel >= 0 && channel < CHANNELS)
     {
-        new TCanvas();
-        fBack[channel].DrawSampling();
+        Double_t bins[SAMPLINGS];
+        for(Int_t i = 0; i < SAMPLINGS; i++)
+        {
+            bins[i] = i;
+        }
+
+        TGraph *graph = new TGraph(SAMPLINGS, bins, fBack[event][channel]);
+        TCanvas *c1 = new TCanvas();
+        graph->Draw();
+        c1->SaveAs("wave.png");
     }
     else
     {
         cerr << "Invalid setting! Channel must be in [0,114]" << endl;
     }
     return;
-}*/
+}
 
 
 
-/*void Run::SaveEventData(Int_t eventNum, const char* outputFilename)
+
+void Run::SaveRun(const char* outputFilename)
 {
-    ofstream outputFile(outputFilename, ios::out | ios::app);
-    if (outputFile.is_open())
+    ofstream outputFile(outputFilename, ofstream::out | ofstream::trunc);
+
+    if(!outputFile.is_open())
     {
-        outputFile << "#Event number " << eventNum << "\n#\n";
-
-        // Writing Front Detector data for the event
-        outputFile << "#Front Detector\n#bin\t";
-        for (Int_t ch = 0; ch < CHANNELS; ++ch)
-        {
-            outputFile << "ch" << ch << " [V]\t";
-        }
-        outputFile << "\n";
-
-        for (Int_t i = 0; i < SAMPLINGS; ++i)
-        {
-            outputFile << fFront[0].fBins[i] << "\t";
-            for (Int_t ch = 0; ch < CHANNELS; ++ch)
-            {
-                outputFile << fFront[ch].fSamples[i] << "\t";
-            }
-            outputFile << "\n";
-        }
-        outputFile << "\n";
-
-        // Writing Back Detector data for the event
-        outputFile << "#Back Detector\n#bin\t";
-        for (Int_t ch = 0; ch < CHANNELS; ++ch)
-        {
-            outputFile << "ch" << ch << " [V]\t";
-        }
-        outputFile << "\n";
-
-        for (Int_t i = 0; i < SAMPLINGS; ++i)
-        {
-            outputFile << fBack[0].fBins[i] << "\t";
-            for (Int_t ch = 0; ch < CHANNELS; ++ch)
-            {
-                outputFile << fBack[ch].fSamples[i] << "\t";
-            }
-            outputFile << "\n";
-        }
-        outputFile << "\n";
-        
-        outputFile.close();
-        if(eventNum == 0) cout << "Event data will be saved in " << outputFilename << endl;
-    }
-    else
-    {
-        cerr << "Can't open the output file!" << endl;
+        cout << "Can't open output file!" << endl;
+        return;
     }
 
-    return;
-}*/
+    for(Int_t ev = 0; ev < EVENTS; ev++)
+    {
+        outputFile << "#Event " << ev << endl;
+        outputFile << "#" << endl;
+        outputFile << "#Front Detector" << endl;
+        outputFile << "#bin\t";
+        for (Int_t ch = 0; ch < CHANNELS; ch++)
+        {
+            outputFile << "ch" << ch << "\t";
+        }
+        outputFile << "\n";
+
+        for(Int_t bin = 0; bin < SAMPLINGS; bin++)
+        {
+            outputFile << bin << "\t";
+            for(Int_t ch = 0; ch < CHANNELS; ch++)
+            {
+                outputFile << fFront[ev][ch][bin] << "\t";
+            }
+            outputFile << endl;
+        }
+        outputFile << "#" << endl;
+        outputFile << "#Back Detector" << endl;
+        outputFile << "#bin\t";
+        for(Int_t ch = 0; ch < CHANNELS; ch++)
+        {
+            outputFile << "ch" << ch << "\t";
+        }
+        outputFile << "\n";
+
+        for(Int_t bin = 0; bin < SAMPLINGS; bin++)
+        {
+            outputFile << bin << "\t";
+            for(Int_t ch = 0; ch < CHANNELS; ch++)
+            {
+                outputFile << fBack[ev][ch][bin] << "\t";
+            }
+            outputFile << endl;
+        }
+    }
+
+    outputFile.close();
+
+    cout << "\nData saved in " << outputFilename << endl;
+}

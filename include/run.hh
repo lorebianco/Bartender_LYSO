@@ -47,12 +47,12 @@ public:
     //void SetBackPhotonsNumber(Int_t event, Int_t channel, Int_t phNumber) {fBackPhNumber[channel] = phNumber; };
     
     void DrawFront(Int_t event, Int_t channel);
-    //void DrawBackChannel(Int_t channel);
+    void DrawBack(Int_t event, Int_t channel);
     
     //Int_t GetFrontPhotonsNumber(Int_t event, Int_t channel) { return fFrontPhNumber[event][channel]; }
     //Int_t GetBackPhotonsNumber(Int_t event, Int_t channel) { return fBackPhNumber[event][channel]; }
 
-    //void SaveEventData(Int_t eventNum, const char* outputFilename);
+    void SaveRun(const char* outputFilename);
 };
 
 #endif
