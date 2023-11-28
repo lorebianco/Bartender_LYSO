@@ -156,8 +156,25 @@ void Run::DrawBack(Int_t event, Int_t channel)
 
 
 
-void Run::SaveRun(const char* outputFilename)
+void Run::SaveRun(const char* inputFilename)
 {
+    regex regex("\\d+");
+    smatch match;
+
+    string filename = inputFilename;
+    string outputFilename;
+    
+    if(regex_search(filename, match, regex))
+    {
+        string runID = match.str();
+        if(!runID.empty())
+        {
+            outputFilename = "BarID_" + runID + ".txt";
+        }
+        else outputFilename = "output.txt";
+    }
+
+
     ofstream outputFile(outputFilename, ofstream::out | ofstream::trunc);
 
     if(!outputFile.is_open())

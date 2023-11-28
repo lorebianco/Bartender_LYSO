@@ -130,7 +130,7 @@ int main(int argc, char** argv)
     cout << "Processed Back Event " << evIdx << endl;
     cout << "Done Back Detector" << endl;
 
-    run->SaveRun("output.txt");
+    run->SaveRun(inputFilename);
 
     mcFile->Close();
 
