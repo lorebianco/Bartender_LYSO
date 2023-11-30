@@ -1,0 +1,16 @@
+#SiPM
+Brand: Hamamatsu
+TypeNo: S13360-6025PE
+Pixel Pitch = 25 um
+Photosensitive Area = 6.0 x 6.0 mm2
+Fill Factor = 47%
+PDE = 24%
+
+#Environment working point
+V = 54.78 V
+T = 20°C
+R_shaper = 1.58E3 Ohm
+Gain = 60 dB
+
+#inputFile for best-fit parameters
+PathToFile: /home/lorenzo/MEG_Project/Acquisizioni/Studio_SIPM/Preamp_Ext/Dati19_10/Dati_root/dati_spectrum_T20_V5478_1pe_fit_params.txt

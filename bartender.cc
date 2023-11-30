@@ -1,10 +1,14 @@
-////////////////////////////////////////////////////////////////////////////////
+//****************************************************************************//
 //                        Lorenzo Bianco 13/11/2023                           //
 //                                                                            //
 //             My 'Bartender' for the LYSO calorimeter prototype              //
 //                                                                            //
-////////////////////////////////////////////////////////////////////////////////
+//****************************************************************************//
 
+/** 
+ * @file bartender.cc
+ * @brief main file of the project.
+ */
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -13,8 +17,6 @@
 #include <TF1.h>
 #include <TFile.h>
 #include <TGraph.h>
-#include <TH1D.h>
-#include <TH2D.h>
 #include <TH3D.h>
 #include <TMath.h>
 #include <TString.h>
@@ -24,15 +26,13 @@
 #include <TCanvas.h>
 
 #include "globals.hh"
-#include "functions.hh"
 #include "run.hh"
+#include "SiPM.hh"
 
 using namespace std;
 using namespace TMath;
 
-TH3D *hAll;
-TRandom3 *randAll = new TRandom3(0);
-TRandom3 *randNoise = new TRandom3(0);
+TH3D *hAll; ///< 3D Histogram of One-Phel waveform parameters
 
 
 int main(int argc, char** argv)
@@ -40,11 +40,10 @@ int main(int argc, char** argv)
     cout << "Start" << endl;
 
     const char *inputFilename = argv[1];
+    const char *sipmFilename = argv[2];
     
-    if(hAll==nullptr)
-    {
-        SetDistros("/home/lorenzo/MEG_Project/Acquisizioni/Studio_SIPM/Preamp_Ext/Dati19_10/Dati_root/dati_spectrum_T20_V5478_1pe_fit_params.txt", 0, 1.5);
-    }
+    SiPM *sipm = new SiPM(sipmFilename);
+    sipm->SetParsDistro(0, 1.5);
 
     cout << "Distro setted" << endl;
 
@@ -94,11 +93,8 @@ int main(int argc, char** argv)
     for(Int_t k = 0; k < tFront->GetEntries(); k++)
     {
         tFront->GetEntry(k);
-
-        Double_t A, tau_rise, tau_dec;
-        hAll->GetRandom3(A, tau_rise, tau_dec, randAll);
         
-        run->SetFrontWaveform(fEvent_front, fChannel_front, A, tau_rise, tau_dec, fT_front);
+        run->SetFrontWaveform(fEvent_front, fChannel_front, fT_front);
 
         if(k == 0) evIdx = fEvent_front;
         if(k!= 0 && evIdx != fEvent_front)
@@ -114,11 +110,8 @@ int main(int argc, char** argv)
     for(Int_t k = 0; k < tBack->GetEntries(); k++)
     {
         tBack->GetEntry(k);
-
-        Double_t A, tau_rise, tau_dec;
-        hAll->GetRandom3(A, tau_rise, tau_dec, randAll);
         
-        run->SetBackWaveform(fEvent_back, fChannel_back, A, tau_rise, tau_dec, fT_back);
+        run->SetBackWaveform(fEvent_back, fChannel_back, fT_back);
 
         if(k == 0) evIdx = fEvent_back;
         if(k!= 0 && evIdx != fEvent_back)
@@ -134,8 +127,8 @@ int main(int argc, char** argv)
 
     mcFile->Close();
 
+    delete sipm;
     delete run;
-    delete randAll, randNoise;
     delete hAll;
 
     return 0;

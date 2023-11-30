@@ -1,4 +1,9 @@
+/** 
+ * @file run.cc
+ * @brief Definition of class Run
+ */
 #include "run.hh"
+
 
 Run::Run(Int_t events) : EVENTS(events)
 {
@@ -43,6 +48,29 @@ Run::~Run()
 
 
 
+Double_t Run::Add_Noise(Double_t sigma) { return fRandNoise->Gaus(0, sigma); }
+
+
+
+
+Double_t Run::Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Int_t timePhel)
+{
+    Double_t funcVal;
+    Double_t expRise = Exp(-(t-timePhel)/tau_rise);
+    Double_t expDec = Exp(-(t-timePhel)/tau_dec);
+
+    //It happens sometimes when t << start or t >> start, so it's just a numerical fixing
+    if(expRise > DBL_MAX || expRise < DBL_MIN) expRise = 0;
+    if(expDec > DBL_MAX || expDec < DBL_MIN) expDec = 0;
+
+    funcVal = (-A*(expDec-expRise))*((t > timePhel) ? 1:0);
+
+    return funcVal;
+}
+
+
+
+
 void Run::InitializeFrontWaveforms()
 {
     for(Int_t ev = 0; ev < EVENTS; ev++)
@@ -81,11 +109,14 @@ void Run::InitializeBackWaveforms()
 
 
 
-void Run::SetFrontWaveform(Int_t event, Int_t channel, Double_t A, Double_t tau_rise, Double_t tau_dec, Double_t start)
+void Run::SetFrontWaveform(Int_t event, Int_t channel, Double_t start)
 {
+    Double_t A, tau_rise, tau_dec;
+    hAll->GetRandom3(A, tau_rise, tau_dec, fRandPars);
+    
     for(Int_t bin = 0; bin < SAMPLINGS; bin++)
     {
-        fFront[event][channel][bin] += Wave_OnePhel(bin, A, tau_rise, tau_dec, Nint(start+ZERO_TIME_BIT));
+        fFront[event][channel][bin] += Wave_OnePhel(bin, A, tau_rise, tau_dec, Nint(start+ZERO_TIME_BIN));
     }
     return;
 }
@@ -93,11 +124,14 @@ void Run::SetFrontWaveform(Int_t event, Int_t channel, Double_t A, Double_t tau_
 
 
 
-void Run::SetBackWaveform(Int_t event, Int_t channel, Double_t A, Double_t tau_rise, Double_t tau_dec, Double_t start)
+void Run::SetBackWaveform(Int_t event, Int_t channel, Double_t start)
 {
-   for(Int_t bin = 0; bin < SAMPLINGS; bin++)
+    Double_t A, tau_rise, tau_dec;
+    hAll->GetRandom3(A, tau_rise, tau_dec, fRandPars);
+    
+    for(Int_t bin = 0; bin < SAMPLINGS; bin++)
     {
-        fBack[event][channel][bin] += Wave_OnePhel(bin, A, tau_rise, tau_dec, Nint(start+ZERO_TIME_BIT));
+        fBack[event][channel][bin] += Wave_OnePhel(bin, A, tau_rise, tau_dec, Nint(start+ZERO_TIME_BIN));
     }
     return;
 }
