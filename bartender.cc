@@ -13,6 +13,7 @@
 #include <fstream>
 #include <vector>
 #include <cfloat>
+#include <chrono>
 
 #include <TF1.h>
 #include <TFile.h>
@@ -26,26 +27,31 @@
 #include <TCanvas.h>
 
 #include "globals.hh"
-#include "run.hh"
+#include "summary.hh"
+#include "bar.hh"
 #include "SiPM.hh"
 
 using namespace std;
 using namespace TMath;
 
+
+// Objects shared between classes (probably I will find a better way to do this)
+Double_t sigmaNoise;   ///< StDev of the pedestal distribution
 TH3D *hAll; ///< 3D Histogram of One-Phel waveform parameters
+
 
 
 int main(int argc, char** argv)
 {
     cout << "Start" << endl;
+    auto start_chrono = chrono::high_resolution_clock::now();
 
     const char *inputFilename = argv[1];
     const char *sipmFilename = argv[2];
     
     SiPM *sipm = new SiPM(sipmFilename);
-    sipm->SetParsDistro(0, 1.5);
-
-    cout << "Distro setted" << endl;
+    sipm->SetParsDistro();
+    
 
     TFile *mcFile = TFile::Open(inputFilename, "READ");
     TTree *tFront = mcFile->Get<TTree>("F");
@@ -87,14 +93,14 @@ int main(int argc, char** argv)
     cout << "Trees loaded. Now there will be the Bartender" << endl;
 
     Int_t fNumberofEvents = tFront->GetMaximum("fEvent") + 1;
-    Run *run = new Run(fNumberofEvents);
+    Bar *bar = new Bar(fNumberofEvents, inputFilename);
 
     Int_t evIdx;
     for(Int_t k = 0; k < tFront->GetEntries(); k++)
     {
         tFront->GetEntry(k);
         
-        run->SetFrontWaveform(fEvent_front, fChannel_front, fT_front);
+        bar->SetFrontWaveform(fEvent_front, fChannel_front, fT_front);
 
         if(k == 0) evIdx = fEvent_front;
         if(k!= 0 && evIdx != fEvent_front)
@@ -111,7 +117,7 @@ int main(int argc, char** argv)
     {
         tBack->GetEntry(k);
         
-        run->SetBackWaveform(fEvent_back, fChannel_back, fT_back);
+        bar->SetBackWaveform(fEvent_back, fChannel_back, fT_back);
 
         if(k == 0) evIdx = fEvent_back;
         if(k!= 0 && evIdx != fEvent_back)
@@ -123,12 +129,17 @@ int main(int argc, char** argv)
     cout << "Processed Back Event " << evIdx << endl;
     cout << "Done Back Detector" << endl;
 
-    run->SaveRun(inputFilename);
+    bar->SaveBar();
+
+    auto end_chrono = chrono::high_resolution_clock::now();
+    chrono::duration<Double_t> duration = end_chrono - start_chrono;
+
+    Bartender_Summary(duration.count(), bar, sipm);
 
     mcFile->Close();
 
     delete sipm;
-    delete run;
+    delete bar;
     delete hAll;
 
     return 0;

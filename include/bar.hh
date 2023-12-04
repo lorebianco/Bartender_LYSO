@@ -1,9 +1,9 @@
 /**
- * @file run.hh
- * @brief Declaration of class Run
+ * @file bar.hh
+ * @brief Declaration of class Bar
  */
-#ifndef RUN_HH
-#define RUN_HH
+#ifndef BAR_HH
+#define BAR_HH
 
 #include <iostream>
 #include <fstream>
@@ -20,25 +20,31 @@
 
 #include "globals.hh"
 
+extern Double_t sigmaNoise;
 extern TH3D *hAll;
 
 /// @brief Class for managing waveform construction for all events and channels.
-class Run
+class Bar
 {
 public:
     /** 
      * @brief Constructor of the class.
      *
-     * It takes as argument the number of events in the run and initializes the two waveform containers @ref fFront and @ref fBack calling @ref InitializeFrontWaveforms() and @ref InitializeBackWaveforms().
+     * It takes as argument the number of events in the run and the MC-filename.
+     * It sets the simulation ID (@ref fID) and initializes the two waveform containers 
+     * @ref fFront and @ref fBack by calling @ref InitializeBaselines().
      *
+     * @param events Number of events in the run.
+     * @param inputFilename MC-filename used in the simulation.
      */
-    Run(Int_t events);
+    Bar(Int_t events, const char* inputFilename);
+
     
     
     /**
      * @brief Destructor of the class.
      */
-    ~Run();
+    ~Bar();
 
 
     /**
@@ -86,20 +92,23 @@ public:
     
 
     /**
-     * @fn void SaveRun(const char* inputFilename)
+     * @fn void SaveBar(const char* inputFilename)
      * @brief Saves all the samples from @ref fFront and @ref fBack into a text file.
      *
-     * This method is designed to save the data samples contained in the objects @ref fFront and @ref fBack into a text file. The file naming convention is based on the RunID (XXXX) extracted from the MC input file. The output file is named as "BarID_XXXX.txt". Refer to the introduction for details about the file format.
+     * This method is designed to save the data samples contained in the objects @ref fFront and @ref fBack into a text file. The file naming convention is based on the RunID @ref fID extracted from the MC input file. The output file is named as "BarID_fID.txt". Refer to the introduction for details about the file format.
      *
-     * @param inputFilename The name of the MC input file used to extract the RunID (XXXX) for the output file naming.
      */
-    void SaveRun(const char* inputFilename);
+    void SaveBar();
 
+
+    Int_t GetEvents() { return EVENTS;} ///< Returns EVENTS.
+    Int_t GetID() {return fID;} ///< Returns fID.
 
 
 private:
     Int_t EVENTS; ///< Number of events in the run
-    
+    Int_t fID; ///< Run ID of the Monte Carlo
+
     Double_t*** fFront; ///< Container for Front-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin.
     
     Double_t*** fBack;  ///< Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin.
@@ -110,30 +119,21 @@ private:
 
     
     /**
-     * @fn void InitializeFrontWaveforms()
-     * @brief Method to initialize the entire @ref fFront with a noise baseline
+     * @fn void InitializeBaselines()
+     * @brief Method to initialize the entire @ref fFront and @ref fBack with a noise baseline
      *
      * This function fills every bin in every channel and event with @ref Add_Noise()
      */
-    void InitializeFrontWaveforms();
-    
-
-    /**
-     * @fn void InitializeBackWaveforms()
-     * @brief Method to initialize the entire @ref fBack with a noise baseline
-     *
-     * This function fills every bin in every channel and event with @ref Add_Noise()
-     */
-    void InitializeBackWaveforms();
+    void InitializeBaselines();
 
 
     /**
-     * @fn Double_t Add_Noise(Double_t sigma)
+     * @fn Double_t Add_Noise()
      * @brief Returns the value of the noise.
      *
-     * This function provides a random value sampled from a normal distribution \f$ N(0, \sigma) \f$. It's important to note that the value of \f$ \sigma \f$ should be derived from experimental data, based on the pedestal's distribution.
+     * This function provides a random value sampled from a normal distribution \f$N\f$(0, @ref sigmaNoise). It's important to note that the value of \f$ \sigma \f$ should be derived from experimental data, based on the pedestal's distribution.
      */
-    Double_t Add_Noise(Double_t sigma);
+    Double_t Add_Noise();
 
 
     /**

@@ -18,7 +18,7 @@ SiPM::~SiPM()
 
 
 
-void SiPM::SetParsDistro(Double_t cutChargeMin, Double_t cutChargeMax)
+void SiPM::SetParsDistro()
 {
     Int_t status;
     Double_t my_charge, A, tau_rise, tau_dec;
@@ -32,17 +32,18 @@ void SiPM::SetParsDistro(Double_t cutChargeMin, Double_t cutChargeMax)
     tree->SetBranchAddress("Tau_rise", &tau_rise);
     tree->SetBranchAddress("Tau_dec", &tau_dec);
 
-    // Need to find a way to do this without hardcoding
-    hAll = new TH3D("hAll", "Fitted All", 50 ,0, 0.6, 50, 0, 1.5, 50, 0, 11);
+    hAll = new TH3D("hAll", "Fitted All", fHisto_A[0], fHisto_A[1], fHisto_A[2], fHisto_Tau_rise[0], fHisto_Tau_rise[1], fHisto_Tau_rise[2], fHisto_Tau_dec[0], fHisto_Tau_dec[1], fHisto_Tau_dec[2]);
 
     for(Int_t i = 0; i < tree->GetEntries(); i++)
     {
         tree->GetEntry(i);
-        if(status==0 && my_charge >= cutChargeMin && my_charge <= cutChargeMax)       
+        if(status==0 && my_charge >= fChargeCuts[0] && my_charge <= fChargeCuts[1])       
         {
             hAll->Fill(A, tau_rise, tau_dec);
         }
     }
+
+    cout << "Distro setted with entries with charge in [" << fChargeCuts[0] << ", " << fChargeCuts[1] << "]" << endl;
 
     delete tree;
 }
@@ -100,27 +101,6 @@ void SiPM::ReadSiPMFile(const char* filename)
         {
             fTypeNo = extract_value(line, "TypeNo:");
         }
-        else if(line.find("Pixel Pitch =") != string::npos)
-        {
-            string pixelPitchStr = extract_value(line, "Pixel Pitch =");
-            fPixelPitch = stof(pixelPitchStr); // Converti la stringa in float
-        }
-        else if(line.find("Photosensitive Area =") != string::npos)
-        {
-            // Estrai la larghezza e l'altezza dell'area photosensibile e convertile in float
-            string areaStr = extract_value(line, "Photosensitive Area =");
-            size_t pos = areaStr.find('x');
-            fPhotosensitiveAreaWidth = stof(areaStr.substr(0, pos));
-            fPhotosensitiveAreaHeight = stof(areaStr.substr(pos + 1));
-        }
-        else if(line.find("Fill Factor =") != string::npos)
-        {
-            fFillFactor = stof(extract_value(line, "Fill Factor ="));
-        }
-        else if(line.find("PDE =") != string::npos)
-        {
-            fPDE = stof(extract_value(line, "PDE ="));
-        }
         else if(line.find("V =") != string::npos)
         {
             fV = stof(extract_value(line, "V ="));
@@ -137,10 +117,62 @@ void SiPM::ReadSiPMFile(const char* filename)
         {
             fGain = stof(extract_value(line, "Gain ="));
         }
+        else if(line.find("Noise (sigma) =") != string::npos)
+        {
+            sigmaNoise = stof(extract_value(line, "Noise (sigma) ="));
+        }
         else if(line.find("PathToFile:") != string::npos)
         {
             fInputFilename = extract_value(line, "PathToFile:");
         }
+        else if(line.find("Charge cuts:") != string::npos)
+        {
+            string data = extract_value(line, "Charge cuts:");
+            istringstream iss(data);
+            Double_t charge_min, charge_max;
+            if(iss >> charge_min >> charge_max)
+            {
+                fChargeCuts[0] = charge_min;
+                fChargeCuts[1] = charge_max;
+            }
+        }
+        else if(line.find("A histo:") != string::npos)
+        {
+            string data = extract_value(line, "A histo:");
+            istringstream iss(data);
+            Double_t nbins, hist_min, hist_max;
+            if(iss >> nbins >> hist_min >> hist_max)
+            {
+                fHisto_A[0] = nbins;
+                fHisto_A[1] = hist_min;
+                fHisto_A[2] = hist_max;
+            }
+        }
+        else if(line.find("Tau_rise histo:") != string::npos)
+        {
+            string data = extract_value(line, "Tau_rise histo:");
+            istringstream iss(data);
+            Double_t nbins, hist_min, hist_max;
+            if(iss >> nbins >> hist_min >> hist_max)
+            {
+                fHisto_Tau_rise[0] = nbins;
+                fHisto_Tau_rise[1] = hist_min;
+                fHisto_Tau_rise[2] = hist_max;
+            }
+        }
+        else if(line.find("Tau_dec histo:") != string::npos)
+        {
+            string data = extract_value(line, "Tau_dec histo:");
+            istringstream iss(data);
+            Double_t nbins, hist_min, hist_max;
+            if(iss >> nbins >> hist_min >> hist_max)
+            {
+                fHisto_Tau_dec[0] = nbins;
+                fHisto_Tau_dec[1] = hist_min;
+                fHisto_Tau_dec[2] = hist_max;
+            }
+        }
+
     }
 
     file.close();

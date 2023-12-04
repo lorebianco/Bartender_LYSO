@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <cfloat>
 
@@ -19,6 +20,7 @@
 
 using namespace std;
 
+extern Double_t sigmaNoise;
 extern TH3D *hAll;
 
 
@@ -37,23 +39,17 @@ public:
     ~SiPM();
 
     /**
-     * @fn SetParsDistro(Double_t cutChargeMin = DBL_MIN, Double_t cutChargeMax = DBL_MAX)
+     * @fn SetParsDistro()
      * @brief Sets the 3D histogram @ref hAll
      *
-     * This function takes all the best-fit parameters (\f$A \f$, \f$ \tau_{RISE} \f$, \f$ \tau_{DEC} \f$) obtained from the fitted I-Phel data waveforms and populates the histogram @ref hAll, from which sampling will occur. It specifically considers entries within the charge range [cutChargeMin, cutChargeMax] and with a converged fit status.
+     * This function takes all the best-fit parameters (\f$A \f$, \f$ \tau_{RISE} \f$, \f$ \tau_{DEC} \f$) obtained from the fitted I-Phel data waveforms and populates the histogram @ref hAll, from which sampling will occur. It specifically considers entries within the charge range [@ref fChargeCuts[0], @ref fChargeCuts[1]] and with a converged fit status.
      *
-     * @param cutChargeMin minimum cut for the my_charge distribution.
-     * @param cutChargeMax maximum cut for the my_charge distribution.
      */
-    void SetParsDistro(Double_t cutChargeMin = DBL_MIN, Double_t cutChargeMax = DBL_MAX);
+    void SetParsDistro();
 
     string GetBrand() { return fBrand;} ///< Returns @ref fBrand
     string GetTypeNo() { return fTypeNo;}   ///< Returns @ref fTypeNo
-    Float_t GetPixelPitch() { return fPixelPitch;}  ///< Returns @ref fPixelPitch
-    Float_t GetPhotosensitiveAreaWidth() { return fPhotosensitiveAreaWidth;}    ///< Returns @ref fPhotosensitiveAreaWidth
-    Float_t GetPhotosensitiveAreaHeight() { return fPhotosensitiveAreaHeight;}  ///< Returns @ref fPhotosensitiveAreaHeight
-    Float_t GetFillFactor() { return fFillFactor;}  ///< Returns @ref fFillFactor
-    Float_t GetPDE() { return fPDE;}    ///< Returns @ref fPDE
+    
     Float_t GetVoltage() { return fV;}  ///< Returns @ref fV
     Float_t GetTemperature() { return fT;}  ///< Returns @ref fT
     Double_t GetRShaper() { return fR_shaper;}  ///< Returns @ref fR_shaper
@@ -62,16 +58,17 @@ public:
 private:
     string fBrand; ///< Manufacturer's brand of SiPM
     string fTypeNo; ///< Type number of the SiPM
-    Float_t fPixelPitch; ///< Pixel Pitch of the SiPM
-    Float_t fPhotosensitiveAreaWidth; ///< Width of the photosensitive active area of the SiPM
-    Float_t fPhotosensitiveAreaHeight; ///< Height of the photosensitive active area of the SiPM
-    Float_t fFillFactor; ///< Fill Factor of the SiPM
-    Float_t fPDE; ///< Photon Detection Efficiency of the SiPM
+    
     Float_t fV; ///< Supply Voltage [V] for the environment working point
     Float_t fT; ///< Temperature [°C] for the environment working point
     Double_t fR_shaper; ///< Value [Ohm] of the resistance of the shaper
     Float_t fGain; ///< Gain of the amplification stage
+    
     string fInputFilename; ///< Name of the txt file of the best fit parameters data. See the introduction for more details about the file format
+    Double_t fChargeCuts[2]; ///< Cuts in the charge spectrum of input best fit parameters data; [0] represents the minimum, [1] represents the maximum.
+    Double_t fHisto_A[3]; ///< Settings for histogram @ref hAll related to parameter A: [0] for number of bins, [1] for the lower limit, [2] for the upper limit.
+    Double_t fHisto_Tau_rise[3]; ///< Settings for histogram @ref hAll related to parameter Tau_rise: [0] for number of bins, [1] for the lower limit, [2] for the upper limit.
+    Double_t fHisto_Tau_dec[3]; ///< Settings for histogram @ref hAll related to parameter Tau_dec: [0] for number of bins, [1] for the lower limit, [2] for the upper limit.
 
 
     /**

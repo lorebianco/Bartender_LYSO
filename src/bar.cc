@@ -1,12 +1,25 @@
 /** 
- * @file run.cc
- * @brief Definition of class Run
+ * @file bar.cc
+ * @brief Definition of class Bar
  */
-#include "run.hh"
+#include "bar.hh"
 
 
-Run::Run(Int_t events) : EVENTS(events)
+Bar::Bar(Int_t events, const char*inputFilename) : EVENTS(events)
 {
+    regex regex("\\d+");
+    smatch match;
+    string filename = inputFilename;
+    if(regex_search(filename, match, regex))
+    {
+        string runID = match.str();
+        if(!runID.empty())
+        {
+            fID = stoi(runID);
+        }
+    }
+
+    
     fFront = new Double_t**[EVENTS];
     fBack = new Double_t**[EVENTS];
 
@@ -22,14 +35,13 @@ Run::Run(Int_t events) : EVENTS(events)
         }
     }
 
-    InitializeFrontWaveforms();
-    InitializeBackWaveforms();
+    InitializeBaselines();
 
 }
 
 
 
-Run::~Run()
+Bar::~Bar()
 {
     for(Int_t i = 0; i < EVENTS; i++)
     {
@@ -48,18 +60,18 @@ Run::~Run()
 
 
 
-Double_t Run::Add_Noise(Double_t sigma) { return fRandNoise->Gaus(0, sigma); }
+Double_t Bar::Add_Noise() { return fRandNoise->Gaus(0, sigmaNoise); }
 
 
 
 
-Double_t Run::Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Int_t timePhel)
+Double_t Bar::Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Int_t timePhel)
 {
     Double_t funcVal;
     Double_t expRise = Exp(-(t-timePhel)/tau_rise);
     Double_t expDec = Exp(-(t-timePhel)/tau_dec);
 
-    //It happens sometimes when t << start or t >> start, so it's just a numerical fixing
+    //It happens sometimes when t << timePhel or t >> timePhel, so it's just a numerical fixing
     if(expRise > DBL_MAX || expRise < DBL_MIN) expRise = 0;
     if(expDec > DBL_MAX || expDec < DBL_MIN) expDec = 0;
 
@@ -71,7 +83,7 @@ Double_t Run::Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t t
 
 
 
-void Run::InitializeFrontWaveforms()
+void Bar::InitializeBaselines()
 {
     for(Int_t ev = 0; ev < EVENTS; ev++)
     {
@@ -79,7 +91,8 @@ void Run::InitializeFrontWaveforms()
         {
             for(Int_t bin = 0; bin < SAMPLINGS; bin++)
             {
-                fFront[ev][ch][bin] = Add_Noise(SIGMA_NOISE);
+                fFront[ev][ch][bin] = Add_Noise();
+                fBack[ev][ch][bin] = Add_Noise();
             }
         }
     }
@@ -90,26 +103,7 @@ void Run::InitializeFrontWaveforms()
 
 
 
-void Run::InitializeBackWaveforms()
-{
-    for(Int_t ev = 0; ev < EVENTS; ev++)
-    {
-        for(Int_t ch = 0; ch < CHANNELS; ch++)
-        {
-            for(Int_t bin = 0; bin < SAMPLINGS; bin++)
-            {
-                fBack[ev][ch][bin] = Add_Noise(SIGMA_NOISE);
-            }
-        }
-    }
-
-    return;
-}
-
-
-
-
-void Run::SetFrontWaveform(Int_t event, Int_t channel, Double_t start)
+void Bar::SetFrontWaveform(Int_t event, Int_t channel, Double_t start)
 {
     Double_t A, tau_rise, tau_dec;
     hAll->GetRandom3(A, tau_rise, tau_dec, fRandPars);
@@ -124,7 +118,7 @@ void Run::SetFrontWaveform(Int_t event, Int_t channel, Double_t start)
 
 
 
-void Run::SetBackWaveform(Int_t event, Int_t channel, Double_t start)
+void Bar::SetBackWaveform(Int_t event, Int_t channel, Double_t start)
 {
     Double_t A, tau_rise, tau_dec;
     hAll->GetRandom3(A, tau_rise, tau_dec, fRandPars);
@@ -138,7 +132,7 @@ void Run::SetBackWaveform(Int_t event, Int_t channel, Double_t start)
 
 
 
-void Run::DrawFront(Int_t event, Int_t channel)
+void Bar::DrawFront(Int_t event, Int_t channel)
 {
     //Add conditions about event
     if(channel >= 0 && channel < CHANNELS)
@@ -164,7 +158,7 @@ void Run::DrawFront(Int_t event, Int_t channel)
 
 
 
-void Run::DrawBack(Int_t event, Int_t channel)
+void Bar::DrawBack(Int_t event, Int_t channel)
 {
     //Add conditions about event
     if(channel >= 0 && channel < CHANNELS)
@@ -190,23 +184,14 @@ void Run::DrawBack(Int_t event, Int_t channel)
 
 
 
-void Run::SaveRun(const char* inputFilename)
-{
-    regex regex("\\d+");
-    smatch match;
-
-    string filename = inputFilename;
+void Bar::SaveBar()
+{   
     string outputFilename;
-    
-    if(regex_search(filename, match, regex))
+    if(fID)
     {
-        string runID = match.str();
-        if(!runID.empty())
-        {
-            outputFilename = "BarID_" + runID + ".txt";
-        }
-        else outputFilename = "output.txt";
+        outputFilename = "BarID_" + to_string(fID) + ".txt";
     }
+    else outputFilename = "output.txt";
 
 
     ofstream outputFile(outputFilename, ofstream::out | ofstream::trunc);

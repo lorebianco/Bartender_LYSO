@@ -23,7 +23,5 @@ using namespace TMath;
 
 #define ZERO_TIME_BIN 450   ///< Delay of all waveforms in the [0, 1023] bins window
 
-#define SIGMA_NOISE 0.02    ///< StDev of the pedestal distribution
-
 
 #endif
