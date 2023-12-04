@@ -1,57 +1,33 @@
 /**
- * @file SiPM.cc
- * @brief Definition of class SiPM
+ * @file configure.hh
+ * @brief Definition of the function @ref Bartender_Configure() (and the auxiliary function @ref extract_value()), used to configure all the settings for the Bartender simulation
  */
+
+#ifndef CONFIGURE_HH
+#define CONFIGURE_HH
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <cfloat>
+
+using namespace std;
+
+
+#include "bar.hh"
 #include "SiPM.hh"
 
 
-SiPM::SiPM(const char* sipmFilename)
-{
-    ReadSiPMFile(sipmFilename);
-}
-
-
-
-SiPM::~SiPM()
-{}
-
-
-
-
-void SiPM::SetParsDistro()
-{
-    Int_t status;
-    Double_t my_charge, A, tau_rise, tau_dec;
-
-    TTree *tree = new TTree("tree", "mytree");
-    tree->ReadFile(fInputFilename.c_str());
-
-    tree->SetBranchAddress("Status", &status);
-    tree->SetBranchAddress("my_charge", &my_charge);
-    tree->SetBranchAddress("A", &A);
-    tree->SetBranchAddress("Tau_rise", &tau_rise);
-    tree->SetBranchAddress("Tau_dec", &tau_dec);
-
-    hAll = new TH3D("hAll", "Fitted All", fHisto_A[0], fHisto_A[1], fHisto_A[2], fHisto_Tau_rise[0], fHisto_Tau_rise[1], fHisto_Tau_rise[2], fHisto_Tau_dec[0], fHisto_Tau_dec[1], fHisto_Tau_dec[2]);
-
-    for(Int_t i = 0; i < tree->GetEntries(); i++)
-    {
-        tree->GetEntry(i);
-        if(status==0 && my_charge >= fChargeCuts[0] && my_charge <= fChargeCuts[1])       
-        {
-            hAll->Fill(A, tau_rise, tau_dec);
-        }
-    }
-
-    cout << "Distro setted with entries with charge in [" << fChargeCuts[0] << ", " << fChargeCuts[1] << "]" << endl;
-
-    delete tree;
-}
-
-
-
-
-string SiPM::extract_value(const string& line, const string& keyword)
+/**
+ * @fn string extract_value(const string& line, const string& keyword)
+ * @brief Extracts a value from a line using a specific keyword.
+ *
+ * @param line The line from which to extract the value.
+ * @param keyword The keyword indicating where the value is located in the line.
+ * @return The extracted value as a string.
+ */
+string extract_value(const string& line, const string& keyword)
 {
     size_t start = line.find(keyword);
     if(start != string::npos)
@@ -59,14 +35,14 @@ string SiPM::extract_value(const string& line, const string& keyword)
         start += keyword.length();
         string value = line.substr(start);
 
-        // Rimuovi gli spazi all'inizio della stringa
+        // Remove spaces before string
         size_t first_not_space = value.find_first_not_of(" \t");
         if(first_not_space != string::npos)
         {
             value = value.substr(first_not_space);
         }
 
-        // Rimuovi gli spazi alla fine della stringa
+        // Remove spaces after string
         size_t last_not_space = value.find_last_not_of(" \t");
         if(last_not_space != string::npos)
         {
@@ -80,8 +56,18 @@ string SiPM::extract_value(const string& line, const string& keyword)
 
 
 
-
-void SiPM::ReadSiPMFile(const char* filename)
+/**
+ * @fn void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm)
+ * @brief Reads and processes a specific file to populate members of the Bar class and SiPM struct.
+ *
+ * Reads the given file (filename) and loads relevant information into the members of @ref Bar and @ref SiPM,
+ * such as Brand, Type Number, Supply Voltage (V), Temperature (T), Resistance (R_shaper), Gain, the name of the input file for best-fit waveform parameters and the @hPars settings.
+ *
+ * @param filename The name of the file (mac file) to be processed.
+ * @param bar Bar class pointer 
+ * @param sipm SiPM struct pointer
+ */
+void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm)
 {
     ifstream file(filename);
     if(!file.is_open())
@@ -95,35 +81,36 @@ void SiPM::ReadSiPMFile(const char* filename)
     {
         if(line.find("Brand:") != string::npos)
         {
-            fBrand = extract_value(line, "Brand:");
+            sipm->fBrand = extract_value(line, "Brand:");
         }
         else if(line.find("TypeNo:") != string::npos)
         {
-            fTypeNo = extract_value(line, "TypeNo:");
+            sipm->fTypeNo = extract_value(line, "TypeNo:");
         }
         else if(line.find("V =") != string::npos)
         {
-            fV = stof(extract_value(line, "V ="));
+            sipm->fV = stof(extract_value(line, "V ="));
         }
         else if(line.find("T =") != string::npos)
         {
-            fT = stof(extract_value(line, "T ="));
+            sipm->fT = stof(extract_value(line, "T ="));
         }
         else if(line.find("R_shaper =") != string::npos)
         {
-            fR_shaper = stod(extract_value(line, "R_shaper ="));
+            sipm->fR_shaper = stod(extract_value(line, "R_shaper ="));
         }
         else if(line.find("Gain =") != string::npos)
         {
-            fGain = stof(extract_value(line, "Gain ="));
+            sipm->fGain = stof(extract_value(line, "Gain ="));
         }
         else if(line.find("Noise (sigma) =") != string::npos)
         {
-            sigmaNoise = stof(extract_value(line, "Noise (sigma) ="));
+            bar->SetSigmaNoise(stof(extract_value(line, "Noise (sigma) =")));
+            sipm->fSigmaNoise = stof(extract_value(line, "Noise (sigma) ="));
         }
         else if(line.find("PathToFile:") != string::npos)
         {
-            fInputFilename = extract_value(line, "PathToFile:");
+            bar->SetInputFilename(extract_value(line, "PathToFile:"));
         }
         else if(line.find("Charge cuts:") != string::npos)
         {
@@ -132,8 +119,7 @@ void SiPM::ReadSiPMFile(const char* filename)
             Double_t charge_min, charge_max;
             if(iss >> charge_min >> charge_max)
             {
-                fChargeCuts[0] = charge_min;
-                fChargeCuts[1] = charge_max;
+                bar->SetChargeCuts(charge_min, charge_max);
             }
         }
         else if(line.find("A histo:") != string::npos)
@@ -143,9 +129,7 @@ void SiPM::ReadSiPMFile(const char* filename)
             Double_t nbins, hist_min, hist_max;
             if(iss >> nbins >> hist_min >> hist_max)
             {
-                fHisto_A[0] = nbins;
-                fHisto_A[1] = hist_min;
-                fHisto_A[2] = hist_max;
+                bar->SetHisto_A(nbins, hist_min, hist_max);
             }
         }
         else if(line.find("Tau_rise histo:") != string::npos)
@@ -155,9 +139,7 @@ void SiPM::ReadSiPMFile(const char* filename)
             Double_t nbins, hist_min, hist_max;
             if(iss >> nbins >> hist_min >> hist_max)
             {
-                fHisto_Tau_rise[0] = nbins;
-                fHisto_Tau_rise[1] = hist_min;
-                fHisto_Tau_rise[2] = hist_max;
+                bar->SetHisto_Tau_rise(nbins, hist_min, hist_max);
             }
         }
         else if(line.find("Tau_dec histo:") != string::npos)
@@ -167,9 +149,7 @@ void SiPM::ReadSiPMFile(const char* filename)
             Double_t nbins, hist_min, hist_max;
             if(iss >> nbins >> hist_min >> hist_max)
             {
-                fHisto_Tau_dec[0] = nbins;
-                fHisto_Tau_dec[1] = hist_min;
-                fHisto_Tau_dec[2] = hist_max;
+                bar->SetHisto_Tau_dec(nbins, hist_min, hist_max);
             }
         }
 
@@ -177,3 +157,5 @@ void SiPM::ReadSiPMFile(const char* filename)
 
     file.close();
 }
+
+#endif  //CONFIGURE_HH

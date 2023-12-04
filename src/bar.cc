@@ -5,7 +5,7 @@
 #include "bar.hh"
 
 
-Bar::Bar(Int_t events, const char*inputFilename) : EVENTS(events)
+Bar::Bar(const char*inputFilename)
 {
     regex regex("\\d+");
     smatch match;
@@ -18,25 +18,6 @@ Bar::Bar(Int_t events, const char*inputFilename) : EVENTS(events)
             fID = stoi(runID);
         }
     }
-
-    
-    fFront = new Double_t**[EVENTS];
-    fBack = new Double_t**[EVENTS];
-
-    for(Int_t i = 0; i < EVENTS; i++)
-    {
-        fFront[i] = new Double_t*[CHANNELS];
-        fBack[i] = new Double_t*[CHANNELS];
-        
-        for(Int_t j = 0; j < CHANNELS; j++)
-        {
-            fFront[i][j] = new Double_t[SAMPLINGS];
-            fBack[i][j] = new Double_t[SAMPLINGS];
-        }
-    }
-
-    InitializeBaselines();
-
 }
 
 
@@ -60,7 +41,40 @@ Bar::~Bar()
 
 
 
-Double_t Bar::Add_Noise() { return fRandNoise->Gaus(0, sigmaNoise); }
+void Bar::SetParsDistro()
+{
+    Int_t status;
+    Double_t my_charge, A, tau_rise, tau_dec;
+
+    TTree *tree = new TTree("tree", "mytree");
+    tree->ReadFile(fInputFilename.c_str());
+
+    tree->SetBranchAddress("Status", &status);
+    tree->SetBranchAddress("my_charge", &my_charge);
+    tree->SetBranchAddress("A", &A);
+    tree->SetBranchAddress("Tau_rise", &tau_rise);
+    tree->SetBranchAddress("Tau_dec", &tau_dec);
+
+    hPars = new TH3D("hPars", "Fitted All", fHisto_A[0], fHisto_A[1], fHisto_A[2], fHisto_Tau_rise[0], fHisto_Tau_rise[1], fHisto_Tau_rise[2], fHisto_Tau_dec[0], fHisto_Tau_dec[1], fHisto_Tau_dec[2]);
+
+    for(Int_t i = 0; i < tree->GetEntries(); i++)
+    {
+        tree->GetEntry(i);
+        if(status==0 && my_charge >= fChargeCuts[0] && my_charge <= fChargeCuts[1])       
+        {
+            hPars->Fill(A, tau_rise, tau_dec);
+        }
+    }
+
+    cout << "Distro setted with entries with charge in [" << fChargeCuts[0] << ", " << fChargeCuts[1] << "]" << endl;
+
+    delete tree;
+}
+
+
+
+
+Double_t Bar::Add_Noise() { return fRandNoise->Gaus(0, fSigmaNoise); }
 
 
 
@@ -83,12 +97,23 @@ Double_t Bar::Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t t
 
 
 
-void Bar::InitializeBaselines()
+void Bar::InitializeBaselines(Int_t newEvents)
 {
+    EVENTS = newEvents;
+
+    fFront = new Double_t**[EVENTS];
+    fBack = new Double_t**[EVENTS];
+
     for(Int_t ev = 0; ev < EVENTS; ev++)
     {
+        fFront[ev] = new Double_t*[CHANNELS];
+        fBack[ev] = new Double_t*[CHANNELS];
+        
         for(Int_t ch = 0; ch < CHANNELS; ch++)
         {
+            fFront[ev][ch] = new Double_t[SAMPLINGS];
+            fBack[ev][ch] = new Double_t[SAMPLINGS];
+
             for(Int_t bin = 0; bin < SAMPLINGS; bin++)
             {
                 fFront[ev][ch][bin] = Add_Noise();
@@ -106,7 +131,7 @@ void Bar::InitializeBaselines()
 void Bar::SetFrontWaveform(Int_t event, Int_t channel, Double_t start)
 {
     Double_t A, tau_rise, tau_dec;
-    hAll->GetRandom3(A, tau_rise, tau_dec, fRandPars);
+    hPars->GetRandom3(A, tau_rise, tau_dec, fRandPars);
     
     for(Int_t bin = 0; bin < SAMPLINGS; bin++)
     {
@@ -121,7 +146,7 @@ void Bar::SetFrontWaveform(Int_t event, Int_t channel, Double_t start)
 void Bar::SetBackWaveform(Int_t event, Int_t channel, Double_t start)
 {
     Double_t A, tau_rise, tau_dec;
-    hAll->GetRandom3(A, tau_rise, tau_dec, fRandPars);
+    hPars->GetRandom3(A, tau_rise, tau_dec, fRandPars);
     
     for(Int_t bin = 0; bin < SAMPLINGS; bin++)
     {

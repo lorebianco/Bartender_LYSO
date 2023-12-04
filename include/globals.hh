@@ -24,4 +24,4 @@ using namespace TMath;
 #define ZERO_TIME_BIN 450   ///< Delay of all waveforms in the [0, 1023] bins window
 
 
-#endif
+#endif  //GLOBALS_HH

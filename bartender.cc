@@ -27,6 +27,7 @@
 #include <TCanvas.h>
 
 #include "globals.hh"
+#include "configure.hh"
 #include "summary.hh"
 #include "bar.hh"
 #include "SiPM.hh"
@@ -35,25 +36,22 @@ using namespace std;
 using namespace TMath;
 
 
-// Objects shared between classes (probably I will find a better way to do this)
-Double_t sigmaNoise;   ///< StDev of the pedestal distribution
-TH3D *hAll; ///< 3D Histogram of One-Phel waveform parameters
-
-
 
 int main(int argc, char** argv)
 {
     cout << "Start" << endl;
-    auto start_chrono = chrono::high_resolution_clock::now();
 
-    const char *inputFilename = argv[1];
+    const char *mcFilename = argv[1];
     const char *sipmFilename = argv[2];
     
-    SiPM *sipm = new SiPM(sipmFilename);
-    sipm->SetParsDistro();
+    SiPM *sipm = new SiPM();
+    Bar *bar = new Bar(mcFilename);
+    Bartender_Configure(sipmFilename, bar, sipm);
     
+    bar->SetParsDistro();
 
-    TFile *mcFile = TFile::Open(inputFilename, "READ");
+
+    TFile *mcFile = TFile::Open(mcFilename, "READ");
     TTree *tFront = mcFile->Get<TTree>("F");
     TTree *tBack = mcFile->Get<TTree>("B");
     TTree *tCry = mcFile->Get<TTree>("Cry");
@@ -92,9 +90,11 @@ int main(int argc, char** argv)
 
     cout << "Trees loaded. Now there will be the Bartender" << endl;
 
-    Int_t fNumberofEvents = tFront->GetMaximum("fEvent") + 1;
-    Bar *bar = new Bar(fNumberofEvents, inputFilename);
 
+    Int_t fNumberofEvents = tCry->GetMaximum("fEvent") + 1;
+    bar->InitializeBaselines(fNumberofEvents);
+
+    auto start_chrono = chrono::high_resolution_clock::now();
     Int_t evIdx;
     for(Int_t k = 0; k < tFront->GetEntries(); k++)
     {
@@ -136,11 +136,10 @@ int main(int argc, char** argv)
 
     Bartender_Summary(duration.count(), bar, sipm);
 
-    mcFile->Close();
 
+    mcFile->Close();
     delete sipm;
     delete bar;
-    delete hAll;
 
     return 0;
 } 

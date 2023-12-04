@@ -20,8 +20,6 @@
 
 #include "globals.hh"
 
-extern Double_t sigmaNoise;
-extern TH3D *hAll;
 
 /// @brief Class for managing waveform construction for all events and channels.
 class Bar
@@ -30,14 +28,11 @@ public:
     /** 
      * @brief Constructor of the class.
      *
-     * It takes as argument the number of events in the run and the MC-filename.
-     * It sets the simulation ID (@ref fID) and initializes the two waveform containers 
-     * @ref fFront and @ref fBack by calling @ref InitializeBaselines().
+     * It takes as argument the MC-filename and sets the simulation ID (@ref fID)
      *
-     * @param events Number of events in the run.
      * @param inputFilename MC-filename used in the simulation.
      */
-    Bar(Int_t events, const char* inputFilename);
+    Bar(const char* inputFilename);
 
     
     
@@ -48,10 +43,31 @@ public:
 
 
     /**
+     * @fn SetParsDistro()
+     * @brief Sets the 3D histogram @ref hPars
+     *
+     * This function takes all the best-fit parameters (\f$A \f$, \f$ \tau_{RISE} \f$, \f$ \tau_{DEC} \f$) obtained from the fitted I-Phel data waveforms, defines and populates the histogram @ref hPars (from which sampling will occur) with settings @ref fHisto_A, @ref fHisto_Tau_rise and @ref fHisto_Tau_dec. It specifically considers entries within the charge range [@ref fChargeCuts[0], @ref fChargeCuts[1]] and with a converged fit status.
+     *
+     */
+    void SetParsDistro();
+
+
+    /**
+     * @fn void InitializeBaselines(Int_t newEvents)
+     * @brief Method to initialize the entire @ref fFront and @ref fBack with a noise baseline.
+     *
+     * This function sets the number of events in the run (@ref EVENTS = newEvents) and fills every bin in every channel and event with @ref Add_Noise()
+     *
+     * @param newEvents Number of events in the MC-Simulation
+     */
+    void InitializeBaselines(Int_t newEvents);
+
+
+    /**
      * @fn SetFrontWaveform(Int_t event, Int_t channel, Double_t start)
      * @brief Method to add a I-Phel waveform to the corresponding event and channel of the Front-Detector
      *
-     * This function samples parameters (\f$A \f$, \f$ \tau_{RISE} \f$, \f$ \tau_{DEC} \f$) from @ref hAll, evaluates @ref Wave_OnePhel() in each bin, and finally sums it at the correct event and channel indices of @ref fFront.
+     * This function samples parameters (\f$A \f$, \f$ \tau_{RISE} \f$, \f$ \tau_{DEC} \f$) from @ref hPars, evaluates @ref Wave_OnePhel() in each bin, and finally sums it at the correct event and channel indices of @ref fFront.
      *
      * @param event Event index
      * @param channel Channel index
@@ -64,7 +80,7 @@ public:
      * @fn SetBackWaveform(Int_t event, Int_t channel, Double_t start)
      * @brief Method to add a I-Phel waveform to the corresponding event and channel of the Back-Detector
      *
-     * This function samples parameters (\f$A \f$, \f$ \tau_{RISE} \f$, \f$ \tau_{DEC} \f$) from @ref hAll, evaluates @ref Wave_OnePhel() in each bin, and finally sums it at the correct event and channel indices of @ref fBack.
+     * This function samples parameters (\f$A \f$, \f$ \tau_{RISE} \f$, \f$ \tau_{DEC} \f$) from @ref hPars, evaluates @ref Wave_OnePhel() in each bin, and finally sums it at the correct event and channel indices of @ref fBack.
      *
      * @param event Event index
      * @param channel Channel index
@@ -100,6 +116,32 @@ public:
      */
     void SaveBar();
 
+    void SetSigmaNoise(Double_t newSigmaNoise) { fSigmaNoise = newSigmaNoise;}
+    void SetInputFilename(string newInputFilename) { fInputFilename = newInputFilename;}
+    void SetChargeCuts(Double_t min, Double_t max)
+    {
+        fChargeCuts[0] = min;
+        fChargeCuts[1] = max;
+    }
+    void SetHisto_A(Double_t nbins, Double_t min, Double_t max)
+    {
+        fHisto_A[0] = Nint(nbins);
+        fHisto_A[1] = min;
+        fHisto_A[2] = max;
+    }
+    void SetHisto_Tau_rise(Double_t nbins, Double_t min, Double_t max)
+    {
+        fHisto_Tau_rise[0] = Nint(nbins);
+        fHisto_Tau_rise[1] = min;
+        fHisto_Tau_rise[2] = max;
+    }
+    void SetHisto_Tau_dec(Double_t nbins, Double_t min, Double_t max)
+    {
+        fHisto_Tau_dec[0] = Nint(nbins);
+        fHisto_Tau_dec[1] = min;
+        fHisto_Tau_dec[2] = max;
+    }
+
 
     Int_t GetEvents() { return EVENTS;} ///< Returns EVENTS.
     Int_t GetID() {return fID;} ///< Returns fID.
@@ -113,18 +155,19 @@ private:
     
     Double_t*** fBack;  ///< Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin.
 
+    TH3D *hPars; ///< 3D Histogram of One-Phel waveform parameters from which sampling will occur
+
     TRandom3 *fRandPars = new TRandom3(0); ///< Random generator for @ref SetFrontWaveform() and @ref SetBackWaveform()
 
     TRandom3 *fRandNoise = new TRandom3(0); ///< Random generator for @ref Add_Noise()
 
-    
-    /**
-     * @fn void InitializeBaselines()
-     * @brief Method to initialize the entire @ref fFront and @ref fBack with a noise baseline
-     *
-     * This function fills every bin in every channel and event with @ref Add_Noise()
-     */
-    void InitializeBaselines();
+    Double_t fSigmaNoise; ///< Noise of the DAQ, evaluated as the stDev of the pedestal distribution
+
+    string fInputFilename; ///< Name of the txt file of the best fit parameters data. See the introduction for more details about the file format
+    Double_t fChargeCuts[2]; ///< Cuts in the charge spectrum of input best fit parameters data; [0] represents the minimum, [1] represents the maximum.
+    Double_t fHisto_A[3]; ///< Settings for histogram @ref hPars related to parameter A: [0] for number of bins, [1] for the lower limit, [2] for the upper limit.
+    Double_t fHisto_Tau_rise[3]; ///< Settings for histogram @ref hPars related to parameter Tau_rise: [0] for number of bins, [1] for the lower limit, [2] for the upper limit.
+    Double_t fHisto_Tau_dec[3]; ///< Settings for histogram @ref hPars related to parameter Tau_dec: [0] for number of bins, [1] for the lower limit, [2] for the upper limit.
 
 
     /**
@@ -148,4 +191,4 @@ private:
 
 };
 
-#endif
+#endif  //BAR_HH

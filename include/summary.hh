@@ -18,8 +18,6 @@
 
 using namespace std;
 
-extern Double_t sigmaNoise;
-
 
 void Bartender_Summary(Double_t duration, Bar* bar, SiPM* sipm)
 {
@@ -35,12 +33,12 @@ void Bartender_Summary(Double_t duration, Bar* bar, SiPM* sipm)
         file << "User Name: " << getlogin() << endl;
         file << "Duration of the simulation: " << duration << endl;
         file << endl;
-        file << "SiPM: " << sipm->GetBrand() << " " << sipm->GetTypeNo() << "\n";
-        file << "Voltage: " << sipm->GetVoltage() << " V\n";
-        file << "Temperature: " << sipm->GetTemperature() << "°C\n";
-        file << "R_shaper: " << sipm->GetRShaper() << " Ohm\n";
-        file << "Gain: " << sipm->GetGain() << " db\n";
-        file << "Noise (sigma): " << sigmaNoise << " V\n\n";
+        file << "SiPM: " << sipm->fBrand << " " << sipm->fTypeNo << "\n";
+        file << "Voltage: " << sipm->fV << " V\n";
+        file << "Temperature: " << sipm->fT << "°C\n";
+        file << "R_shaper: " << sipm->fR_shaper << " Ohm\n";
+        file << "Gain: " << sipm->fGain << " db\n";
+        file << "Noise (sigma): " << sipm->fSigmaNoise << " V\n\n";
 
         file << "Number of events: " << bar->GetEvents() << "\n\n";
         file << "########################################################\n\n";
@@ -54,4 +52,4 @@ void Bartender_Summary(Double_t duration, Bar* bar, SiPM* sipm)
 }
 
 
-#endif
+#endif  //SUMMARY_HH
