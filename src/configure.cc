@@ -9,7 +9,10 @@ using namespace std;
 
 string extract_value(const string& line, const string& keyword)
 {
+    // Find the position of the keyword in the line
     size_t start = line.find(keyword);
+
+    // If the keyword is found, extract the value following it
     if(start != string::npos)
     {
         start += keyword.length();
@@ -31,6 +34,8 @@ string extract_value(const string& line, const string& keyword)
 
         return value;
     }
+
+    // Return an empty string if the keyword is not found
     return "";
 }
 
@@ -38,6 +43,7 @@ string extract_value(const string& line, const string& keyword)
 
 void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm)
 {
+    // Open the mac file
     ifstream file(filename);
     if(!file.is_open())
     {
@@ -45,9 +51,11 @@ void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm)
         return;
     }
 
+    // Read each line from the file
     string line;
     while (getline(file, line))
     {
+        // Check for different parameters in each line and update corresponding values    
         if(line.find("Brand:") != string::npos)
         {
             sipm->fBrand = extract_value(line, "Brand:");
@@ -124,5 +132,6 @@ void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm)
 
     }
 
+    // Close the file
     file.close();
 }
