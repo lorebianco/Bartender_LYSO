@@ -1,8 +1,7 @@
 /**
  * @file summary.hh
- * @brief Definition of the function @ref Bartender_Summary(), used to save the relevant infos of the Bartender simulation
+ * @brief Definition of the function @ref Bartender_Summary().
  */
-
 #ifndef SUMMARY_HH
 #define SUMMARY_HH
 
@@ -16,40 +15,19 @@
 #include "bar.hh"
 #include "SiPM.hh"
 
-using namespace std;
+/**
+ * @brief Writes the summary of the Bartender to a text file, updating it at
+ * the end of every simulation.
+ * The summary includes:
+ * - Bartender ID (equal to the ID of the MC_LYSO), date, username and duration;
+ * - Settings related to the MPPC working point.
+ *
+ *
+ * @param duration The duration (in seconds) of the simulation
+ * @param bar The Bar class instance pointer
+ * @param sipm The SiPM struct instance pointer
+ */
+void Bartender_Summary(Double_t duration, Bar* bar, SiPM* sipm);
 
 
-void Bartender_Summary(Double_t duration, Bar* bar, SiPM* sipm)
-{
-    ofstream file("Bartender_Summaries.txt", ios::app);
-
-    if(file.is_open())
-    {
-        file << "Bartender serial number (MCID): " << bar->GetID() << "\n";
-        file << endl;
-        time_t now = time(0);
-        tm* current_time = localtime(&now);
-        file << "Date: " << asctime(current_time);
-        file << "User Name: " << getlogin() << endl;
-        file << "Duration of the simulation: " << duration << endl;
-        file << endl;
-        file << "SiPM: " << sipm->fBrand << " " << sipm->fTypeNo << "\n";
-        file << "Voltage: " << sipm->fV << " V\n";
-        file << "Temperature: " << sipm->fT << "°C\n";
-        file << "R_shaper: " << sipm->fR_shaper << " Ohm\n";
-        file << "Gain: " << sipm->fGain << " db\n";
-        file << "Noise (sigma): " << sipm->fSigmaNoise << " V\n\n";
-
-        file << "Number of events: " << bar->GetEvents() << "\n\n";
-        file << "########################################################\n\n";
-
-        file.close();
-    }
-    else
-    {
-        cout << "Can't open summary file!" << endl;
-    }
-}
-
-
-#endif  //SUMMARY_HH
+#endif  // SUMMARY_HH

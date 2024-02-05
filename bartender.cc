@@ -5,141 +5,126 @@
 //                                                                            //
 //****************************************************************************//
 
-/** 
+/**
  * @file bartender.cc
- * @brief main file of the project.
+ * @brief Definition of the main function of Bartender_LYSO.
  */
 #include <iostream>
-#include <fstream>
 #include <vector>
-#include <cfloat>
 #include <chrono>
-
-#include <TF1.h>
+ 
 #include <TFile.h>
-#include <TGraph.h>
-#include <TH3D.h>
-#include <TMath.h>
-#include <TString.h>
-#include <TSystem.h>
 #include <TTree.h>
-#include <TRandom3.h>
-#include <TCanvas.h>
-
+ 
 #include "globals.hh"
 #include "configure.hh"
 #include "summary.hh"
 #include "bar.hh"
 #include "SiPM.hh"
-
+ 
 using namespace std;
-using namespace TMath;
 
-
-
+/**
+ * @brief Main of the application.
+ *
+ * It manages the program flow. To begin with, it creates instances of the Bar
+ * and SiPM classes and invokes Bartender_Configure() and Bar::SetParsDistro()
+ * method. Next, it accesses the "lyso" TTree from the Monte Carlo simulation.
+ * After initializing all the waveform containers through
+ * Bar::InitializeBaselines(), it initiates the core of the simulation. By
+ * looping through all events and hit collections in the TTree, it constructs
+ * the waveforms by calling Bar::SetFrontWaveforms() and
+ * Bar::SetBackWaveform(). Finally, it saves all the data using Bar::SaveBar()
+ * and invokes Bartender_Summary(). 
+ */
 int main(int argc, char** argv)
 {
     cout << "Start" << endl;
 
+    // Get input files
     const char *mcFilename = argv[1];
     const char *sipmFilename = argv[2];
-    
+
+    // Intantiates and configure SiPM and Bar members
     SiPM *sipm = new SiPM();
     Bar *bar = new Bar(mcFilename);
     Bartender_Configure(sipmFilename, bar, sipm);
-    
+
+    // Set the parameters histogram
     bar->SetParsDistro();
 
+    // Access the "lyso" TTree and its useful branches
+    unique_ptr<TFile> mcFile(TFile::Open(mcFilename, "READ"));
+    TTree *lyso = mcFile->Get<TTree>("lyso");
 
-    TFile *mcFile = TFile::Open(mcFilename, "READ");
-    TTree *tFront = mcFile->Get<TTree>("F");
-    TTree *tBack = mcFile->Get<TTree>("B");
-    TTree *tCry = mcFile->Get<TTree>("Cry");
+    lyso->SetBranchStatus("*", false);
 
-    tFront->SetBranchStatus("*", false);
-    tBack->SetBranchStatus("*", false);
-    tCry->SetBranchStatus("*", false);
+    lyso->SetBranchStatus("Event", true);
+    lyso->SetBranchStatus("NHits_F", true);
+    lyso->SetBranchStatus("NHits_B", true);    
+    lyso->SetBranchStatus("T_F", true);
+    lyso->SetBranchStatus("Ch_F", true);
+    lyso->SetBranchStatus("T_B", true);
+    lyso->SetBranchStatus("Ch_B", true);
 
-    tFront->SetBranchStatus("fEvent", true);
-    tFront->SetBranchStatus("fT", true);
-    tFront->SetBranchStatus("fChannel", true);
-    tBack->SetBranchStatus("fEvent", true);
-    tBack->SetBranchStatus("fT", true);
-    tBack->SetBranchStatus("fChannel", true);
-    tCry->SetBranchStatus("fEvent", true);
-    tCry->SetBranchStatus("fTin", true);
+    int fEvent;
+    int fNHits_F, fNHits_B;
+    vector<double> *fT_F = 0, *fT_B = 0;
+    vector<int> *fCh_F = 0, *fCh_B = 0;
 
-
-    Int_t fEvent_front, fEvent_back, fChannel_front, fChannel_back;
-    Double_t fT_front, fT_back;
-
-    tFront->SetBranchAddress("fEvent", &fEvent_front);
-    tBack->SetBranchAddress("fEvent", &fEvent_back);
-
-    tFront->SetBranchAddress("fChannel", &fChannel_front);
-    tBack->SetBranchAddress("fChannel", &fChannel_back);
-
-    tFront->SetBranchAddress("fT", &fT_front);
-    tBack->SetBranchAddress("fT", &fT_back);
-
-    if(!(tFront->GetMaximum("fEvent") == tBack->GetMaximum("fEvent") && tBack->GetMaximum("fEvent") == tCry->GetMaximum("fEvent"))) 
-    {
-        cerr << "Error: something wrong in the MC file happened: events in trees are not the same" << endl;
-        return 1;
-    }
+    lyso->SetBranchAddress("Event", &fEvent);
+    lyso->SetBranchAddress("NHits_F", &fNHits_F);
+    lyso->SetBranchAddress("NHits_B", &fNHits_B);
+    lyso->SetBranchAddress("Ch_F", &fCh_F);
+    lyso->SetBranchAddress("Ch_B", &fCh_B);
+    lyso->SetBranchAddress("T_F", &fT_F);
+    lyso->SetBranchAddress("T_B", &fT_B);
 
     cout << "Trees loaded. Now there will be the Bartender" << endl;
 
-
-    Int_t fNumberofEvents = tCry->GetMaximum("fEvent") + 1;
+    // Get the number of events and initialize WF containers
+    Int_t fNumberofEvents = lyso->GetEntries();
     bar->InitializeBaselines(fNumberofEvents);
 
+    // Start with the Bartender
     auto start_chrono = chrono::high_resolution_clock::now();
-    Int_t evIdx;
-    for(Int_t k = 0; k < tFront->GetEntries(); k++)
+
+    for(Int_t k = 0; k < fNumberofEvents; k++)
     {
-        tFront->GetEntry(k);
-        
-        bar->SetFrontWaveform(fEvent_front, fChannel_front, fT_front);
+        lyso->GetEntry(k);
 
-        if(k == 0) evIdx = fEvent_front;
-        if(k!= 0 && evIdx != fEvent_front)
+        Int_t *fCh_F_data = fCh_F->data();
+        Int_t *fCh_B_data = fCh_B->data();
+        Double_t *fT_F_data =  fT_F->data();
+        Double_t *fT_B_data =  fT_B->data();
+
+        for(Int_t j = 0; j < fNHits_F; j++)
         {
-            cout << "Processed Front Event " << evIdx << endl;
-            evIdx = fEvent_front;
+            bar->SetFrontWaveform(fEvent, fCh_F_data[j], fT_F_data[j]);
         }
-    }
-    cout << "Processed Front Event " << evIdx << endl;
-    cout << "Done Front Detector" << endl;
-
-
-    for(Int_t k = 0; k < tBack->GetEntries(); k++)
-    {
-        tBack->GetEntry(k);
-        
-        bar->SetBackWaveform(fEvent_back, fChannel_back, fT_back);
-
-        if(k == 0) evIdx = fEvent_back;
-        if(k!= 0 && evIdx != fEvent_back)
+        for(Int_t j = 0; j < fNHits_B; j++)
         {
-            cout << "Processed Back Event " << evIdx << endl;
-            evIdx = fEvent_back;
+            bar->SetBackWaveform(fEvent, fCh_B_data[j], fT_B_data[j]);
         }
-    }
-    cout << "Processed Back Event " << evIdx << endl;
-    cout << "Done Back Detector" << endl;
 
+        if(k%(fNumberofEvents/10) == 0) cout << "Processed " << k << " events" << endl;
+    }
+
+    // Save data
     bar->SaveBar();
 
     auto end_chrono = chrono::high_resolution_clock::now();
     chrono::duration<Double_t> duration = end_chrono - start_chrono;
 
+    // Save summary
     Bartender_Summary(duration.count(), bar, sipm);
 
-
-    mcFile->Close();
+    // Free the memory
+    lyso->ResetBranchAddresses();
+    delete fT_F, fT_B, fCh_F, fCh_B;
     delete sipm;
     delete bar;
 
+    // Finally
     return 0;
 } 

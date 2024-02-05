@@ -1,27 +1,15 @@
 /**
  * @file globals.hh
- * @brief Definition of global parameters shared among classes and functions.
+ * @brief Definition of global constant values for the simulation.
  */
 #ifndef GLOBALS_HH
 #define GLOBALS_HH
 
-using namespace std;
-using namespace TMath;
 
-#include <TF1.h>
-#include <TFile.h>
-#include <TGraph.h>
-#include <TH3D.h>
-#include <TMath.h>
-#include <TString.h>
-#include <TSystem.h>
-#include <TTree.h>
-#include <TRandom3.h>
+constexpr Int_t CHANNELS = 115; /**< @brief Number of channels of the detectors */
+constexpr Int_t SAMPLINGS = 1024; /**< @brief Number of samplings for one waveform */
 
-#define CHANNELS 115    ///< Number of channels of the detectors
-#define SAMPLINGS 1024  ///< Number of samplings for one waveform
-
-#define ZERO_TIME_BIN 450   ///< Delay of all waveforms in the [0, 1023] bins window
+constexpr Int_t ZERO_TIME_BIN = 450; /**< @brief Delay of all waveforms in the [0, 1023] bins window */
 
 
-#endif  //GLOBALS_HH
+#endif  // GLOBALS_HH
