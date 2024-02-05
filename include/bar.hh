@@ -145,7 +145,7 @@ public:
     }
 
     inline Int_t GetEvents() const { return EVENTS; } /**< @brief Returns the number of events in the run. */
-    inline Int_t GetID() const { return fID; } /**< Returns the ID of the Monte Carlo. */
+    inline Int_t GetID() const { return fID; } /**< @brief Returns the ID of the Monte Carlo. */
 private:
     Int_t EVENTS; /**< @brief Number of events in the run */
     Int_t fID; /**< @brief Run ID of the Monte Carlo */
