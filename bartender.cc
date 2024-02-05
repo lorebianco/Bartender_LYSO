@@ -27,9 +27,10 @@ using namespace std;
 /**
  * @brief Main of the application.
  *
- * It manages the program flow. To begin with, it creates instances of the Bar
- * and SiPM classes and invokes Bartender_Configure() and Bar::SetParsDistro()
- * method. Next, it accesses the "lyso" TTree from the Monte Carlo simulation.
+ * It manages the simulation flow. To begin with, it creates instances of the
+ * Bar and SiPM classes and invokes Bartender_Configure() and
+ * Bar::SetParsDistro() method. Next, it accesses the "lyso" TTree from the
+ * Monte Carlo simulation.
  * After initializing all the waveform containers through
  * Bar::InitializeBaselines(), it initiates the core of the simulation. By
  * looping through all events and hit collections in the TTree, it constructs
