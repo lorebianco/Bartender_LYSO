@@ -1,0 +1,15 @@
+<map id="include/SiPM.hh" name="include/SiPM.hh">
+<area shape="rect" id="Node000001" title="Definition of the struct SiPM." alt="" coords="131,5,246,31"/>
+<area shape="rect" id="Node000002" href="$bartender_8cc.html" title="Definition of the main function of Bartender_LYSO." alt="" coords="142,153,234,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,47,191,152,186,152,186,47"/>
+<area shape="rect" id="Node000003" href="$configure_8hh.html" title="Declaration of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="15,79,151,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,42,102,81,99,76,156,38"/>
+<area shape="rect" id="Node000005" href="$summary_8hh.html" title="Definition of the function Bartender_Summary()." alt="" coords="225,79,362,105"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="220,38,277,76,274,81,217,42"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="115,111,172,150,169,154,112,116"/>
+<area shape="rect" id="Node000004" href="$configure_8cc.html" title="Definition of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="5,153,118,178"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="78,120,68,153,63,151,72,119"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="265,116,208,154,205,150,262,111"/>
+<area shape="rect" id="Node000006" href="$summary_8cc.html" title="Definition of the function Bartender_Summary()" alt="" coords="258,153,372,178"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="304,119,314,151,309,153,299,120"/>
+</map>
