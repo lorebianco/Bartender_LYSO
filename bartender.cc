@@ -68,10 +68,10 @@ int main(int argc, char** argv)
     lyso->SetBranchStatus("T_B", true);
     lyso->SetBranchStatus("Ch_B", true);
 
-    int fEvent;
-    int fNHits_F, fNHits_B;
-    vector<double> *fT_F = 0, *fT_B = 0;
-    vector<int> *fCh_F = 0, *fCh_B = 0;
+    Int_t fEvent;
+    Int_t fNHits_F, fNHits_B;
+    vector<Double_t> *fT_F = 0, *fT_B = 0;
+    vector<Int_t> *fCh_F = 0, *fCh_B = 0;
 
     lyso->SetBranchAddress("Event", &fEvent);
     lyso->SetBranchAddress("NHits_F", &fNHits_F);
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
             bar->SetBackWaveform(fEvent, fCh_B_data[j], fT_B_data[j]);
         }
 
-        if(k%(fNumberofEvents/10) == 0) cout << "Processed " << k << " events" << endl;
+        if(k%(fNumberofEvents/10) == 0) cout << "Processed " << k+1 << " events" << endl;
     }
 
     // Save data
