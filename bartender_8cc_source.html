@@ -140,10 +140,10 @@ $(function() { codefold.init(0); });
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;T_B&quot;</span>, <span class="keyword">true</span>);</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;Ch_B&quot;</span>, <span class="keyword">true</span>);</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keywordtype">int</span> fEvent;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keywordtype">int</span> fNHits_F, fNHits_B;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    vector&lt;double&gt; *fT_F = 0, *fT_B = 0;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    vector&lt;int&gt; *fCh_F = 0, *fCh_B = 0;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    Int_t fEvent;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    Int_t fNHits_F, fNHits_B;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    vector&lt;Double_t&gt; *fT_F = 0, *fT_B = 0;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    vector&lt;Int_t&gt; *fCh_F = 0, *fCh_B = 0;</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;Event&quot;</span>, &amp;fEvent);</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;NHits_F&quot;</span>, &amp;fNHits_F);</div>
@@ -180,7 +180,7 @@ $(function() { codefold.init(0); });
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            bar-&gt;<a class="code hl_function" href="classBar.html#acc4bad81634d44435b108ff797e71266">SetBackWaveform</a>(fEvent, fCh_B_data[j], fT_B_data[j]);</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        }</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">if</span>(k%(fNumberofEvents/10) == 0) cout &lt;&lt; <span class="stringliteral">&quot;Processed &quot;</span> &lt;&lt; k &lt;&lt; <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; endl;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">if</span>(k%(fNumberofEvents/10) == 0) cout &lt;&lt; <span class="stringliteral">&quot;Processed &quot;</span> &lt;&lt; k+1 &lt;&lt; <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; endl;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    }</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="comment">// Save data</span></div>
