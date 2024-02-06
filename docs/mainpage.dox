@@ -99,7 +99,7 @@ To execute the simulation, you need to provide the ROOT file of the Monte Carlo 
 
 > Status/I:my_charge/D:A/D:Tau_rise/D:Tau_dec/D
 
-to be correctly read by the function TTree::ReadFile(). A dataset is shown [HERE](link to dataset).
+to be correctly read by the function TTree::ReadFile(). A dataset is shown <a href="https://github.com/lorebianco/Bartender_LYSO/blob/main/pars_datasets/dati_spectrum_T20_V5478_1pe_fit_params.txt">here</a>.
 
 Finally, the idea is that the user has reviewed the histograms of the best fit results and is able to establish, in addition to which charge cuts to apply to the spectrum, also the binning, minimum, and maximum for each of the 3 parameters through last settings shown in the mac.
 
@@ -108,7 +108,7 @@ Finally, the idea is that the user has reviewed the histograms of the best fit r
 
 @image html wavesoutput.png width=1100
 
-Given the non-optimized format of the output file, a macro is made available (here) to display the plot of the generated waveforms.
+Given the non-optimized format of the output file, a macro is made available <a href="https://github.com/lorebianco/Bartender_LYSO/blob/main/analyzeSamples/loadSamples.cc">here</a> to display the plot of the generated waveforms.
 
 Executing from the root terminal
 
