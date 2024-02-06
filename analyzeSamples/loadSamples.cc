@@ -3,20 +3,26 @@
 
 using namespace std;
 
-#define CHANNELS 115
-#define SAMPLINGS 1024
+// Number of channels
+constexpr Int_t CHANNELS = 115;
+// Number of samples
+constexpr Int_t SAMPLINGS = 1024;
 
+// Reads samples from a given file for a specific event, detector type, and channel
 Bool_t ReadSamples(const char* filename, Int_t eventNumber, Bool_t isFront, Int_t channelNumber, Double_t eventData[])
 {
     ifstream inputFile(filename);
 
-    if(!inputFile.is_open()) {
-        cout << "Can't open input file!" << endl;
+    // Check if the input file can be opened
+    if(!inputFile.is_open())
+    {
+        cerr << "Can't open input file!" << endl;
         return false;
     }
 
     string line;
-    string eventType = isFront ? "#Front Detector" : "#Back Detector";
+    // Determine the event and detector headers
+    string detectorType = isFront ? "#Front Detector" : "#Back Detector";
     string eventHeader = "#Event " + to_string(eventNumber);
 
     Bool_t foundEvent = false;
@@ -25,18 +31,19 @@ Bool_t ReadSamples(const char* filename, Int_t eventNumber, Bool_t isFront, Int_
     Bool_t readData = false;
     Int_t currentChannel = -1;
 
-    // Trova l'evento appropriato (Front o Back) nel file di input
+    // Find the waveform in the input file
     while(getline(inputFile, line))
     {
+        // Look for the specific event
         if(line == eventHeader)
         {
             foundEvent = true;
-            getline(inputFile, line); // Salta la riga vuota dopo l'intestazione dell'evento
+            getline(inputFile, line); // Skip the blank line after the event header
 
-            // Cerca il tipo di evento specifico (Front o Back)
             while(getline(inputFile, line))
             {
-                if(line == eventType)
+                // Look for the specific detector
+                if(line == detectorType)
                 {
                     readData = true;
                     break;
@@ -50,11 +57,13 @@ Bool_t ReadSamples(const char* filename, Int_t eventNumber, Bool_t isFront, Int_
                     Int_t bin;
                     inputFile >> bin;
 
+                    // Look for the specific channel
                     for(Int_t ch = 0; ch < CHANNELS; ch++)
                     {
                         Double_t data;
                         inputFile >> data;
 
+                        // Store samplings
                         if(ch == channelNumber)
                         {
                             eventData[bin] = data;
@@ -70,9 +79,10 @@ Bool_t ReadSamples(const char* filename, Int_t eventNumber, Bool_t isFront, Int_
 
     inputFile.close();
 
+    // Check if the event or channel was found
     if (!foundEvent || !foundChannel)
     {
-        cout << "Can't find event or channel!" << endl;
+        cerr << "Can't find event or channel!" << endl;
         return false;
     }
 
@@ -80,13 +90,12 @@ Bool_t ReadSamples(const char* filename, Int_t eventNumber, Bool_t isFront, Int_
 }
 
 
-
-
+// Draws waveforms from a specified event, detector and channel
 void DrawSamples(const char* filename, int eventNumberToLoad, bool isFront, int channelNumberToLoad)
 {
     Double_t eventData[SAMPLINGS];
 
-    // Carica i dati Front relativi all'evento specificato e al canale specificato nell'array eventData
+    // Load data related to the specified event, detector and channel into the eventData array
     Bool_t success = ReadSamples(filename, eventNumberToLoad, isFront, channelNumberToLoad, eventData);
 
     if(success)
@@ -98,6 +107,7 @@ void DrawSamples(const char* filename, int eventNumberToLoad, bool isFront, int 
         }
         TGraph *graph = new TGraph(SAMPLINGS, bins, eventData);
 
+        // Set a title for the plot
         TString detector;
         if(isFront) detector = "Front-";
         else detector = "Back-"; 
