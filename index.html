@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.10.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Bartender LYSO: Main Page</title>
+<title>Bartender LYSO: Bartender_LYSO Documentation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -78,10 +78,114 @@ $(function() {
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">Bartender LYSO Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Bartender_LYSO Documentation </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><h1><a class="anchor" id="intro"></a>
+Introduction</h1>
+<p>The <em>Bartender_LYSO</em> project is a simulation of the waveform output from the MPPCs (SiPMs) of the LYSO calorimeter prototype, entirely written in C++ and utilizing the ROOT libraries. It's directly connected to the Geant4-based Monte Carlo simulation of the detector (see <a href="https://lorebianco.github.io/MC_LYSO/">MC_LYSO</a> for all details), as it simulates the digitizer and, consequently, the readout.</p>
+<p>On these simulated data, it will be possible to test waveform analysis algorithms, searching for the best estimators for energy, time, and position, thus extracting a prediction of experimental resolutions.</p>
+<p>This is only a very preliminary version, and several improvements are planned for the future. In addition to expanding its physical aspects (introducing SiPMs crosstalk, afterpulses, different sampling rates, jitter, and so on), there is an intention to enable a multithreading mode and set the output in ROOT format (likely, everything will be adapted for the use of RDataFrame).</p>
+<h1><a class="anchor" id="wfconstruction"></a>
+The Waveform Construction concept</h1>
+<p>The final output waveform from a <a class="el" href="structSiPM.html" title="Struct for storing MPPC/SiPM settings for waveform generation.">SiPM</a> is constructed by summing single-photon waves, one for each detected scintillation photon.</p>
+<p>The analytical form of the 1-Phel waveform is described by a double exponential function:  </p><p class="formulaDsp">
+\[
+\text{Wave}_{1-Phel}(t) = -A \Bigg( \exp \Bigg( -\frac{t - t_{phel}}{\tau_{\text{RISE}}} \Bigg) - \exp \Bigg( -\frac{t - t_{phel}}{\tau_{\text{DEC}}} \Bigg) \Bigg) \theta( t - t_{phel} )
+\]
+</p>
+<p> where the parameter \( t_{phel} \) is the detection time of the scintillation photon, taken from the MC_LYSO data.</p>
+<p>The parameters \((A, \tau_{\text{RISE}}, \tau_{\text{DEC}})\) are not fixed but fluctuate statistically (and are correlated with each other) for each 1-Phel waveform: the next two sections describe how the distributions and sampling of the parameters have been implemented.</p>
+<p>Then, for \( N \) scintillation photons:  </p><p class="formulaDsp">
+\[
+\text{Wave}_{\text{SiPM}}(t) = \sum^{N}_{i} \Bigg[-A_{i} \Bigg( \exp \Bigg( -\frac{t - t_{phel, i}}{\tau_{\text{RISE}, i}} \Bigg) - \exp \Bigg( -\frac{t - t_{phel, i}}{\tau_{\text{DEC}, i}} \Bigg) \Bigg) \theta( t - t_{phel, i} )\Bigg]
+\]
+</p>
+<p> To this, finally, Gaussian noise \( N(0, \sigma_{\text{Noise}})\) is added.</p>
+<h1><a class="anchor" id="template"></a>
+The Template for Parameters</h1>
+<div class="image">
+<img src="datasetimages.png" alt="" width="1000"/>
+</div>
+<p>The shape of the single-photoelectron waveform of a <a class="el" href="structSiPM.html" title="Struct for storing MPPC/SiPM settings for waveform generation.">SiPM</a> (and consequently its parameters) depends on the conditions of the acquisition electronics and the environment.</p>
+<p>The chosen strategy is to provide the user with maximum flexibility by allowing them to choose the working point to simulate the <a class="el" href="structSiPM.html" title="Struct for storing MPPC/SiPM settings for waveform generation.">SiPM</a> response, providing a dataset directly.</p>
+<p>To test the method, signals produced by the dark noise photoelectrons of an MPPC (Hamamatsu S13360-6050CS) were acquired. Subsequently, a best-fit was performed on each waveform, and the integral of the function was used as an estimator of the charge. From this, spectra were extracted (see image), and it was possible to identify the region of signals due to the first photoelectron.</p>
+<p>In addition to the charge, all the best-fit parameters were saved in a text file (see <a class="el" href="#howtorun">How to run</a>), which is then provided to Bartender_LYSO.</p>
+<p>These parameters, through the method <a class="el" href="classBar.html#a9aabbb315116410f6231e4ac05baf7fd" title="Sets the 3D histogram hPars.">Bar::SetParsDistro()</a>, populate a 3D histogram from which sampling occurs for each 1-Phel waveform using the TH3D::GetRandom3() method: this way, correlations between parameters are also taken into account.</p>
+<div class="image">
+<img src="Phase-Space.png" alt="" width="450"/>
+</div>
+<h1><a class="anchor" id="implementation"></a>
+Implementation and Flow of the Simulation</h1>
+<p>At the beginning of the application, the <a class="el" href="structSiPM.html" title="Struct for storing MPPC/SiPM settings for waveform generation.">SiPM</a> structure and the <a class="el" href="classBar.html" title="Class for managing waveform construction for all events and channels.">Bar</a> class are instantiated, and the <a class="el" href="configure_8cc.html#a684b7d226d649259cd2de2306cfc8a7e" title="Reads and processes a specific file to populate members of the Bar class and SiPM struct.">Bartender_Configure()</a> function is called, which loads all user settings. The <a class="el" href="structSiPM.html" title="Struct for storing MPPC/SiPM settings for waveform generation.">SiPM</a> structure is responsible for containing user-provided information about the detector and its operating point, while <a class="el" href="classBar.html" title="Class for managing waveform construction for all events and channels.">Bar</a> represents the "waveform generator".</p>
+<p>Subsequently, the <a class="el" href="classBar.html#acefbd7347c6ae2de1ecb44e9da3e71b1" title="3D Histogram of One-Phel waveform parameters from which sampling will occur">Bar::hPars</a> histogram of parameters is filled by invoking the <a class="el" href="classBar.html#a9aabbb315116410f6231e4ac05baf7fd" title="Sets the 3D histogram hPars.">Bar::SetParsDistro()</a> method.</p>
+<p>Next, the Monte Carlo simulation ROOT file is accessed, and the eventID, hit count, collections of scintillation photon detection times, and their corresponding detector channels are extracted from the <em>lyso</em> TTree branches.</p>
+<p>At this point, the core of the simulation begins.</p>
+<p>Through the method <a class="el" href="classBar.html#adf39b7769b745a7101e4848d2f95e45b" title="Method to initialize the entire fFront and fBack with a noise baseline.">Bar::InitializeBaselines()</a>, the containers for the waveforms <a class="el" href="classBar.html#a4b280db6798c3760d9fcb63ced894df0" title="Container for Front-Detector waveforms: a 3-dimensional matrix with indices for event,...">Bar::fFront</a> and <a class="el" href="classBar.html#add15e3f1f7f23f23e4875af09c3f19e7" title="Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event,...">Bar::fBack</a> are initialized with noise. They are pointer-to-pointer-to-pointer structures of type Double_t and represent 3D matrices [<a class="el" href="classBar.html#ae695c8c556d6aba760c186c9b8f287db" title="Number of events in the run.">Bar::EVENTS</a>]x[<a class="el" href="globals_8hh.html#aea82036781da9f8db06aa7843afe025a">CHANNELS</a>]x[<a class="el" href="globals_8hh.html#a71f33fec43804efff8715e5cdc32c35b">SAMPLINGS</a>]. This type of structure was chosen for two reasons:</p><ul>
+<li>When the TTree <em>lyso</em> is read, the detector channels in the collection will arrive in random order, so the idea is to prepare the containers and update the waveforms in the corresponding "box" as needed;</li>
+<li>For optimization reasons, both in terms of memory and time, it does not make sense to manipulate the "entire function" (for example, TF1 objects), but it is better to work with the finite number of samples from the beginning.</li>
+</ul>
+<p>However, in future versions, this system will definitely be deprecated in favor of a faster and more memory-efficient method.</p>
+<p>Next, the event loop is executed, during which entries from the TTree are extracted. While looping over the entries of the collections of the two detectors, the methods <a class="el" href="classBar.html#adb5609c4d5abd1caf793e21163ebc4e5" title="Method to add a I-Phel waveform to the corresponding event and channel of the Front-Detector.">Bar::SetFrontWaveform()</a> and <a class="el" href="classBar.html#acc4bad81634d44435b108ff797e71266" title="Method to add a I-Phel waveform to the corresponding event and channel of the Back-Detector.">Bar::SetBackWaveform()</a> are called one by one.</p>
+<p>These functions receive as input the eventID, the channel number, and the detection time of the optical photon. They first sample the remaining parameters (see <a class="el" href="#template">The Template for Parameters</a>), and then add bin by bin the new 1-Phel waveform, evaluated using <a class="el" href="classBar.html#abb66d4cfad1a470eaad9ff85ed292f87" title="Returns the value at t of the analytical form of the One Photo-Electron waveform.">Bar::Wave_OnePhel()</a>, to that present in the container at the selected indices.</p>
+<p>At the end of the loop, the two containers are complete, and they are saved using <a class="el" href="classBar.html#a4ddd84ae498aa33360f73e28e19ae3ca" title="Saves all the samples from fFront and fBack into a text file.">Bar::SaveBar()</a> on a text file <em>BarID_[runID].txt</em>.</p>
+<h1><a class="anchor" id="summary"></a>
+Summary of the Bartender simulation</h1>
+<p>At the very end of the application, the function <a class="el" href="summary_8cc.html#a63e31ff74dfc10b5877b0031eb10ffa6" title="Writes the summary of the Bartender to a text file, updating it at the end of every simulation....">Bartender_Summary()</a> is invoked. It creates (or updates) a file named <em>Bartender_Summaries.txt</em> where a summary of the simulation is written (the ID is the same as that of MC_LYSO). The recap is extracted from the macro file used (see the next paragraph) and includes all the information about the MPPC and its working point. Additionally, it records the date, user name and duration.</p>
+<p>An example output is displayed:</p>
+<div class="fragment"><div class="line"><span class="comment">// Bartender_Summaries file snippet</span></div>
+<div class="line"> </div>
+<div class="line">Bartender serial number (MCID): 1707049321</div>
+<div class="line"> </div>
+<div class="line">Date: Mon Feb  5 01:28:18 2024</div>
+<div class="line">User Name: lorenzo</div>
+<div class="line">Duration of the simulation: 49.9395 s</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_struct" href="structSiPM.html">SiPM</a>: Hamamatsu S13360-6050CS</div>
+<div class="line">Voltage: 54.78 V</div>
+<div class="line">Temperature: 20°C</div>
+<div class="line">R_shaper: 1580 Ohm</div>
+<div class="line">Gain: 60 db</div>
+<div class="line">Noise (sigma): 0.02 V</div>
+<div class="line"> </div>
+<div class="line">Number of events: 16</div>
+<div class="line"> </div>
+<div class="line">########################################################</div>
+<div class="ttc" id="astructSiPM_html"><div class="ttname"><a href="structSiPM.html">SiPM</a></div><div class="ttdoc">Struct for storing MPPC/SiPM settings for waveform generation.</div><div class="ttdef"><b>Definition</b> <a href="SiPM_8hh_source.html#l00013">SiPM.hh:14</a></div></div>
+</div><!-- fragment --><h1><a class="anchor" id="howtorun"></a>
+How to run</h1>
+<p>To execute the simulation, you need to provide the ROOT file of the Monte Carlo simulation of the detector and a macro file for configuration, for example:</p>
+<blockquote class="doxtable">
+<p>&zwj;./bartender MCID_1707049321.root SiPM.mac </p>
+</blockquote>
+<p><a href="https://github.com/lorebianco/Bartender_LYSO/blob/main/SiPM.mac">SiPM.mac</a> is a ready-to-use template that must be modified with various settings. In this file, you also provide the path to the parameter files; it is mandatory for it to contain at least the following data in columnar format: the Fit status (0 if converged), charge, parameter \( A \), parameter \( \tau_{\text{RISE}}\), parameter \( \tau_{\text{DEC}}\), and the header for these must be:</p>
+<blockquote class="doxtable">
+<p>&zwj;Status/I:my_charge/D:A/D:Tau_rise/D:Tau_dec/D </p>
+</blockquote>
+<p>to be correctly read by the function TTree::ReadFile(). A dataset is shown [HERE](link to dataset).</p>
+<p>Finally, the idea is that the user has reviewed the histograms of the best fit results and is able to establish, in addition to which charge cuts to apply to the spectrum, also the binning, minimum, and maximum for each of the 3 parameters through last settings shown in the mac.</p>
+<h1><a class="anchor" id="output"></a>
+Output Example</h1>
+<div class="image">
+<img src="wavesoutput.png" alt="" width="1100"/>
+</div>
+<p>Given the non-optimized format of the output file, a macro is made available (here) to display the plot of the generated waveforms.</p>
+<p>Executing from the root terminal</p>
+<blockquote class="doxtable">
+<p>&zwj;.L loadSamples.cc </p>
+</blockquote>
+<p>you can use the function DrawSamples providing it with parameters (in order) the output file name, the eventID, 1 for Front detector or 0 for Back detector and the channel number.</p>
+<p>For example:</p>
+<blockquote class="doxtable">
+<p>&zwj;DrawSamples("/home/lorenzo/MEG_Project/Simulazioni/Bartender_LYSO/build/BarID_1707049321.txt", 7, 1, 57) </p>
+</blockquote>
+<p>or</p>
+<blockquote class="doxtable">
+<p>&zwj;DrawSamples("/home/lorenzo/MEG_Project/Simulazioni/Bartender_LYSO/build/BarID_1707049321.txt", 7, 0, 2) </p>
+</blockquote>
+<p>The two waveforms are shown in the figure. </p>
+</div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"/>
 </div><!-- contents -->
 <!-- start footer part -->
