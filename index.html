@@ -89,7 +89,7 @@ Introduction</h1>
 <p>This is only a very preliminary version, and several improvements are planned for the future. In addition to expanding its physical aspects (introducing SiPMs crosstalk, afterpulses, different sampling rates, jitter, and so on), there is an intention to enable a multithreading mode and set the output in ROOT format (likely, everything will be adapted for the use of RDataFrame).</p>
 <h1><a class="anchor" id="wfconstruction"></a>
 The Waveform Construction concept</h1>
-<p>The final output waveform from a <a class="el" href="structSiPM.html" title="Struct for storing MPPC/SiPM settings for waveform generation.">SiPM</a> is constructed by summing single-photon waves, one for each detected scintillation photon.</p>
+<p>The final output waveform from a <a class="el" href="structSiPM.html" title="Struct for storing MPPC/SiPM settings for waveform generation.">SiPM</a> is constructed by summing single-photoelectron waves, one for each detected scintillation photon.</p>
 <p>The analytical form of the 1-Phel waveform is described by a double exponential function:  </p><p class="formulaDsp">
 \[
 \text{Wave}_{1-Phel}(t) = -A \Bigg( \exp \Bigg( -\frac{t - t_{phel}}{\tau_{\text{RISE}}} \Bigg) - \exp \Bigg( -\frac{t - t_{phel}}{\tau_{\text{DEC}}} \Bigg) \Bigg) \theta( t - t_{phel} )
