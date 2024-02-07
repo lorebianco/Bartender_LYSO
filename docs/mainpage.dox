@@ -9,7 +9,7 @@ This is only a very preliminary version, and several improvements are planned fo
 
 
 @section wfconstruction The Waveform Construction concept
-The final output waveform from a SiPM is constructed by summing single-photon waves, one for each detected scintillation photon.
+The final output waveform from a SiPM is constructed by summing single-photoelectron waves, one for each detected scintillation photon.
 
 The analytical form of the 1-Phel waveform is described by a double exponential function:
 \f[
