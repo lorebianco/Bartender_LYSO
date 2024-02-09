@@ -33,7 +33,7 @@ The shape of the single-photoelectron waveform of a SiPM (and consequently its p
 
 The chosen strategy is to provide the user with maximum flexibility by allowing them to choose the working point to simulate the SiPM response, providing a dataset directly.
 
-To test the method, signals produced by the dark noise photoelectrons of an MPPC (Hamamatsu S13360-6050CS) were acquired. Subsequently, a best-fit was performed on each waveform, and the integral of the function was used as an estimator of the charge. From this, spectra were extracted (see image), and it was possible to identify the region of signals due to the first photoelectron.
+To test the method, signals produced by the dark noise electrons of an MPPC (Hamamatsu S13360-6050CS) were acquired. Subsequently, a best-fit was performed on each waveform, and the integral of the function was used as an estimator of the charge. From this, spectra were extracted (see image), and it was possible to identify the region of signals due to the first photoelectron.
 
 In addition to the charge, all the best-fit parameters were saved in a text file (see @ref howtorun), which is then provided to Bartender_LYSO.
 
