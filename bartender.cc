@@ -18,7 +18,6 @@
  
 #include "globals.hh"
 #include "configure.hh"
-#include "summary.hh"
 #include "bar.hh"
 #include "SiPM.hh"
  
@@ -40,15 +39,18 @@ using namespace std;
  */
 int main(int argc, char** argv)
 {
-    cout << "Start" << endl;
-
     // Get input files
     const char *mcFilename = argv[1];
     const char *sipmFilename = argv[2];
+    Int_t threadID = 0;
+    if(argc == 4)
+        threadID = std::stoi(argv[3]);
 
+    cout << "BarWT" << threadID << ">> Start" << endl;
+    
     // Intantiates and configure SiPM and Bar members
     SiPM *sipm = new SiPM();
-    Bar *bar = new Bar(mcFilename);
+    Bar *bar = new Bar(mcFilename, threadID);
     Bartender_Configure(sipmFilename, bar, sipm);
 
     // Set the parameters histogram
@@ -81,16 +83,16 @@ int main(int argc, char** argv)
     lyso->SetBranchAddress("T_F", &fT_F);
     lyso->SetBranchAddress("T_B", &fT_B);
 
-    cout << "Trees loaded. Now there will be the Bartender" << endl;
+    cout << "BarWT" << threadID << ">> Trees loaded. Now there will be the Bartender" << endl;
 
     // Get the number of events and initialize WF containers
-    Int_t fNumberofEvents = lyso->GetEntries();
-    bar->InitializeBaselines(fNumberofEvents);
+    Int_t nEntries = lyso->GetEntries();
+    bar->SetEvents(nEntries);
 
     // Start with the Bartender
     auto start_chrono = chrono::high_resolution_clock::now();
 
-    for(Int_t k = 0; k < fNumberofEvents; k++)
+    for(Int_t k = 0; k < nEntries; k++)
     {
         lyso->GetEntry(k);
 
@@ -99,16 +101,23 @@ int main(int argc, char** argv)
         Double_t *fT_F_data =  fT_F->data();
         Double_t *fT_B_data =  fT_B->data();
 
+        bar->InitializeBaselines(fEvent);
+
         for(Int_t j = 0; j < fNHits_F; j++)
         {
-            bar->SetFrontWaveform(fEvent, fCh_F_data[j], fT_F_data[j]);
+            bar->SetFrontWaveform(fCh_F_data[j], fT_F_data[j]);
         }
         for(Int_t j = 0; j < fNHits_B; j++)
         {
-            bar->SetBackWaveform(fEvent, fCh_B_data[j], fT_B_data[j]);
+            bar->SetBackWaveform(fCh_B_data[j], fT_B_data[j]);
         }
-
-        if(k%(fNumberofEvents/10) == 0) cout << "Processed " << k+1 << " events" << endl;
+        
+        bar->SaveEvent();
+        bar->ClearContainers();
+        
+        // Print progress
+        if(nEntries < 10 || k % (nEntries / 10) == 0)
+            cout << "BarWT" << threadID << ">> Processed " << k + 1 << " events" << endl;
     }
 
     // Save data
@@ -116,9 +125,6 @@ int main(int argc, char** argv)
 
     auto end_chrono = chrono::high_resolution_clock::now();
     chrono::duration<Double_t> duration = end_chrono - start_chrono;
-
-    // Save summary
-    Bartender_Summary(duration.count(), bar, sipm);
 
     // Free the memory
     lyso->ResetBranchAddresses();
