@@ -1,20 +1,19 @@
 <map id="include/globals.hh" name="include/globals.hh">
-<area shape="rect" id="Node000001" title="Definition of global constant values for the simulation." alt="" coords="325,5,449,31"/>
-<area shape="rect" id="Node000002" href="$bartender_8cc.html" title="Definition of the main function of Bartender_LYSO." alt="" coords="235,226,328,252"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="414,40,442,68,467,104,476,123,480,142,478,162,469,180,450,191,415,204,329,228,328,223,413,199,448,186,465,177,473,160,474,143,471,125,462,106,438,72,411,43"/>
-<area shape="rect" id="Node000003" href="$bar_8hh.html" title="Declaration of the class Bar." alt="" coords="231,79,332,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="358,42,301,81,298,76,355,38"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="284,120,284,226,279,226,279,120"/>
-<area shape="rect" id="Node000004" href="$configure_8hh.html" title="Declaration of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="319,153,455,178"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="313,111,370,150,367,154,310,116"/>
-<area shape="rect" id="Node000006" href="$summary_8hh.html" title="Definition of the function Bartender_Summary()." alt="" coords="5,153,142,178"/>
-<area shape="poly" id="edge7_Node000003_Node000006" title=" " alt="" coords="233,113,110,155,108,150,231,108"/>
-<area shape="rect" id="Node000008" href="$bar_8cc.html" title="Definition of the class Bar." alt="" coords="166,153,245,178"/>
-<area shape="poly" id="edge10_Node000003_Node000008" title=" " alt="" coords="259,117,220,154,216,150,256,114"/>
-<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="358,190,301,228,298,224,355,185"/>
-<area shape="rect" id="Node000005" href="$configure_8cc.html" title="Definition of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="352,226,464,252"/>
-<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="397,192,407,225,402,227,392,194"/>
-<area shape="poly" id="edge8_Node000006_Node000002" title=" " alt="" coords="124,181,247,223,245,228,122,186"/>
-<area shape="rect" id="Node000007" href="$summary_8cc.html" title="Definition of the function Bartender_Summary()" alt="" coords="17,226,130,252"/>
-<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="76,194,76,226,71,226,71,194"/>
+<area shape="rect" id="Node000001" title="Definition of global constant values for the simulation." alt="" coords="27,5,151,31"/>
+<area shape="rect" id="Node000002" href="$bartender_8cc.html" title="Definition of the main function of Bartender_LYSO." alt="" coords="5,226,98,252"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,46,56,226,51,226,82,45"/>
+<area shape="rect" id="Node000003" href="$bar_8hh.html" title="Declaration of the class Bar." alt="" coords="117,79,218,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="115,40,156,77,153,81,111,43"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="134,115,111,133,90,154,68,192,57,227,52,225,64,190,85,151,107,129,131,111"/>
+<area shape="rect" id="Node000004" href="$configure_8hh.html" title="Declaration of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="100,153,235,178"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="170,120,170,152,165,152,165,120"/>
+<area shape="rect" id="Node000006" href="$summary_8hh.html" title="Definition of the function Bartender_Summary()." alt="" coords="259,153,396,178"/>
+<area shape="poly" id="edge7_Node000003_Node000006" title=" " alt="" coords="209,109,301,150,299,155,207,114"/>
+<area shape="rect" id="Node000008" href="$bar_8cc.html" title="Definition of the class Bar." alt="" coords="420,153,499,178"/>
+<area shape="poly" id="edge9_Node000003_Node000008" title=" " alt="" coords="232,106,421,152,419,157,231,111"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="137,189,73,228,70,223,134,184"/>
+<area shape="rect" id="Node000005" href="$configure_8cc.html" title="Definition of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="122,226,234,252"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="174,193,179,225,174,226,169,194"/>
+<area shape="rect" id="Node000007" href="$summary_8cc.html" title="Definition of the function Bartender_Summary()" alt="" coords="271,226,384,252"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="330,194,330,226,325,226,325,194"/>
 </map>
