@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hpars_0',['hPars',['../classBar.html#acefbd7347c6ae2de1ecb44e9da3e71b1',1,'Bar']]]
+  ['samplings_0',['SAMPLINGS',['../globals_8hh.html#a71f33fec43804efff8715e5cdc32c35b',1,'globals.hh']]]
 ];

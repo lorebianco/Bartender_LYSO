@@ -105,32 +105,46 @@ $(function(){ initResizable(false); });
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="bar_8hh_source.html">bar.hh</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for Bar:</div>
+<div class="dyncontent">
+<div class="center"><img src="classBar__coll__graph.png" border="0" usemap="#aBar_coll__map" alt="Collaboration graph"/></div>
+<map name="aBar_coll__map" id="aBar_coll__map">
+<area shape="rect" title="Class for managing waveform construction for all events and channels." alt="" coords="9,94,51,120"/>
+<area shape="rect" href="structDAQ.html" title=" " alt="" coords="5,5,55,31"/>
+<area shape="poly" title=" " alt="" coords="33,47,33,94,27,94,27,47"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a74efd3b193da3d8baded6a35baed681d" id="r_a74efd3b193da3d8baded6a35baed681d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74efd3b193da3d8baded6a35baed681d">Bar</a> (const char *inputFilename)</td></tr>
-<tr class="memdesc:a74efd3b193da3d8baded6a35baed681d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor of the class.  <br /></td></tr>
-<tr class="separator:a74efd3b193da3d8baded6a35baed681d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a864f43994ac1998a2b6210551d84ecae" id="r_a864f43994ac1998a2b6210551d84ecae"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a864f43994ac1998a2b6210551d84ecae">Bar</a> (const char *inputFilename, Int_t threadID)</td></tr>
+<tr class="memdesc:a864f43994ac1998a2b6210551d84ecae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor of the class.  <br /></td></tr>
+<tr class="separator:a864f43994ac1998a2b6210551d84ecae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c7ebea0c189423591741ac438985316" id="r_a9c7ebea0c189423591741ac438985316"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c7ebea0c189423591741ac438985316">~Bar</a> ()</td></tr>
 <tr class="memdesc:a9c7ebea0c189423591741ac438985316"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor of the class.  <br /></td></tr>
 <tr class="separator:a9c7ebea0c189423591741ac438985316"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9aabbb315116410f6231e4ac05baf7fd" id="r_a9aabbb315116410f6231e4ac05baf7fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9aabbb315116410f6231e4ac05baf7fd">SetParsDistro</a> ()</td></tr>
 <tr class="memdesc:a9aabbb315116410f6231e4ac05baf7fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the 3D histogram <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a>.  <br /></td></tr>
 <tr class="separator:a9aabbb315116410f6231e4ac05baf7fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf39b7769b745a7101e4848d2f95e45b" id="r_adf39b7769b745a7101e4848d2f95e45b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf39b7769b745a7101e4848d2f95e45b">InitializeBaselines</a> (Int_t newEvents)</td></tr>
-<tr class="memdesc:adf39b7769b745a7101e4848d2f95e45b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to initialize the entire <a class="el" href="#a4b280db6798c3760d9fcb63ced894df0">fFront</a> and <a class="el" href="#add15e3f1f7f23f23e4875af09c3f19e7">fBack</a> with a noise baseline.  <br /></td></tr>
-<tr class="separator:adf39b7769b745a7101e4848d2f95e45b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb5609c4d5abd1caf793e21163ebc4e5" id="r_adb5609c4d5abd1caf793e21163ebc4e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb5609c4d5abd1caf793e21163ebc4e5">SetFrontWaveform</a> (Int_t event, Int_t channel, Double_t start)</td></tr>
-<tr class="memdesc:adb5609c4d5abd1caf793e21163ebc4e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to add a I-Phel waveform to the corresponding event and channel of the Front-Detector.  <br /></td></tr>
-<tr class="separator:adb5609c4d5abd1caf793e21163ebc4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc4bad81634d44435b108ff797e71266" id="r_acc4bad81634d44435b108ff797e71266"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc4bad81634d44435b108ff797e71266">SetBackWaveform</a> (Int_t event, Int_t channel, Double_t start)</td></tr>
-<tr class="memdesc:acc4bad81634d44435b108ff797e71266"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to add a I-Phel waveform to the corresponding event and channel of the Back-Detector.  <br /></td></tr>
-<tr class="separator:acc4bad81634d44435b108ff797e71266"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae48b29998690565fd22dbadf6bf00eb7" id="r_ae48b29998690565fd22dbadf6bf00eb7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae48b29998690565fd22dbadf6bf00eb7">InitializeBaselines</a> (Int_t event)</td></tr>
+<tr class="memdesc:ae48b29998690565fd22dbadf6bf00eb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to initialize the entire <a class="el" href="#a79d12d188526a711f6b2f59121c322dc">fFront</a> and <a class="el" href="#a272bbafc284027e2f97d18c8fdeb1ea8">fBack</a> with a noise baseline.  <br /></td></tr>
+<tr class="separator:ae48b29998690565fd22dbadf6bf00eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a461db396cea6f5697d578e49a5b556ec" id="r_a461db396cea6f5697d578e49a5b556ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a461db396cea6f5697d578e49a5b556ec">ClearContainers</a> ()</td></tr>
+<tr class="memdesc:a461db396cea6f5697d578e49a5b556ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to add a I-Phel waveform to the corresponding event and channel of the Front-Detector.  <br /></td></tr>
+<tr class="separator:a461db396cea6f5697d578e49a5b556ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50fd65d448ba2cb366c89f083819996c" id="r_a50fd65d448ba2cb366c89f083819996c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50fd65d448ba2cb366c89f083819996c">SetFrontWaveform</a> (Int_t channel, Double_t start)</td></tr>
+<tr class="separator:a50fd65d448ba2cb366c89f083819996c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae887a154084aea546ab1bb23575586ad" id="r_ae887a154084aea546ab1bb23575586ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae887a154084aea546ab1bb23575586ad">SetBackWaveform</a> (Int_t channel, Double_t start)</td></tr>
+<tr class="memdesc:ae887a154084aea546ab1bb23575586ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Method to add a I-Phel waveform to the corresponding event and channel of the Back-Detector.  <br /></td></tr>
+<tr class="separator:ae887a154084aea546ab1bb23575586ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a763498c48fd020b7ffda58a27ae13e4b" id="r_a763498c48fd020b7ffda58a27ae13e4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a763498c48fd020b7ffda58a27ae13e4b">SaveEvent</a> ()</td></tr>
+<tr class="memdesc:a763498c48fd020b7ffda58a27ae13e4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves all the samples from <a class="el" href="#a79d12d188526a711f6b2f59121c322dc">fFront</a> and <a class="el" href="#a272bbafc284027e2f97d18c8fdeb1ea8">fBack</a> into a text file.  <br /></td></tr>
+<tr class="separator:a763498c48fd020b7ffda58a27ae13e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ddd84ae498aa33360f73e28e19ae3ca" id="r_a4ddd84ae498aa33360f73e28e19ae3ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ddd84ae498aa33360f73e28e19ae3ca">SaveBar</a> ()</td></tr>
-<tr class="memdesc:a4ddd84ae498aa33360f73e28e19ae3ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves all the samples from <a class="el" href="#a4b280db6798c3760d9fcb63ced894df0">fFront</a> and <a class="el" href="#add15e3f1f7f23f23e4875af09c3f19e7">fBack</a> into a text file.  <br /></td></tr>
 <tr class="separator:a4ddd84ae498aa33360f73e28e19ae3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fa7af4447b9b2e40ff2736209f7cb77" id="r_a6fa7af4447b9b2e40ff2736209f7cb77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6fa7af4447b9b2e40ff2736209f7cb77">SetSigmaNoise</a> (Double_t newSigmaNoise)</td></tr>
-<tr class="memdesc:a6fa7af4447b9b2e40ff2736209f7cb77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="#a989e79afdd1744a6457219d5f50aef18">fSigmaNoise</a>, the noise of the DAQ.  <br /></td></tr>
+<tr class="memdesc:a6fa7af4447b9b2e40ff2736209f7cb77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="#a989e79afdd1744a6457219d5f50aef18">fSigmaNoise</a>, the noise of the <a class="el" href="structDAQ.html">DAQ</a>.  <br /></td></tr>
 <tr class="separator:a6fa7af4447b9b2e40ff2736209f7cb77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab42193951c8dd6fc5fb316ff534702ab" id="r_ab42193951c8dd6fc5fb316ff534702ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab42193951c8dd6fc5fb316ff534702ab">SetInputFilename</a> (std::string newInputFilename)</td></tr>
 <tr class="memdesc:ab42193951c8dd6fc5fb316ff534702ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the name of the text file of the best fit parameters data.  <br /></td></tr>
@@ -147,47 +161,59 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab52b18de6e39cadf3f6993f15206c925" id="r_ab52b18de6e39cadf3f6993f15206c925"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab52b18de6e39cadf3f6993f15206c925">SetHisto_Tau_dec</a> (Double_t nbins, Double_t min, Double_t max)</td></tr>
 <tr class="memdesc:ab52b18de6e39cadf3f6993f15206c925"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the number of bins, the lower and the upper limit related to parameter Tau_dec for the histogram <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a>.  <br /></td></tr>
 <tr class="separator:ab52b18de6e39cadf3f6993f15206c925"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafb63a601bf8afd01643c7096106e210" id="r_aafb63a601bf8afd01643c7096106e210"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aafb63a601bf8afd01643c7096106e210">SetEvents</a> (Int_t events)</td></tr>
+<tr class="separator:aafb63a601bf8afd01643c7096106e210"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad97d9e868917aa9cd183d696876c461f" id="r_ad97d9e868917aa9cd183d696876c461f"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad97d9e868917aa9cd183d696876c461f">GetEvents</a> () const</td></tr>
 <tr class="memdesc:ad97d9e868917aa9cd183d696876c461f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of events in the run.  <br /></td></tr>
 <tr class="separator:ad97d9e868917aa9cd183d696876c461f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba8531bf57ce1d0df3675c7e3b407e6d" id="r_aba8531bf57ce1d0df3675c7e3b407e6d"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba8531bf57ce1d0df3675c7e3b407e6d">GetID</a> () const</td></tr>
 <tr class="memdesc:aba8531bf57ce1d0df3675c7e3b407e6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ID of the Monte Carlo.  <br /></td></tr>
 <tr class="separator:aba8531bf57ce1d0df3675c7e3b407e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf3934ca5fab622599c91942253b65fb" id="r_adf3934ca5fab622599c91942253b65fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDAQ.html">DAQ</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adf3934ca5fab622599c91942253b65fb">GetDAQ</a> () const</td></tr>
+<tr class="separator:adf3934ca5fab622599c91942253b65fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:aa0ba5478d8796945d343ec7ff298aac9" id="r_aa0ba5478d8796945d343ec7ff298aac9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0ba5478d8796945d343ec7ff298aac9">GenerateOutputFilename</a> (const char *inputFilename)</td></tr>
+<tr class="separator:aa0ba5478d8796945d343ec7ff298aac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8534b35ff7e36a4b34e9b699b12e6ea9" id="r_a8534b35ff7e36a4b34e9b699b12e6ea9"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8534b35ff7e36a4b34e9b699b12e6ea9">Add_Noise</a> ()</td></tr>
 <tr class="memdesc:a8534b35ff7e36a4b34e9b699b12e6ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of the noise.  <br /></td></tr>
 <tr class="separator:a8534b35ff7e36a4b34e9b699b12e6ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb66d4cfad1a470eaad9ff85ed292f87" id="r_abb66d4cfad1a470eaad9ff85ed292f87"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb66d4cfad1a470eaad9ff85ed292f87">Wave_OnePhel</a> (Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Int_t timePhel)</td></tr>
-<tr class="memdesc:abb66d4cfad1a470eaad9ff85ed292f87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value at t of the analytical form of the One Photo-Electron waveform.  <br /></td></tr>
-<tr class="separator:abb66d4cfad1a470eaad9ff85ed292f87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a533e91af3d9fcbca74cbd3fb85231be2" id="r_a533e91af3d9fcbca74cbd3fb85231be2"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a533e91af3d9fcbca74cbd3fb85231be2">Wave_OnePhel</a> (Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Double_t timePhel)</td></tr>
+<tr class="memdesc:a533e91af3d9fcbca74cbd3fb85231be2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value at t of the analytical form of the One Photo-Electron waveform.  <br /></td></tr>
+<tr class="separator:a533e91af3d9fcbca74cbd3fb85231be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:ae695c8c556d6aba760c186c9b8f287db" id="r_ae695c8c556d6aba760c186c9b8f287db"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae695c8c556d6aba760c186c9b8f287db">EVENTS</a></td></tr>
-<tr class="memdesc:ae695c8c556d6aba760c186c9b8f287db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of events in the run.  <br /></td></tr>
-<tr class="separator:ae695c8c556d6aba760c186c9b8f287db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a625af3be2860596dc5496f4a3d6fd0b5" id="r_a625af3be2860596dc5496f4a3d6fd0b5"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a625af3be2860596dc5496f4a3d6fd0b5">fEvent</a></td></tr>
+<tr class="memdesc:a625af3be2860596dc5496f4a3d6fd0b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of events in the run.  <br /></td></tr>
+<tr class="separator:a625af3be2860596dc5496f4a3d6fd0b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adca66b344a317d6f8c0a65e861a8ec91" id="r_adca66b344a317d6f8c0a65e861a8ec91"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adca66b344a317d6f8c0a65e861a8ec91">fID</a></td></tr>
 <tr class="memdesc:adca66b344a317d6f8c0a65e861a8ec91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run ID of the Monte Carlo.  <br /></td></tr>
 <tr class="separator:adca66b344a317d6f8c0a65e861a8ec91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b280db6798c3760d9fcb63ced894df0" id="r_a4b280db6798c3760d9fcb63ced894df0"><td class="memItemLeft" align="right" valign="top">Double_t ***&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b280db6798c3760d9fcb63ced894df0">fFront</a></td></tr>
-<tr class="memdesc:a4b280db6798c3760d9fcb63ced894df0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Container for Front-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin.  <br /></td></tr>
-<tr class="separator:a4b280db6798c3760d9fcb63ced894df0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add15e3f1f7f23f23e4875af09c3f19e7" id="r_add15e3f1f7f23f23e4875af09c3f19e7"><td class="memItemLeft" align="right" valign="top">Double_t ***&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add15e3f1f7f23f23e4875af09c3f19e7">fBack</a></td></tr>
-<tr class="memdesc:add15e3f1f7f23f23e4875af09c3f19e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin.  <br /></td></tr>
-<tr class="separator:add15e3f1f7f23f23e4875af09c3f19e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae695c8c556d6aba760c186c9b8f287db" id="r_ae695c8c556d6aba760c186c9b8f287db"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae695c8c556d6aba760c186c9b8f287db">EVENTS</a></td></tr>
+<tr class="separator:ae695c8c556d6aba760c186c9b8f287db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37b413acf7672347fd69c560954dd579" id="r_a37b413acf7672347fd69c560954dd579"><td class="memItemLeft" align="right" valign="top">Int_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37b413acf7672347fd69c560954dd579">fThreadID</a></td></tr>
+<tr class="separator:a37b413acf7672347fd69c560954dd579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79d12d188526a711f6b2f59121c322dc" id="r_a79d12d188526a711f6b2f59121c322dc"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; Double_t &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79d12d188526a711f6b2f59121c322dc">fFront</a></td></tr>
+<tr class="memdesc:a79d12d188526a711f6b2f59121c322dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Container for Front-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin.  <br /></td></tr>
+<tr class="separator:a79d12d188526a711f6b2f59121c322dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a272bbafc284027e2f97d18c8fdeb1ea8" id="r_a272bbafc284027e2f97d18c8fdeb1ea8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::vector&lt; Double_t &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a272bbafc284027e2f97d18c8fdeb1ea8">fBack</a></td></tr>
+<tr class="memdesc:a272bbafc284027e2f97d18c8fdeb1ea8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin.  <br /></td></tr>
+<tr class="separator:a272bbafc284027e2f97d18c8fdeb1ea8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a479e5d154fc78501de2f3fa627ae951e" id="r_a479e5d154fc78501de2f3fa627ae951e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Double_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a479e5d154fc78501de2f3fa627ae951e">fTimes</a></td></tr>
+<tr class="separator:a479e5d154fc78501de2f3fa627ae951e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acefbd7347c6ae2de1ecb44e9da3e71b1" id="r_acefbd7347c6ae2de1ecb44e9da3e71b1"><td class="memItemLeft" align="right" valign="top">TH3D *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a></td></tr>
 <tr class="memdesc:acefbd7347c6ae2de1ecb44e9da3e71b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">3D Histogram of One-Phel waveform parameters from which sampling will occur  <br /></td></tr>
 <tr class="separator:acefbd7347c6ae2de1ecb44e9da3e71b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a805aa5bc79011006708a8041397c542d" id="r_a805aa5bc79011006708a8041397c542d"><td class="memItemLeft" align="right" valign="top">TRandom3 *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a805aa5bc79011006708a8041397c542d">fRandPars</a> = new TRandom3(0)</td></tr>
-<tr class="memdesc:a805aa5bc79011006708a8041397c542d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Random generator for <a class="el" href="#adb5609c4d5abd1caf793e21163ebc4e5">SetFrontWaveform()</a> and <a class="el" href="#acc4bad81634d44435b108ff797e71266">SetBackWaveform()</a>  <br /></td></tr>
+<tr class="memitem:a805aa5bc79011006708a8041397c542d" id="r_a805aa5bc79011006708a8041397c542d"><td class="memItemLeft" align="right" valign="top">TRandom3 *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a805aa5bc79011006708a8041397c542d">fRandPars</a></td></tr>
+<tr class="memdesc:a805aa5bc79011006708a8041397c542d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Random generator for SetFrontWaveform() and <a class="el" href="#ae887a154084aea546ab1bb23575586ad">SetBackWaveform()</a>  <br /></td></tr>
 <tr class="separator:a805aa5bc79011006708a8041397c542d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef44ad3d9e94872b77072297886a8a05" id="r_aef44ad3d9e94872b77072297886a8a05"><td class="memItemLeft" align="right" valign="top">TRandom3 *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef44ad3d9e94872b77072297886a8a05">fRandNoise</a> = new TRandom3(0)</td></tr>
+<tr class="memitem:aef44ad3d9e94872b77072297886a8a05" id="r_aef44ad3d9e94872b77072297886a8a05"><td class="memItemLeft" align="right" valign="top">TRandom3 *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef44ad3d9e94872b77072297886a8a05">fRandNoise</a></td></tr>
 <tr class="memdesc:aef44ad3d9e94872b77072297886a8a05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Random generator for <a class="el" href="#a8534b35ff7e36a4b34e9b699b12e6ea9">Add_Noise()</a>  <br /></td></tr>
 <tr class="separator:aef44ad3d9e94872b77072297886a8a05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a989e79afdd1744a6457219d5f50aef18" id="r_a989e79afdd1744a6457219d5f50aef18"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a989e79afdd1744a6457219d5f50aef18">fSigmaNoise</a></td></tr>
-<tr class="memdesc:a989e79afdd1744a6457219d5f50aef18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Noise of the DAQ, evaluated as the stDev of the pedestal distribution.  <br /></td></tr>
+<tr class="memdesc:a989e79afdd1744a6457219d5f50aef18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Noise of the <a class="el" href="structDAQ.html">DAQ</a>, evaluated as the stDev of the pedestal distribution.  <br /></td></tr>
 <tr class="separator:a989e79afdd1744a6457219d5f50aef18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3071e4ba8a94aa03c67836cac8a369d1" id="r_a3071e4ba8a94aa03c67836cac8a369d1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3071e4ba8a94aa03c67836cac8a369d1">fInputFilename</a></td></tr>
 <tr class="memdesc:a3071e4ba8a94aa03c67836cac8a369d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the txt file of the best fit parameters data. See the introduction for more details about the file format.  <br /></td></tr>
@@ -204,14 +230,20 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:ae4084349882ac73c0bf5364aa0428110" id="r_ae4084349882ac73c0bf5364aa0428110"><td class="memItemLeft" align="right" valign="top">Double_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4084349882ac73c0bf5364aa0428110">fHisto_Tau_dec</a> [3]</td></tr>
 <tr class="memdesc:ae4084349882ac73c0bf5364aa0428110"><td class="mdescLeft">&#160;</td><td class="mdescRight">Settings for histogram <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a> related to parameter Tau_dec: [0] for number of bins, [1] for the lower limit, [2] for the upper limit.  <br /></td></tr>
 <tr class="separator:ae4084349882ac73c0bf5364aa0428110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93be978726b31e10368bc93e3891eba9" id="r_a93be978726b31e10368bc93e3891eba9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDAQ.html">DAQ</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93be978726b31e10368bc93e3891eba9">fDAQ</a></td></tr>
+<tr class="separator:a93be978726b31e10368bc93e3891eba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bfc2331640b39dfa3be02e657b00b83" id="r_a6bfc2331640b39dfa3be02e657b00b83"><td class="memItemLeft" align="right" valign="top">TFile *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6bfc2331640b39dfa3be02e657b00b83">fOutFile</a> = nullptr</td></tr>
+<tr class="separator:a6bfc2331640b39dfa3be02e657b00b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3008317215615ff4f6da82701a3c62b9" id="r_a3008317215615ff4f6da82701a3c62b9"><td class="memItemLeft" align="right" valign="top">TTree *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3008317215615ff4f6da82701a3c62b9">fOutTree</a> = nullptr</td></tr>
+<tr class="separator:a3008317215615ff4f6da82701a3c62b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for managing waveform construction for all events and channels. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00025">25</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00027">27</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a74efd3b193da3d8baded6a35baed681d" name="a74efd3b193da3d8baded6a35baed681d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74efd3b193da3d8baded6a35baed681d">&#9670;&#160;</a></span>Bar()</h2>
+<a id="a864f43994ac1998a2b6210551d84ecae" name="a864f43994ac1998a2b6210551d84ecae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a864f43994ac1998a2b6210551d84ecae">&#9670;&#160;</a></span>Bar()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,8 +251,12 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">Bar::Bar </td>
           <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>inputFilename</em></span></td><td>)</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>inputFilename</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">Int_t</td>          <td class="paramname"><span class="paramname"><em>threadID</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -255,7 +291,7 @@ Private Attributes</h2></td></tr>
 
 <p>Destructor of the class. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00033">33</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00048">48</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
 
 </div>
 </div>
@@ -286,7 +322,92 @@ Private Attributes</h2></td></tr>
 <p>Returns the value of the noise. </p>
 <p>This function provides a random value sampled from a normal distribution \(N\)(0, sigmaNoise). It's important to note that the value of \( \sigma \) should be derived from experimental data, based on the pedestal's distribution. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00177">177</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00196">196</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+
+</div>
+</div>
+<a id="a461db396cea6f5697d578e49a5b556ec" name="a461db396cea6f5697d578e49a5b556ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a461db396cea6f5697d578e49a5b556ec">&#9670;&#160;</a></span>ClearContainers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Bar::ClearContainers </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Method to add a I-Phel waveform to the corresponding event and channel of the Front-Detector. </p>
+<p>This function samples parameters ( \(A \), \( \tau_{RISE} \),  \(
+\tau_{DEC} \)) from <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a>, evaluates <a class="el" href="#a533e91af3d9fcbca74cbd3fb85231be2">Wave_OnePhel()</a> in each bin, and finally sums it at the correct event and channel indices of <a class="el" href="#a79d12d188526a711f6b2f59121c322dc">fFront</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">event</td><td>Event index </td></tr>
+    <tr><td class="paramname">channel</td><td>Channel index </td></tr>
+    <tr><td class="paramname">start</td><td>Scintillation photon arrival time, provided to <a class="el" href="#a533e91af3d9fcbca74cbd3fb85231be2">Wave_OnePhel()</a> as the timePhel ( \( t_{phel} \)) input parameter </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00169">169</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
+
+</div>
+</div>
+<a id="aa0ba5478d8796945d343ec7ff298aac9" name="aa0ba5478d8796945d343ec7ff298aac9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0ba5478d8796945d343ec7ff298aac9">&#9670;&#160;</a></span>GenerateOutputFilename()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Bar::GenerateOutputFilename </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>inputFilename</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00060">60</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
+
+</div>
+</div>
+<a id="adf3934ca5fab622599c91942253b65fb" name="adf3934ca5fab622599c91942253b65fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf3934ca5fab622599c91942253b65fb">&#9670;&#160;</a></span>GetDAQ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structDAQ.html">DAQ</a> * Bar::GetDAQ </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00156">156</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -315,7 +436,7 @@ Private Attributes</h2></td></tr>
 
 <p>Returns the number of events in the run. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00147">147</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00154">154</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -344,12 +465,12 @@ Private Attributes</h2></td></tr>
 
 <p>Returns the ID of the Monte Carlo. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00148">148</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00155">155</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
-<a id="adf39b7769b745a7101e4848d2f95e45b" name="adf39b7769b745a7101e4848d2f95e45b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf39b7769b745a7101e4848d2f95e45b">&#9670;&#160;</a></span>InitializeBaselines()</h2>
+<a id="ae48b29998690565fd22dbadf6bf00eb7" name="ae48b29998690565fd22dbadf6bf00eb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae48b29998690565fd22dbadf6bf00eb7">&#9670;&#160;</a></span>InitializeBaselines()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -357,14 +478,14 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">void Bar::InitializeBaselines </td>
           <td>(</td>
-          <td class="paramtype">Int_t</td>          <td class="paramname"><span class="paramname"><em>newEvents</em></span></td><td>)</td>
+          <td class="paramtype">Int_t</td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Method to initialize the entire <a class="el" href="#a4b280db6798c3760d9fcb63ced894df0">fFront</a> and <a class="el" href="#add15e3f1f7f23f23e4875af09c3f19e7">fBack</a> with a noise baseline. </p>
-<p>This function sets the number of events in the run (<a class="el" href="#ae695c8c556d6aba760c186c9b8f287db">EVENTS</a> = newEvents) and fills every bin in every channel and event with <a class="el" href="#a8534b35ff7e36a4b34e9b699b12e6ea9">Add_Noise()</a></p>
+<p>Method to initialize the entire <a class="el" href="#a79d12d188526a711f6b2f59121c322dc">fFront</a> and <a class="el" href="#a272bbafc284027e2f97d18c8fdeb1ea8">fBack</a> with a noise baseline. </p>
+<p>This function sets the number of events in the run (EVENTS = newEvents) and fills every bin in every channel and event with <a class="el" href="#a8534b35ff7e36a4b34e9b699b12e6ea9">Add_Noise()</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">newEvents</td><td>Number of events in the MC-Simulation </td></tr>
@@ -372,7 +493,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00112">112</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00150">150</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
 
 </div>
 </div>
@@ -391,15 +512,34 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Saves all the samples from <a class="el" href="#a4b280db6798c3760d9fcb63ced894df0">fFront</a> and <a class="el" href="#add15e3f1f7f23f23e4875af09c3f19e7">fBack</a> into a text file. </p>
-<p>This method is designed to save the data samples contained in the objects <a class="el" href="#a4b280db6798c3760d9fcb63ced894df0">fFront</a> and <a class="el" href="#add15e3f1f7f23f23e4875af09c3f19e7">fBack</a> into a text file. The file naming convention is based on the RunID <a class="el" href="#adca66b344a317d6f8c0a65e861a8ec91">fID</a> extracted from the MC input file. The output file is named as "BarID_fID.txt". Refer to the introduction for details about the file format. </p>
-
-<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00173">173</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00220">220</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
 
 </div>
 </div>
-<a id="acc4bad81634d44435b108ff797e71266" name="acc4bad81634d44435b108ff797e71266"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc4bad81634d44435b108ff797e71266">&#9670;&#160;</a></span>SetBackWaveform()</h2>
+<a id="a763498c48fd020b7ffda58a27ae13e4b" name="a763498c48fd020b7ffda58a27ae13e4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a763498c48fd020b7ffda58a27ae13e4b">&#9670;&#160;</a></span>SaveEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Bar::SaveEvent </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Saves all the samples from <a class="el" href="#a79d12d188526a711f6b2f59121c322dc">fFront</a> and <a class="el" href="#a272bbafc284027e2f97d18c8fdeb1ea8">fBack</a> into a text file. </p>
+<p>This method is designed to save the data samples contained in the objects <a class="el" href="#a79d12d188526a711f6b2f59121c322dc">fFront</a> and <a class="el" href="#a272bbafc284027e2f97d18c8fdeb1ea8">fBack</a> into a text file. The file naming convention is based on the RunID <a class="el" href="#adca66b344a317d6f8c0a65e861a8ec91">fID</a> extracted from the MC input file. The output file is named as "BarID_fID.txt". Refer to the introduction for details about the file format. </p>
+
+<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00213">213</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
+
+</div>
+</div>
+<a id="ae887a154084aea546ab1bb23575586ad" name="ae887a154084aea546ab1bb23575586ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae887a154084aea546ab1bb23575586ad">&#9670;&#160;</a></span>SetBackWaveform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -407,11 +547,6 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">void Bar::SetBackWaveform </td>
           <td>(</td>
-          <td class="paramtype">Int_t</td>          <td class="paramname"><span class="paramname"><em>event</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">Int_t</td>          <td class="paramname"><span class="paramname"><em>channel</em></span>, </td>
         </tr>
         <tr>
@@ -424,17 +559,17 @@ Private Attributes</h2></td></tr>
 
 <p>Method to add a I-Phel waveform to the corresponding event and channel of the Back-Detector. </p>
 <p>This function samples parameters ( \(A \), \( \tau_{RISE} \),  \(
-\tau_{DEC} \)) from <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a>, evaluates <a class="el" href="#abb66d4cfad1a470eaad9ff85ed292f87">Wave_OnePhel()</a> in each bin, and finally sums it at the correct event and channel indices of <a class="el" href="#add15e3f1f7f23f23e4875af09c3f19e7">fBack</a>.</p>
+\tau_{DEC} \)) from <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a>, evaluates <a class="el" href="#a533e91af3d9fcbca74cbd3fb85231be2">Wave_OnePhel()</a> in each bin, and finally sums it at the correct event and channel indices of <a class="el" href="#a272bbafc284027e2f97d18c8fdeb1ea8">fBack</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">event</td><td>Event index </td></tr>
     <tr><td class="paramname">channel</td><td>Channel index </td></tr>
-    <tr><td class="paramname">start</td><td>Scintillation photon arrival time, provided to <a class="el" href="#abb66d4cfad1a470eaad9ff85ed292f87">Wave_OnePhel()</a> as the timePhel ( \( t_{phel} \)) input parameter </td></tr>
+    <tr><td class="paramname">start</td><td>Scintillation photon arrival time, provided to <a class="el" href="#a533e91af3d9fcbca74cbd3fb85231be2">Wave_OnePhel()</a> as the timePhel ( \( t_{phel} \)) input parameter </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00158">158</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00198">198</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
 
 </div>
 </div>
@@ -467,12 +602,39 @@ Private Attributes</h2></td></tr>
 
 <p>Set the cuts in the charge spectrum of input best fit parameters data. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00111">111</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00117">117</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
-<a id="adb5609c4d5abd1caf793e21163ebc4e5" name="adb5609c4d5abd1caf793e21163ebc4e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb5609c4d5abd1caf793e21163ebc4e5">&#9670;&#160;</a></span>SetFrontWaveform()</h2>
+<a id="aafb63a601bf8afd01643c7096106e210" name="aafb63a601bf8afd01643c7096106e210"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafb63a601bf8afd01643c7096106e210">&#9670;&#160;</a></span>SetEvents()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Bar::SetEvents </td>
+          <td>(</td>
+          <td class="paramtype">Int_t</td>          <td class="paramname"><span class="paramname"><em>events</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00153">153</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+
+</div>
+</div>
+<a id="a50fd65d448ba2cb366c89f083819996c" name="a50fd65d448ba2cb366c89f083819996c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50fd65d448ba2cb366c89f083819996c">&#9670;&#160;</a></span>SetFrontWaveform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -480,11 +642,6 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">void Bar::SetFrontWaveform </td>
           <td>(</td>
-          <td class="paramtype">Int_t</td>          <td class="paramname"><span class="paramname"><em>event</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">Int_t</td>          <td class="paramname"><span class="paramname"><em>channel</em></span>, </td>
         </tr>
         <tr>
@@ -495,19 +652,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Method to add a I-Phel waveform to the corresponding event and channel of the Front-Detector. </p>
-<p>This function samples parameters ( \(A \), \( \tau_{RISE} \),  \(
-\tau_{DEC} \)) from <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a>, evaluates <a class="el" href="#abb66d4cfad1a470eaad9ff85ed292f87">Wave_OnePhel()</a> in each bin, and finally sums it at the correct event and channel indices of <a class="el" href="#a4b280db6798c3760d9fcb63ced894df0">fFront</a>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">event</td><td>Event index </td></tr>
-    <tr><td class="paramname">channel</td><td>Channel index </td></tr>
-    <tr><td class="paramname">start</td><td>Scintillation photon arrival time, provided to <a class="el" href="#abb66d4cfad1a470eaad9ff85ed292f87">Wave_OnePhel()</a> as the timePhel ( \( t_{phel} \)) input parameter </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00143">143</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00183">183</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
 
 </div>
 </div>
@@ -545,7 +690,7 @@ Private Attributes</h2></td></tr>
 
 <p>Set the number of bins, the lower and the upper limit related to parameter A for the histogram <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00120">120</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00126">126</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -583,7 +728,7 @@ Private Attributes</h2></td></tr>
 
 <p>Set the number of bins, the lower and the upper limit related to parameter Tau_dec for the histogram <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00140">140</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00146">146</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -621,7 +766,7 @@ Private Attributes</h2></td></tr>
 
 <p>Set the number of bins, the lower and the upper limit related to parameter Tau_rise for the histogram <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00130">130</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00136">136</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -650,7 +795,7 @@ Private Attributes</h2></td></tr>
 
 <p>Set the name of the text file of the best fit parameters data. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00106">106</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00112">112</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -673,7 +818,7 @@ Private Attributes</h2></td></tr>
 <p>This function takes all the best-fit parameters ( \(A \),  \(
 \tau_{RISE} \), \( \tau_{DEC} \)) obtained from the fitted I-Phel data waveforms, defines and populates the histogram <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a> (from which sampling will occur) with settings <a class="el" href="#a7a1ba5736d498463917d3ae3b311f269">fHisto_A</a>, <a class="el" href="#a4a24038af9d9f6c9e429e49e8c1e6a9a">fHisto_Tau_rise</a> and <a class="el" href="#ae4084349882ac73c0bf5364aa0428110">fHisto_Tau_dec</a>. It specifically considers entries within the charge range [<a class="el" href="#a47734b827abb252acbe12721c2faf290">fChargeCuts</a>[0], <a class="el" href="#a47734b827abb252acbe12721c2faf290">fChargeCuts</a>[1]] and with a converged fit status. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00056">56</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00096">96</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
 
 </div>
 </div>
@@ -700,14 +845,14 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Set <a class="el" href="#a989e79afdd1744a6457219d5f50aef18">fSigmaNoise</a>, the noise of the DAQ. </p>
+<p>Set <a class="el" href="#a989e79afdd1744a6457219d5f50aef18">fSigmaNoise</a>, the noise of the <a class="el" href="structDAQ.html">DAQ</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00105">105</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00111">111</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
-<a id="abb66d4cfad1a470eaad9ff85ed292f87" name="abb66d4cfad1a470eaad9ff85ed292f87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb66d4cfad1a470eaad9ff85ed292f87">&#9670;&#160;</a></span>Wave_OnePhel()</h2>
+<a id="a533e91af3d9fcbca74cbd3fb85231be2" name="a533e91af3d9fcbca74cbd3fb85231be2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a533e91af3d9fcbca74cbd3fb85231be2">&#9670;&#160;</a></span>Wave_OnePhel()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -738,7 +883,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Int_t</td>          <td class="paramname"><span class="paramname"><em>timePhel</em></span>&#160;)</td>
+          <td class="paramtype">Double_t</td>          <td class="paramname"><span class="paramname"><em>timePhel</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -755,7 +900,7 @@ Private Attributes</h2></td></tr>
 \]
 </p>
  
-<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00094">94</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8cc_source.html#l00132">132</a> of file <a class="el" href="bar_8cc_source.html">bar.cc</a>.</p>
 
 </div>
 </div>
@@ -780,14 +925,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Number of events in the run. </p>
-
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00150">150</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00161">161</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
-<a id="add15e3f1f7f23f23e4875af09c3f19e7" name="add15e3f1f7f23f23e4875af09c3f19e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add15e3f1f7f23f23e4875af09c3f19e7">&#9670;&#160;</a></span>fBack</h2>
+<a id="a272bbafc284027e2f97d18c8fdeb1ea8" name="a272bbafc284027e2f97d18c8fdeb1ea8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a272bbafc284027e2f97d18c8fdeb1ea8">&#9670;&#160;</a></span>fBack</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -796,7 +939,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Double_t*** Bar::fBack</td>
+          <td class="memname">std::vector&lt;std::vector&lt;Double_t&gt; &gt; Bar::fBack</td>
         </tr>
       </table>
   </td>
@@ -808,7 +951,7 @@ Private Attributes</h2></td></tr>
 
 <p>Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00154">154</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00165">165</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -834,12 +977,12 @@ Private Attributes</h2></td></tr>
 
 <p>Cuts in the charge spectrum of input best fit parameters data; [0] represents the minimum, [1] represents the maximum. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00164">164</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00176">176</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
-<a id="a4b280db6798c3760d9fcb63ced894df0" name="a4b280db6798c3760d9fcb63ced894df0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b280db6798c3760d9fcb63ced894df0">&#9670;&#160;</a></span>fFront</h2>
+<a id="a93be978726b31e10368bc93e3891eba9" name="a93be978726b31e10368bc93e3891eba9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93be978726b31e10368bc93e3891eba9">&#9670;&#160;</a></span>fDAQ</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -848,7 +991,57 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Double_t*** Bar::fFront</td>
+          <td class="memname"><a class="el" href="structDAQ.html">DAQ</a>* Bar::fDAQ</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00181">181</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+
+</div>
+</div>
+<a id="a625af3be2860596dc5496f4a3d6fd0b5" name="a625af3be2860596dc5496f4a3d6fd0b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a625af3be2860596dc5496f4a3d6fd0b5">&#9670;&#160;</a></span>fEvent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t Bar::fEvent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of events in the run. </p>
+
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00159">159</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+
+</div>
+</div>
+<a id="a79d12d188526a711f6b2f59121c322dc" name="a79d12d188526a711f6b2f59121c322dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79d12d188526a711f6b2f59121c322dc">&#9670;&#160;</a></span>fFront</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::vector&lt;Double_t&gt; &gt; Bar::fFront</td>
         </tr>
       </table>
   </td>
@@ -860,7 +1053,7 @@ Private Attributes</h2></td></tr>
 
 <p>Container for Front-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00153">153</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00164">164</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -886,7 +1079,7 @@ Private Attributes</h2></td></tr>
 
 <p>Settings for histogram <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a> related to parameter A: [0] for number of bins, [1] for the lower limit, [2] for the upper limit. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00165">165</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00177">177</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -912,7 +1105,7 @@ Private Attributes</h2></td></tr>
 
 <p>Settings for histogram <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a> related to parameter Tau_dec: [0] for number of bins, [1] for the lower limit, [2] for the upper limit. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00167">167</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00179">179</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -938,7 +1131,7 @@ Private Attributes</h2></td></tr>
 
 <p>Settings for histogram <a class="el" href="#acefbd7347c6ae2de1ecb44e9da3e71b1">hPars</a> related to parameter Tau_rise: [0] for number of bins, [1] for the lower limit, [2] for the upper limit. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00166">166</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00178">178</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -964,7 +1157,7 @@ Private Attributes</h2></td></tr>
 
 <p>Run ID of the Monte Carlo. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00151">151</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00160">160</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -990,7 +1183,55 @@ Private Attributes</h2></td></tr>
 
 <p>Name of the txt file of the best fit parameters data. See the introduction for more details about the file format. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00163">163</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00175">175</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+
+</div>
+</div>
+<a id="a6bfc2331640b39dfa3be02e657b00b83" name="a6bfc2331640b39dfa3be02e657b00b83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bfc2331640b39dfa3be02e657b00b83">&#9670;&#160;</a></span>fOutFile</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TFile* Bar::fOutFile = nullptr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00185">185</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+
+</div>
+</div>
+<a id="a3008317215615ff4f6da82701a3c62b9" name="a3008317215615ff4f6da82701a3c62b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3008317215615ff4f6da82701a3c62b9">&#9670;&#160;</a></span>fOutTree</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TTree* Bar::fOutTree = nullptr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00186">186</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -1004,7 +1245,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">TRandom3* Bar::fRandNoise = new TRandom3(0)</td>
+          <td class="memname">TRandom3* Bar::fRandNoise</td>
         </tr>
       </table>
   </td>
@@ -1016,7 +1257,7 @@ Private Attributes</h2></td></tr>
 
 <p>Random generator for <a class="el" href="#a8534b35ff7e36a4b34e9b699b12e6ea9">Add_Noise()</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00159">159</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00171">171</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -1030,7 +1271,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">TRandom3* Bar::fRandPars = new TRandom3(0)</td>
+          <td class="memname">TRandom3* Bar::fRandPars</td>
         </tr>
       </table>
   </td>
@@ -1040,9 +1281,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Random generator for <a class="el" href="#adb5609c4d5abd1caf793e21163ebc4e5">SetFrontWaveform()</a> and <a class="el" href="#acc4bad81634d44435b108ff797e71266">SetBackWaveform()</a> </p>
+<p>Random generator for SetFrontWaveform() and <a class="el" href="#ae887a154084aea546ab1bb23575586ad">SetBackWaveform()</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00158">158</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00170">170</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -1066,9 +1307,57 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Noise of the DAQ, evaluated as the stDev of the pedestal distribution. </p>
+<p>Noise of the <a class="el" href="structDAQ.html">DAQ</a>, evaluated as the stDev of the pedestal distribution. </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00161">161</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00173">173</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+
+</div>
+</div>
+<a id="a37b413acf7672347fd69c560954dd579" name="a37b413acf7672347fd69c560954dd579"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37b413acf7672347fd69c560954dd579">&#9670;&#160;</a></span>fThreadID</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Int_t Bar::fThreadID</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00162">162</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+
+</div>
+</div>
+<a id="a479e5d154fc78501de2f3fa627ae951e" name="a479e5d154fc78501de2f3fa627ae951e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a479e5d154fc78501de2f3fa627ae951e">&#9670;&#160;</a></span>fTimes</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;Double_t&gt; Bar::fTimes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00166">166</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>
@@ -1094,7 +1383,7 @@ Private Attributes</h2></td></tr>
 
 <p>3D Histogram of One-Phel waveform parameters from which sampling will occur </p>
 
-<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00156">156</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
+<p class="definition">Definition at line <a class="el" href="bar_8hh_source.html#l00168">168</a> of file <a class="el" href="bar_8hh_source.html">bar.hh</a>.</p>
 
 </div>
 </div>

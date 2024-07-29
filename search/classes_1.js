@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sipm_0',['SiPM',['../structSiPM.html',1,'']]]
+  ['daq_0',['DAQ',['../structDAQ.html',1,'']]]
 ];

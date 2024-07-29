@@ -1,19 +1,15 @@
 <map id="include/globals.hh" name="include/globals.hh">
-<area shape="rect" id="Node000001" title="Definition of global constant values for the simulation." alt="" coords="27,5,151,31"/>
-<area shape="rect" id="Node000002" href="$bartender_8cc.html" title="Definition of the main function of Bartender_LYSO." alt="" coords="5,226,98,252"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,46,56,226,51,226,82,45"/>
-<area shape="rect" id="Node000003" href="$bar_8hh.html" title="Declaration of the class Bar." alt="" coords="117,79,218,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="115,40,156,77,153,81,111,43"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="134,115,111,133,90,154,68,192,57,227,52,225,64,190,85,151,107,129,131,111"/>
-<area shape="rect" id="Node000004" href="$configure_8hh.html" title="Declaration of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="100,153,235,178"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="170,120,170,152,165,152,165,120"/>
-<area shape="rect" id="Node000006" href="$summary_8hh.html" title="Definition of the function Bartender_Summary()." alt="" coords="259,153,396,178"/>
-<area shape="poly" id="edge7_Node000003_Node000006" title=" " alt="" coords="209,109,301,150,299,155,207,114"/>
-<area shape="rect" id="Node000008" href="$bar_8cc.html" title="Definition of the class Bar." alt="" coords="420,153,499,178"/>
-<area shape="poly" id="edge9_Node000003_Node000008" title=" " alt="" coords="232,106,421,152,419,157,231,111"/>
-<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="137,189,73,228,70,223,134,184"/>
-<area shape="rect" id="Node000005" href="$configure_8cc.html" title="Definition of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="122,226,234,252"/>
-<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="174,193,179,225,174,226,169,194"/>
-<area shape="rect" id="Node000007" href="$summary_8cc.html" title="Definition of the function Bartender_Summary()" alt="" coords="271,226,384,252"/>
-<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="330,194,330,226,325,226,325,194"/>
+<area shape="rect" id="Node000001" title="Definition of global constant values for the simulation." alt="" coords="5,5,130,31"/>
+<area shape="rect" id="Node000002" href="$bartender_8cc.html" title="Definition of the main function of Bartender_LYSO." alt="" coords="17,226,110,252"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,46,66,226,61,226,64,46"/>
+<area shape="rect" id="Node000003" href="$bar_8hh.html" title="Declaration of the class Bar." alt="" coords="94,79,196,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="94,40,134,77,130,81,90,44"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="127,118,102,154,83,193,70,227,65,225,78,191,97,151,122,115"/>
+<area shape="rect" id="Node000004" href="$configure_8hh.html" title="Declaration of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="112,153,247,178"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="160,117,176,151,171,153,155,120"/>
+<area shape="rect" id="Node000006" href="$bar_8cc.html" title="Definition of the class Bar." alt="" coords="271,153,349,178"/>
+<area shape="poly" id="edge7_Node000003_Node000006" title=" " alt="" coords="188,109,283,150,281,155,186,114"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="149,189,85,228,82,223,146,184"/>
+<area shape="rect" id="Node000005" href="$configure_8cc.html" title="Definition of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="134,226,246,252"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="186,193,191,225,186,226,181,194"/>
 </map>

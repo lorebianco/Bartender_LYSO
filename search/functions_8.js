@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7ebar_0',['~Bar',['../classBar.html#a9c7ebea0c189423591741ac438985316',1,'Bar']]]
+  ['wave_5fonephel_0',['Wave_OnePhel',['../classBar.html#a533e91af3d9fcbca74cbd3fb85231be2',1,'Bar']]]
 ];
