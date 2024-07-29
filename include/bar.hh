@@ -16,8 +16,10 @@
 #include <TRandom3.h>
 #include <TTree.h>
 #include <TMath.h>
+#include <TFile.h>
 
 #include "globals.hh"
+#include "daq.hh"
 
 /**
  * @brief Class for managing waveform construction for all events and channels.
@@ -32,7 +34,7 @@ public:
      *
      * @param inputFilename MC-filename used in the simulation.
      */
-    Bar(const char* inputFilename);
+    Bar(const char* inputFilename, Int_t threadID);
     /**
      * @brief Destructor of the class.
      */
@@ -60,7 +62,7 @@ public:
      *
      * @param newEvents Number of events in the MC-Simulation
      */
-    void InitializeBaselines(Int_t newEvents);
+    void InitializeBaselines(Int_t event);
     /**
      * @brief Method to add a I-Phel waveform to the corresponding event and
      * channel of the Front-Detector
@@ -75,7 +77,10 @@ public:
      * @param start Scintillation photon arrival time, provided to @ref
      * Wave_OnePhel() as the timePhel (\f$ t_{phel} \f$) input parameter
      */
-    void SetFrontWaveform(Int_t event, Int_t channel, Double_t start);
+
+    void ClearContainers();
+
+    void SetFrontWaveform(Int_t channel, Double_t start);
     /**
      * @brief Method to add a I-Phel waveform to the corresponding event and channel of the Back-Detector
      *
@@ -89,7 +94,7 @@ public:
      * @param start Scintillation photon arrival time, provided to @ref
      * Wave_OnePhel() as the timePhel (\f$ t_{phel} \f$) input parameter
      */
-    void SetBackWaveform(Int_t event, Int_t channel, Double_t start);
+    void SetBackWaveform(Int_t channel, Double_t start);
     /**
      * @brief Saves all the samples from @ref fFront and @ref fBack into a text
      * file.
@@ -100,6 +105,7 @@ public:
      * file. The output file is named as "BarID_fID.txt". Refer to the
      * introduction for details about the file format.
      */
+    void SaveEvent();
     void SaveBar();
 
     inline void SetSigmaNoise(Double_t newSigmaNoise) { fSigmaNoise = newSigmaNoise; } /**< @brief Set @ref fSigmaNoise, the noise of the DAQ. */
@@ -144,19 +150,25 @@ public:
         fHisto_Tau_dec[2] = max;
     }
 
+    inline void SetEvents(Int_t events) { EVENTS = events; } 
     inline Int_t GetEvents() const { return EVENTS; } /**< @brief Returns the number of events in the run. */
     inline Int_t GetID() const { return fID; } /**< @brief Returns the ID of the Monte Carlo. */
-private:
-    Int_t EVENTS; /**< @brief Number of events in the run */
-    Int_t fID; /**< @brief Run ID of the Monte Carlo */
+    inline DAQ *GetDAQ() const { return fDAQ; }
 
-    Double_t*** fFront; /**< @brief Container for Front-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. */  
-    Double_t*** fBack;  /**< @brief Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. */
+private:
+    Int_t fEvent; /**< @brief Number of events in the run */
+    Int_t fID; /**< @brief Run ID of the Monte Carlo */
+    Int_t EVENTS;
+    Int_t fThreadID;
+
+    std::vector<std::vector<Double_t>> fFront; /**< @brief Container for Front-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. */  
+    std::vector<std::vector<Double_t>> fBack;  /**< @brief Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. */
+    std::vector<Double_t> fTimes;
 
     TH3D *hPars; /**< @brief 3D Histogram of One-Phel waveform parameters from which sampling will occur */
     
-    TRandom3 *fRandPars = new TRandom3(0); /**< @brief Random generator for @ref SetFrontWaveform() and @ref SetBackWaveform() */
-    TRandom3 *fRandNoise = new TRandom3(0); /**< @brief Random generator for @ref Add_Noise() */
+    TRandom3 *fRandPars; /**< @brief Random generator for @ref SetFrontWaveform() and @ref SetBackWaveform() */
+    TRandom3 *fRandNoise; /**< @brief Random generator for @ref Add_Noise() */
 
     Double_t fSigmaNoise; /**< @brief Noise of the DAQ, evaluated as the stDev of the pedestal distribution */
 
@@ -164,7 +176,14 @@ private:
     Double_t fChargeCuts[2]; /**< @brief Cuts in the charge spectrum of input best fit parameters data; [0] represents the minimum, [1] represents the maximum. */
     Double_t fHisto_A[3]; /**< @brief Settings for histogram @ref hPars related to parameter A: [0] for number of bins, [1] for the lower limit, [2] for the upper limit. */
     Double_t fHisto_Tau_rise[3]; /**< @brief Settings for histogram @ref hPars related to parameter Tau_rise: [0] for number of bins, [1] for the lower limit, [2] for the upper limit. */
-    Double_t fHisto_Tau_dec[3]; /**< @brief Settings for histogram @ref hPars related to parameter Tau_dec: [0] for number of bins, [1] for the lower limit, [2] for the upper limit. */ 
+    Double_t fHisto_Tau_dec[3]; /**< @brief Settings for histogram @ref hPars related to parameter Tau_dec: [0] for number of bins, [1] for the lower limit, [2] for the upper limit. */
+
+    DAQ *fDAQ;
+
+    std::string GenerateOutputFilename(const char *inputFilename);
+ 
+    TFile *fOutFile = nullptr;
+    TTree *fOutTree = nullptr;
 
     /**
      * @brief Returns the value of the noise.
@@ -174,7 +193,7 @@ private:
      * \f$ \sigma \f$ should be derived from experimental data, based on the
      * pedestal's distribution.
      */
-    inline Double_t Add_Noise() { return fRandNoise->Gaus(0, fSigmaNoise); }
+    inline Double_t Add_Noise() { return fRandNoise->Gaus(0, fDAQ->fSigmaNoise); }
     /**
      * @brief Returns the value at t of the analytical form of the One Photo-Electron waveform.
      *
@@ -182,7 +201,7 @@ private:
      * \text{wave}(t) = -A \Bigg( \exp \Bigg( -\frac{t - t_{phel}}{\tau_{\text{RISE}}} \Bigg) - \exp \Bigg( -\frac{t - t_{phel}}{\tau_{\text{DEC}}} \Bigg) \Bigg)  \theta( t - t_{phel} )
      * \f] 
      */
-    Double_t Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Int_t timePhel);
+    Double_t Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Double_t timePhel);
 
 };
 

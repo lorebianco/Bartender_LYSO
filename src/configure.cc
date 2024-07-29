@@ -72,18 +72,21 @@ void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm)
         {
             sipm->fT = stof(extract_value(line, "T ="));
         }
+        else if(line.find("Sampling speed =") != string::npos)
+        {
+            bar->GetDAQ()->fSamplingSpeed = stof(extract_value(line, "Sampling speed ="));
+        }
         else if(line.find("R_shaper =") != string::npos)
         {
-            sipm->fR_shaper = stod(extract_value(line, "R_shaper ="));
+            bar->GetDAQ()->fR_shaper = stod(extract_value(line, "R_shaper ="));
         }
         else if(line.find("Gain =") != string::npos)
         {
-            sipm->fGain = stof(extract_value(line, "Gain ="));
+            bar->GetDAQ()->fGain = stof(extract_value(line, "Gain ="));
         }
         else if(line.find("Noise (sigma) =") != string::npos)
         {
-            bar->SetSigmaNoise(stof(extract_value(line, "Noise (sigma) =")));
-            sipm->fSigmaNoise = stof(extract_value(line, "Noise (sigma) ="));
+            bar->GetDAQ()->fSigmaNoise = stof(extract_value(line, "Noise (sigma) ="));
         }
         else if(line.find("PathToFile:") != string::npos)
         {

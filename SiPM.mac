@@ -1,22 +1,25 @@
 # SiPM
 Brand: Hamamatsu
 TypeNo: S13360-6050CS
-
+#
 # Environment working point
 V = 54.78 V
 T = 20°C
+#
+# DAQ working point
+Sampling speed = 1 GSPS
 R_shaper = 1.58E3 Ohm
 Gain = 60 dB
-
+#
 # Evaluate the noise from the pedestal distribution
 Noise (sigma) = 0.02 V
-
+#
 # inputFile for best-fit parameters
 PathToFile: /home/lorenzo/MEG_Project/Acquisizioni/Studio_SIPM/Preamp_Ext/Dati19_10/Dati_root/dati_spectrum_T20_V5478_1pe_fit_params.txt
-
+#
 # Cuts in the charge spectrum: min max
 Charge cuts: 0 1.5
-
+#
 # Histograms of parameters: nbins min max
 A histo: 50 0 0.6
 Tau_rise histo: 50 0 1.5
