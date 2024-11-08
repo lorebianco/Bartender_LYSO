@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7ebar_0',['~Bar',['../classBar.html#a9c7ebea0c189423591741ac438985316',1,'Bar']]]
+  ['_7ebarlyso_0',['~BarLYSO',['../classBarLYSO.html#aa44641defbda3dd323d07b745c4fc6e0',1,'BarLYSO']]]
 ];

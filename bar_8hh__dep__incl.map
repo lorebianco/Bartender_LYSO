@@ -1,10 +1,10 @@
 <map id="include/bar.hh" name="include/bar.hh">
-<area shape="rect" id="Node000001" title="Declaration of the class Bar." alt="" coords="106,5,208,31"/>
+<area shape="rect" id="Node000001" title="Declaration of the class BarLYSO." alt="" coords="106,5,208,31"/>
 <area shape="rect" id="Node000002" href="$bartender_8cc.html" title="Definition of the main function of Bartender_LYSO." alt="" coords="5,153,98,178"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,42,99,59,79,80,62,118,55,153,50,152,57,117,75,78,95,55,119,37"/>
 <area shape="rect" id="Node000003" href="$configure_8hh.html" title="Declaration of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="89,79,224,105"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,46,160,79,154,79,154,46"/>
-<area shape="rect" id="Node000005" href="$bar_8cc.html" title="Definition of the class Bar." alt="" coords="248,79,327,105"/>
+<area shape="rect" id="Node000005" href="$bar_8cc.html" title="Definition of the class BarLYSO." alt="" coords="248,79,327,105"/>
 <area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="193,36,266,76,264,81,191,41"/>
 <area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="128,116,71,154,68,150,125,111"/>
 <area shape="rect" id="Node000004" href="$configure_8cc.html" title="Definition of the function Bartender_Configure() (and the auxiliary function extract_value())" alt="" coords="122,153,234,178"/>

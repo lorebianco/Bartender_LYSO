@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['initializebaselines_0',['InitializeBaselines',['../classBar.html#ae48b29998690565fd22dbadf6bf00eb7',1,'Bar']]]
+  ['initializebaselines_0',['InitializeBaselines',['../classBarLYSO.html#a8b36718acbc5c65e64d7ab969109f01e',1,'BarLYSO']]]
 ];

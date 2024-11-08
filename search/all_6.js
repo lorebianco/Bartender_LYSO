@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['getevents_0',['GetEvents',['../classBar.html#ad97d9e868917aa9cd183d696876c461f',1,'Bar']]],
-  ['getid_1',['GetID',['../classBar.html#aba8531bf57ce1d0df3675c7e3b407e6d',1,'Bar']]],
+  ['getevents_0',['GetEvents',['../classBarLYSO.html#ae160f9049cdf0de3d3b84a1b5c11a313',1,'BarLYSO']]],
+  ['getid_1',['GetID',['../classBarLYSO.html#ab7f4db7e2ae81d516c11b055e8304da4',1,'BarLYSO']]],
   ['globals_2ehh_2',['globals.hh',['../globals_8hh.html',1,'']]]
 ];

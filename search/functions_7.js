@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['saveevent_0',['SaveEvent',['../classBar.html#a763498c48fd020b7ffda58a27ae13e4b',1,'Bar']]],
-  ['setbackwaveform_1',['SetBackWaveform',['../classBar.html#ae887a154084aea546ab1bb23575586ad',1,'Bar']]],
-  ['setchargecuts_2',['SetChargeCuts',['../classBar.html#a55bb6600d4f3c753c8c15377d428c3bd',1,'Bar']]],
-  ['sethisto_5fa_3',['SetHisto_A',['../classBar.html#a740c411c7b3230e64f59febb02649fc1',1,'Bar']]],
-  ['sethisto_5ftau_5fdec_4',['SetHisto_Tau_dec',['../classBar.html#ab52b18de6e39cadf3f6993f15206c925',1,'Bar']]],
-  ['sethisto_5ftau_5frise_5',['SetHisto_Tau_rise',['../classBar.html#a0ae7fefc6a82b249116b498eb102f1e6',1,'Bar']]],
-  ['setinputfilename_6',['SetInputFilename',['../classBar.html#ab42193951c8dd6fc5fb316ff534702ab',1,'Bar']]],
-  ['setparsdistro_7',['SetParsDistro',['../classBar.html#a9aabbb315116410f6231e4ac05baf7fd',1,'Bar']]],
-  ['setsigmanoise_8',['SetSigmaNoise',['../classBar.html#a6fa7af4447b9b2e40ff2736209f7cb77',1,'Bar']]]
+  ['saveevent_0',['SaveEvent',['../classBarLYSO.html#a6a510ceebc64d6ddab4dbefbbfd6e92e',1,'BarLYSO']]],
+  ['setbackwaveform_1',['SetBackWaveform',['../classBarLYSO.html#a937b454a9f8a8a024242f047d8add2a5',1,'BarLYSO']]],
+  ['setchargecuts_2',['SetChargeCuts',['../classBarLYSO.html#aea6f1ac86fe089b8cda7a0644571b8e1',1,'BarLYSO']]],
+  ['sethisto_5fa_3',['SetHisto_A',['../classBarLYSO.html#aa7d76d4b94a8ca39593f31a1cd280be8',1,'BarLYSO']]],
+  ['sethisto_5ftau_5fdec_4',['SetHisto_Tau_dec',['../classBarLYSO.html#ae3ba1853d1bde5ac31fe7fc680459c11',1,'BarLYSO']]],
+  ['sethisto_5ftau_5frise_5',['SetHisto_Tau_rise',['../classBarLYSO.html#a99051fd91efd8a282e3c8239aa4a60e6',1,'BarLYSO']]],
+  ['setinputfilename_6',['SetInputFilename',['../classBarLYSO.html#a8c7a419e7b23e9ef1249752f0607689f',1,'BarLYSO']]],
+  ['setparsdistro_7',['SetParsDistro',['../classBarLYSO.html#a8ccaeae49d0c14932a1a7c3b72882039',1,'BarLYSO']]],
+  ['setsigmanoise_8',['SetSigmaNoise',['../classBarLYSO.html#a4e07288ba5541cc3b3428dcbb1682aed',1,'BarLYSO']]]
 ];

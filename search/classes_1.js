@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['daq_0',['DAQ',['../structDAQ.html',1,'']]]
+  ['daq_0',['DAQ',['../classDAQ.html',1,'']]]
 ];
