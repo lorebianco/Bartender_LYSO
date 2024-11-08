@@ -1,6 +1,6 @@
 /**
  * @file bar.hh
- * @brief Declaration of the class Bar
+ * @brief Declaration of the class BarLYSO
  */ 
 #ifndef BAR_HH
 #define BAR_HH
@@ -24,7 +24,7 @@
 /**
  * @brief Class for managing waveform construction for all events and channels.
  */
-class Bar
+class BarLYSO
 {
 public:
     /** 
@@ -34,11 +34,11 @@ public:
      *
      * @param inputFilename MC-filename used in the simulation.
      */
-    Bar(const char* inputFilename, Int_t threadID);
+    BarLYSO(const char* inputFilename, Int_t threadID);
     /**
      * @brief Destructor of the class.
      */
-    ~Bar();
+    ~BarLYSO();
 
     /**
      * @brief Sets the 3D histogram @ref hPars
@@ -79,7 +79,7 @@ public:
      */
 
     void ClearContainers();
-
+    void SetSamplingTimes();
     void SetFrontWaveform(Int_t channel, Double_t start);
     /**
      * @brief Method to add a I-Phel waveform to the corresponding event and channel of the Back-Detector
@@ -163,7 +163,8 @@ private:
 
     std::vector<std::vector<Double_t>> fFront; /**< @brief Container for Front-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. */  
     std::vector<std::vector<Double_t>> fBack;  /**< @brief Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. */
-    std::vector<Double_t> fTimes;
+    std::vector<std::vector<Double_t>> fTimes_F;
+    std::vector<std::vector<Double_t>> fTimes_B;
 
     TH3D *hPars; /**< @brief 3D Histogram of One-Phel waveform parameters from which sampling will occur */
     
@@ -193,7 +194,7 @@ private:
      * \f$ \sigma \f$ should be derived from experimental data, based on the
      * pedestal's distribution.
      */
-    inline Double_t Add_Noise() { return fRandNoise->Gaus(0, fDAQ->fSigmaNoise); }
+    inline Double_t Add_Noise() { return fRandNoise->Gaus(BASELINE, fDAQ->fSigmaNoise); };
     /**
      * @brief Returns the value at t of the analytical form of the One Photo-Electron waveform.
      *

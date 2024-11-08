@@ -1,6 +1,6 @@
 /** 
  * @file bar.cc
- * @brief Definition of the class Bar
+ * @brief Definition of the class BarLYSO
  */
 #include "bar.hh"
 
@@ -8,7 +8,7 @@ using namespace std;
 using namespace TMath;
 
 
-Bar::Bar(const char*inputFilename, Int_t threadID)
+BarLYSO::BarLYSO(const char*inputFilename, Int_t threadID)
 {
     // Set the threadID
     fThreadID = threadID;
@@ -22,42 +22,50 @@ Bar::Bar(const char*inputFilename, Int_t threadID)
 
     // Initialize whole WF containers [CHANNELS]x[SAMPLINGS]
     fEvent = -1;
-    fFront.resize(CHANNELS, vector<Double_t>(SAMPLINGS));
-    fBack.resize(CHANNELS, vector<Double_t>(SAMPLINGS));
-    fTimes.resize(SAMPLINGS);
+    fFront.resize(CHANNELS, vector<Double_t>(SAMPLINGS, 0));
+    fBack.resize(CHANNELS, vector<Double_t>(SAMPLINGS, 0)); 
+    fTimes_F.resize(CHANNELS, vector<Double_t>(SAMPLINGS, 0)); 
+    fTimes_B.resize(CHANNELS, vector<Double_t>(SAMPLINGS, 0)); 
 
-    for(Int_t i = 0; i < SAMPLINGS; i++)
-    {
-        fTimes[i] = i;
-    }
-
-    // Determine the output filename based on the Bar ID
+    // Determine the output filename based on the BarLYSO ID
     string outputFilename = GenerateOutputFilename(inputFilename);
 
     // Create the file.root and the TTree
     fOutFile = TFile::Open(outputFilename.c_str(), "RECREATE");        
     fOutTree = new TTree("lyso_wfs", "lyso_wfs");
     fOutTree->Branch("Event", &fEvent);
-    fOutTree->Branch("Time", &fTimes);
+    fOutTree->Branch("Time_F", &fTimes_F);
+    fOutTree->Branch("Time_B", &fTimes_B);
     fOutTree->Branch("Front", &fFront);
     fOutTree->Branch("Back", &fBack);
 }
 
 
 
-Bar::~Bar()
+BarLYSO::~BarLYSO()
 {
-    // Delete hPars and TRandom3 objs
+    // Delete DAQ and random generators
     delete fDAQ;
     delete hPars;
-    delete fRandPars, fRandNoise;
-    delete fOutTree;
-    delete fOutFile;
+    delete fRandPars;
+    delete fRandNoise;
+
+    // Ensure that we delete the TTree and TFile objects only if they are not null
+    if(fOutTree)
+    {
+        fOutTree->ResetBranchAddresses();  // Reset any attached branches if needed
+        delete fOutTree;
+    }
+    if(fOutFile)
+    {
+        fOutFile->Close(); // Make sure to close the file properly
+        delete fOutFile;
+    }
 }
 
 
 
-string Bar::GenerateOutputFilename(const char* inputFilename)
+string BarLYSO::GenerateOutputFilename(const char* inputFilename)
 {
     // Regular expression to extract digits following "MCID_"
     regex regex("\\bMCID_(\\d+)");
@@ -93,7 +101,48 @@ string Bar::GenerateOutputFilename(const char* inputFilename)
 
 
 
-void Bar::SetParsDistro()
+void BarLYSO::SetSamplingTimes()
+{
+    // Set the times
+    for(Int_t j = 0; j < CHANNELS; j++)
+    {
+        if(fDAQ->fIsBinSizeConstant)
+        {
+            for(Int_t i = 0; i < SAMPLINGS; i++)
+            {
+                fTimes_F[j][i] = (Double_t) i / fDAQ->fSamplingSpeed;
+                fTimes_B[j][i] = (Double_t) i / fDAQ->fSamplingSpeed;
+            }
+        }
+        else
+        {
+            // Initialize the first time points
+            fTimes_F[j][0] = 0.0;
+            fTimes_B[j][0] = 0.0;
+
+            for(Int_t i = 0; i < SAMPLINGS - 1; i++)  // Up to SAMPLINGS - 1
+            {
+                Double_t bin_F, bin_B;
+                do
+                {
+                    bin_F = fDAQ->binRand->Gaus(1.0 / fDAQ->fSamplingSpeed, fDAQ->fSigmaBinSize);
+                } while (bin_F < 0.5 * (1.0 / fDAQ->fSamplingSpeed) || bin_F > 1.5 * (1.0 / fDAQ->fSamplingSpeed));
+
+                do
+                {
+                    bin_B = fDAQ->binRand->Gaus(1.0 / fDAQ->fSamplingSpeed, fDAQ->fSigmaBinSize);
+                } while (bin_B < 0.5 * (1.0 / fDAQ->fSamplingSpeed) || bin_B > 1.5 * (1.0 / fDAQ->fSamplingSpeed));
+
+                fTimes_F[j][i+1] = fTimes_F[j][i] + bin_F;
+                fTimes_B[j][i+1] = fTimes_B[j][i] + bin_B;
+            }
+        }
+    }
+}
+
+
+
+void BarLYSO::SetParsDistro()
 {
     Int_t status;
     Double_t my_charge, A, tau_rise, tau_dec;
@@ -129,7 +178,7 @@ void Bar::SetParsDistro()
 
 
 
-Double_t Bar::Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Double_t timePhel)
+Double_t BarLYSO::Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Double_t timePhel)
 {
     Double_t funcVal;
     Double_t expRise = Exp(-(t-timePhel)/tau_rise);
@@ -140,33 +189,22 @@ Double_t Bar::Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t t
     if(expDec > DBL_MAX || expDec < DBL_MIN) expDec = 0;
 
     // 1-Phel function
-    funcVal = (-A*(expDec-expRise))*((t > timePhel) ? 1:0);
-
+    funcVal = A*(expRise-expDec)*((t > timePhel) ? 1:0);    
     return funcVal;
 }
 
 
 
-void Bar::InitializeBaselines(Int_t event)
+void BarLYSO::InitializeBaselines(Int_t event)
 {
     fEvent = event;
-    fFront.resize(CHANNELS, vector<Double_t>(SAMPLINGS));
-    fBack.resize(CHANNELS, vector<Double_t>(SAMPLINGS));
-
-    for(Int_t ch = 0; ch < CHANNELS; ch++)
-    {
-        for(Int_t bin = 0; bin < SAMPLINGS; bin++)
-        {
-            // Set every bin with gaussian noise
-            fFront[ch][bin] = Add_Noise();
-            fBack[ch][bin] = Add_Noise();
-        }
-    }
+    fFront.assign(CHANNELS, std::vector<Double_t>(SAMPLINGS, 0.));
+    fBack.assign(CHANNELS, std::vector<Double_t>(SAMPLINGS, 0.));
 }
 
 
 
-void Bar::ClearContainers()
+void BarLYSO::ClearContainers()
 {
     for(Int_t ch = 0; ch < CHANNELS; ch++)
     {
@@ -180,7 +218,7 @@ void Bar::ClearContainers()
 
 
 
-void Bar::SetFrontWaveform(Int_t channel, Double_t start)
+void BarLYSO::SetFrontWaveform(Int_t channel, Double_t start)
 {
     // Sample from hPars the parameters of 1-Phel WF
     Double_t A, tau_rise, tau_dec;
@@ -189,13 +227,13 @@ void Bar::SetFrontWaveform(Int_t channel, Double_t start)
     // Evaluate and sum the new 1-Phel WF to the existing one
     for(Int_t bin = 0; bin < SAMPLINGS; bin++)
     {
-        fFront[channel][bin] += Wave_OnePhel(bin, A, tau_rise, tau_dec, start + ZERO_TIME_BIN);
+        fFront[channel][bin] += Wave_OnePhel(fTimes_F[channel][bin], A, tau_rise, tau_dec, start + ZERO_TIME_BIN);
     }
 }
 
 
 
-void Bar::SetBackWaveform(Int_t channel, Double_t start)
+void BarLYSO::SetBackWaveform(Int_t channel, Double_t start)
 {
     // Sample from hPars the parameters of 1-Phel WF
     Double_t A, tau_rise, tau_dec;
@@ -204,21 +242,33 @@ void Bar::SetBackWaveform(Int_t channel, Double_t start)
     // Evaluate and sum the new 1-Phel WF to the existing one
     for(Int_t bin = 0; bin < SAMPLINGS; bin++)
     {
-        fBack[channel][bin] += Wave_OnePhel(bin, A, tau_rise, tau_dec, start + ZERO_TIME_BIN);
+        fBack[channel][bin] += Wave_OnePhel(fTimes_B[channel][bin], A, tau_rise, tau_dec, start + ZERO_TIME_BIN);
     }
 }
 
 
 
-void Bar::SaveEvent()
+void BarLYSO::SaveEvent()
 {   
+    // Recompute the gain and add noise
+    Double_t k = fDAQ->ComputeFactorOfGainConversion();
+    for(Int_t ch = 0; ch < CHANNELS; ch++)
+    {
+        for(Int_t bin = 0; bin < SAMPLINGS; bin++)
+        {
+            // Set every bin with gaussian noise
+            fFront[ch][bin] = k*fFront[ch][bin] + Add_Noise();
+            fBack[ch][bin] = k*fBack[ch][bin] + Add_Noise();
+        }
+    }
+
     fOutTree->Fill();
 }
 
 
 
-void Bar::SaveBar()
+void BarLYSO::SaveBar()
 {
     fOutFile->cd();
-    fOutFile->WriteObject(fOutTree, "lyso_wfs");
+    fOutTree->Write("lyso_wfs");
 }

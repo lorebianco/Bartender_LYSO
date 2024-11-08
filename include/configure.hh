@@ -11,6 +11,7 @@
 #include <sstream>
 #include <string>
 #include <cfloat>
+#include <regex>
 
 #include "bar.hh"
 #include "SiPM.hh"
@@ -26,19 +27,19 @@ std::string extract_value(const std::string& line, const std::string& keyword);
 
 
 /**
- * @brief Reads and processes a specific file to populate members of the Bar
+ * @brief Reads and processes a specific file to populate members of the BarLYSO
  * class and SiPM struct.
  *
  * Reads the given file (filename) and loads relevant information into the
- * members of @ref Bar and @ref SiPM, such as Brand, Type Number, Supply
+ * members of @ref BarLYSO and @ref SiPM, such as Brand, Type Number, Supply
  * Voltage (V), Temperature (T), Resistance (R_shaper), Gain, the name of the
  * input file for best-fit waveform parameters and the @hPars settings.
  *
  * @param filename The name of the file (mac file) to be processed.
- * @param bar Bar class pointer 
+ * @param bar BarLYSO class pointer 
  * @param sipm SiPM struct pointer
  */
-void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm);
+void Bartender_Configure(const char* filename, BarLYSO* bar, SiPM* sipm);
 
 
 #endif  // CONFIGURE_HH

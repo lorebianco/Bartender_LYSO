@@ -6,18 +6,31 @@
 #define DAQ_HH
 
 #include <TMath.h>
+#include <TRandom3.h>
 
-
-struct DAQ
+class DAQ
 {
-    Float_t fSamplingSpeed; /**< @brief Sampling speed [GSPS] of the DAQ */
-    Double_t fR_shaper; /**< @brief Value [Ohm] of the resistance of the shaper */
-    Float_t fGain; /**< @brief Gain of the amplification stage */
-    Float_t fGainOfTemplate;
-    Double_t fFactorOfGainConversion;
-    Double_t fSigmaNoise; /**< @brief Noise of the DAQ, evaluated as the stDev of the pedestal distribution */
+  public:
+    DAQ() { binRand = new TRandom3(0); };
+    ~DAQ() { delete binRand; };
 
-    inline void ComputeFactorOfGainConversion() { fFactorOfGainConversion = TMath::Power(10, (1./20)*(fGain - fGainOfTemplate)); }
+    // Sampling
+    Float_t fSamplingSpeed; /**< @brief Sampling speed [GSPS] of the DAQ */
+    Float_t fSamplingSpeed_Template;
+    Bool_t fIsBinSizeConstant;
+    Double_t fSigmaBinSize;
+    TRandom3 *binRand;
+    
+    // Amplification
+    Float_t fGain; /**< @brief Gain of the amplification stage */
+    Float_t fGain_Template;
+    inline Double_t ComputeFactorOfGainConversion() { return TMath::Power(10, (1./20)*(fGain - fGain_Template)); }
+    
+    // Shaping
+    Bool_t fIsShaping;
+    Double_t fTau_shaping;
+    Double_t fR_shaper_Template; /**< @brief Value [Ohm] of the resistance of the shaper */
+    Double_t fSigmaNoise; /**< @brief Noise of the DAQ, evaluated as the stDev of the pedestal distribution */
 };
 
 

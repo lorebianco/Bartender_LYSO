@@ -8,7 +8,7 @@
 
 constexpr Int_t CHANNELS = 115; /**< @brief Number of channels of the detectors */
 constexpr Int_t SAMPLINGS = 1024; /**< @brief Number of samplings for one waveform */
-
+constexpr Double_t BASELINE = 0.45;
 constexpr Int_t ZERO_TIME_BIN = 450; /**< @brief Delay of all waveforms in the [0, 1023] bins window */
 
 

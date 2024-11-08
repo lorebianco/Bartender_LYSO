@@ -41,9 +41,8 @@ string extract_value(const string& line, const string& keyword)
 
 
 
-void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm)
+void Bartender_Configure(const char* filename, BarLYSO* bar, SiPM* sipm)
 {
-    // Open the mac file
     ifstream file(filename);
     if(!file.is_open())
     {
@@ -51,11 +50,9 @@ void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm)
         return;
     }
 
-    // Read each line from the file
     string line;
-    while (getline(file, line))
+    while(getline(file, line))
     {
-        // Check for different parameters in each line and update corresponding values    
         if(line.find("Brand:") != string::npos)
         {
             sipm->fBrand = extract_value(line, "Brand:");
@@ -74,15 +71,39 @@ void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm)
         }
         else if(line.find("Sampling speed =") != string::npos)
         {
-            bar->GetDAQ()->fSamplingSpeed = stof(extract_value(line, "Sampling speed ="));
+            bar->GetDAQ()->fSamplingSpeed_Template = stof(extract_value(line, "Sampling speed ="));
         }
         else if(line.find("R_shaper =") != string::npos)
         {
-            bar->GetDAQ()->fR_shaper = stod(extract_value(line, "R_shaper ="));
+            bar->GetDAQ()->fR_shaper_Template = stod(extract_value(line, "R_shaper ="));
         }
         else if(line.find("Gain =") != string::npos)
         {
-            bar->GetDAQ()->fGain = stof(extract_value(line, "Gain ="));
+            bar->GetDAQ()->fGain_Template = stof(extract_value(line, "Gain ="));
+        }
+        else if(line.find("Constant Bins =") != string::npos)
+        {
+            bar->GetDAQ()->fIsBinSizeConstant = (extract_value(line, "Constant Bins =") == "true");
+        }
+        else if(line.find("Sampling speed_sim =") != string::npos)
+        {
+            bar->GetDAQ()->fSamplingSpeed = stof(extract_value(line, "Sampling speed_sim ="));
+        }
+        else if(line.find("BinSize sigma =") != string::npos && !bar->GetDAQ()->fIsBinSizeConstant)
+        {
+            bar->GetDAQ()->fSigmaBinSize = stod(extract_value(line, "BinSize sigma ="));
+        }
+        else if(line.find("Use shaping =") != string::npos)
+        {
+            bar->GetDAQ()->fIsShaping = (extract_value(line, "Use shaping =") == "true");
+        }
+        else if(line.find("Tau_shaping =") != string::npos && bar->GetDAQ()->fIsShaping)
+        {
+            bar->GetDAQ()->fTau_shaping = stod(extract_value(line, "Tau_shaping ="));
+        }
+        else if(line.find("Gain_sim =") != string::npos)
+        {
+            bar->GetDAQ()->fGain = stof(extract_value(line, "Gain_sim ="));
         }
         else if(line.find("Noise (sigma) =") != string::npos)
         {
@@ -132,9 +153,7 @@ void Bartender_Configure(const char* filename, Bar* bar, SiPM* sipm)
                 bar->SetHisto_Tau_dec(nbins, hist_min, hist_max);
             }
         }
-
     }
-
-    // Close the file
+    
     file.close();
 }

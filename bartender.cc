@@ -20,6 +20,8 @@
 #include "configure.hh"
 #include "bar.hh"
 #include "SiPM.hh"
+#include "summary.hh"
+
  
 using namespace std;
 
@@ -27,14 +29,14 @@ using namespace std;
  * @brief Main of the application.
  *
  * It manages the simulation flow. To begin with, it creates instances of the
- * Bar and SiPM classes and invokes Bartender_Configure() and
- * Bar::SetParsDistro() method. Next, it accesses the "lyso" TTree from the
+ * BarLYSO and SiPM classes and invokes Bartender_Configure() and
+ * BarLYSO::SetParsDistro() method. Next, it accesses the "lyso" TTree from the
  * Monte Carlo simulation.
  * After initializing all the waveform containers through
- * Bar::InitializeBaselines(), it initiates the core of the simulation. By
+ * BarLYSO::InitializeBaselines(), it initiates the core of the simulation. By
  * looping through all events and hit collections in the TTree, it constructs
- * the waveforms by calling Bar::SetFrontWaveforms() and
- * Bar::SetBackWaveform(). Finally, it saves all the data using Bar::SaveBar()
+ * the waveforms by calling BarLYSO::SetFrontWaveforms() and
+ * BarLYSO::SetBackWaveform(). Finally, it saves all the data using BarLYSO::SaveBar()
  * and invokes Bartender_Summary(). 
  */
 int main(int argc, char** argv)
@@ -43,23 +45,26 @@ int main(int argc, char** argv)
     const char *mcFilename = argv[1];
     const char *sipmFilename = argv[2];
     Int_t threadID = 0;
+    bool isMultithreading = false;
+
     if(argc == 4)
+    {
         threadID = std::stoi(argv[3]);
+        isMultithreading = true;
+    }
 
     cout << "BarWT" << threadID << ">> Start" << endl;
     
-    // Intantiates and configure SiPM and Bar members
+    // Instances and configuration of SiPM and BarLYSO
     SiPM *sipm = new SiPM();
-    Bar *bar = new Bar(mcFilename, threadID);
+    BarLYSO *bar = new BarLYSO(mcFilename, threadID);
     Bartender_Configure(sipmFilename, bar, sipm);
 
-    // Set the parameters histogram
+    // Set parameters and load TTree
     bar->SetParsDistro();
-
-    // Access the "lyso" TTree and its useful branches
     unique_ptr<TFile> mcFile(TFile::Open(mcFilename, "READ"));
     TTree *lyso = mcFile->Get<TTree>("lyso");
-
+    
     lyso->SetBranchStatus("*", false);
 
     lyso->SetBranchStatus("Event", true);
@@ -83,50 +88,53 @@ int main(int argc, char** argv)
     lyso->SetBranchAddress("T_F", &fT_F);
     lyso->SetBranchAddress("T_B", &fT_B);
 
-    cout << "BarWT" << threadID << ">> Trees loaded. Now there will be the Bartender" << endl;
+    cout << "BarWT" << threadID << ">> Trees loaded. Starting Bartender" << endl;
 
-    // Get the number of events and initialize WF containers
+    // Number of events and initialize containers
     Int_t nEntries = lyso->GetEntries();
     bar->SetEvents(nEntries);
-
+        
     // Start with the Bartender
     auto start_chrono = chrono::high_resolution_clock::now();
 
+    // Sampling times
+    bar->SetSamplingTimes();
+
+    cout << "BarWT" << threadID << ">> Times set!" << endl;
+
+    // Event loop
     for(Int_t k = 0; k < nEntries; k++)
     {
         lyso->GetEntry(k);
 
-        Int_t *fCh_F_data = fCh_F->data();
-        Int_t *fCh_B_data = fCh_B->data();
-        Double_t *fT_F_data =  fT_F->data();
-        Double_t *fT_B_data =  fT_B->data();
-
         bar->InitializeBaselines(fEvent);
 
         for(Int_t j = 0; j < fNHits_F; j++)
-        {
-            bar->SetFrontWaveform(fCh_F_data[j], fT_F_data[j]);
-        }
+            bar->SetFrontWaveform(fCh_F->data()[j], fT_F->data()[j]);
+
         for(Int_t j = 0; j < fNHits_B; j++)
-        {
-            bar->SetBackWaveform(fCh_B_data[j], fT_B_data[j]);
-        }
-        
+            bar->SetBackWaveform(fCh_B->data()[j], fT_B->data()[j]);
+
         bar->SaveEvent();
         bar->ClearContainers();
-        
-        // Print progress
+
         if(nEntries < 10 || k % (nEntries / 10) == 0)
-            cout << "BarWT" << threadID << ">> Processed " << k + 1 << " events" << endl;
+            cout << "\rBarWT" << threadID << ">> Processed " << k + 1 << " events" << flush;
     }
 
     // Save data
     bar->SaveBar();
 
     auto end_chrono = chrono::high_resolution_clock::now();
-    chrono::duration<Double_t> duration = end_chrono - start_chrono;
+    chrono::duration<double> duration = end_chrono - start_chrono;
 
-    // Free the memory
+    // Single-thread summary
+    if(!isMultithreading)
+    {
+        Bartender_Summary(sipmFilename, bar->GetID(), duration.count());
+    }
+
+    // Free memory
     lyso->ResetBranchAddresses();
     delete fT_F, fT_B, fCh_F, fCh_B;
     delete sipm;
@@ -134,4 +142,4 @@ int main(int argc, char** argv)
 
     // Finally
     return 0;
-} 
+}

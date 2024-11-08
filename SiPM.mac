@@ -1,4 +1,5 @@
 # SiPM
+# From here the real parameters are defined:
 Brand: Hamamatsu
 TypeNo: S13360-6050CS
 #
@@ -11,7 +12,14 @@ Sampling speed = 1 GSPS
 R_shaper = 1.58E3 Ohm
 Gain = 60 dB
 #
-# Evaluate the noise from the pedestal distribution
+#
+# From here the simulation DAQ parameters are defined:
+Constant Bins = false
+Sampling speed_sim = 1 GSPS
+BinSize sigma = 0.01 ns
+Use shaping = false
+Tau_shaping = 1 ns
+Gain_sim = 10 dB
 Noise (sigma) = 0.02 V
 #
 # inputFile for best-fit parameters

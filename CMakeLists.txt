@@ -26,8 +26,8 @@ file(COPY ${MACRO_FILES} DESTINATION ${PROJECT_BINARY_DIR})
 add_executable(bartender bartender.cc ${sources} ${headers})
 target_link_libraries(bartender ${ROOT_LIBRARIES})
 
-# Aggiungi l'eseguibile bartenderMT
-add_executable(bartenderMT bartenderMT.cc)
+# Aggiungi l'eseguibile bartenderMT includendo solo summary.hh
+add_executable(bartenderMT bartenderMT.cc ${PROJECT_SOURCE_DIR}/include/summary.hh  ${PROJECT_SOURCE_DIR}/src/summary.cc)
 
 # Definisci il target personalizzato per la generazione di entrambi gli eseguibili
 add_custom_target(my_Bartender ALL DEPENDS bartender bartenderMT)
