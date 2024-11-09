@@ -124,7 +124,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="comment">// Get input files</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *mcFilename = argv[1];</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">const</span> <span class="keywordtype">char</span> *sipmFilename = argv[2];</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    Int_t threadID = 0;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    Int_t threadID = -1;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordtype">bool</span> isMultithreading = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">if</span>(argc == 4)</div>
@@ -133,106 +133,116 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        isMultithreading = <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    }</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    cout &lt;&lt; <span class="stringliteral">&quot;BarWT&quot;</span> &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Start&quot;</span> &lt;&lt; endl;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// Instances and configuration of SiPM and BarLYSO</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <a class="code hl_struct" href="structSiPM.html">SiPM</a> *sipm = <span class="keyword">new</span> <a class="code hl_struct" href="structSiPM.html">SiPM</a>();</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_class" href="classBarLYSO.html">BarLYSO</a> *bar = <span class="keyword">new</span> <a class="code hl_class" href="classBarLYSO.html">BarLYSO</a>(mcFilename, threadID);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_function" href="configure_8cc.html#abb6b43729bf1fe03afd1e96b78f39961">Bartender_Configure</a>(sipmFilename, bar, sipm);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// Set parameters and load TTree</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    bar-&gt;<a class="code hl_function" href="classBarLYSO.html#a8ccaeae49d0c14932a1a7c3b72882039">SetParsDistro</a>();</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    unique_ptr&lt;TFile&gt; mcFile(TFile::Open(mcFilename, <span class="stringliteral">&quot;READ&quot;</span>));</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    TTree *lyso = mcFile-&gt;Get&lt;TTree&gt;(<span class="stringliteral">&quot;lyso&quot;</span>);</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;*&quot;</span>, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;Event&quot;</span>, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;NHits_F&quot;</span>, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;NHits_B&quot;</span>, <span class="keyword">true</span>);    </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;T_F&quot;</span>, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;Ch_F&quot;</span>, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;T_B&quot;</span>, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;Ch_B&quot;</span>, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    Int_t fEvent;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    Int_t fNHits_F, fNHits_B;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    vector&lt;Double_t&gt; *fT_F = 0, *fT_B = 0;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    vector&lt;Int_t&gt; *fCh_F = 0, *fCh_B = 0;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;Event&quot;</span>, &amp;fEvent);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;NHits_F&quot;</span>, &amp;fNHits_F);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;NHits_B&quot;</span>, &amp;fNHits_B);</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;Ch_F&quot;</span>, &amp;fCh_F);</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;Ch_B&quot;</span>, &amp;fCh_B);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;T_F&quot;</span>, &amp;fT_F);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;T_B&quot;</span>, &amp;fT_B);</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    cout &lt;&lt; <span class="stringliteral">&quot;BarWT&quot;</span> &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Trees loaded. Starting Bartender&quot;</span> &lt;&lt; endl;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="comment">// Number of events and initialize containers</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    Int_t nEntries = lyso-&gt;GetEntries();</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    bar-&gt;SetEvents(nEntries);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <span class="comment">// Start with the Bartender</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keyword">auto</span> start_chrono = chrono::high_resolution_clock::now();</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="comment">// Sampling times</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    bar-&gt;SetSamplingTimes();</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordflow">if</span>(!isMultithreading)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        cout &lt;&lt; <span class="stringliteral">&quot;BarST&gt;&gt; Start&quot;</span> &lt;&lt; endl;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        cout &lt;&lt; <span class="stringliteral">&quot;BarWT&quot;</span> &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Start&quot;</span> &lt;&lt; endl; </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="comment">// Instances and configuration of SiPM and BarLYSO</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <a class="code hl_struct" href="structSiPM.html">SiPM</a> *sipm = <span class="keyword">new</span> <a class="code hl_struct" href="structSiPM.html">SiPM</a>();</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_class" href="classBarLYSO.html">BarLYSO</a> *bar = <span class="keyword">new</span> <a class="code hl_class" href="classBarLYSO.html">BarLYSO</a>(mcFilename, threadID);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <a class="code hl_function" href="configure_8cc.html#abb6b43729bf1fe03afd1e96b78f39961">Bartender_Configure</a>(sipmFilename, bar, sipm);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// Set parameters and load TTree</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    bar-&gt;<a class="code hl_function" href="classBarLYSO.html#a8ccaeae49d0c14932a1a7c3b72882039">SetParsDistro</a>();</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    unique_ptr&lt;TFile&gt; mcFile(TFile::Open(mcFilename, <span class="stringliteral">&quot;READ&quot;</span>));</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    TTree *lyso = mcFile-&gt;Get&lt;TTree&gt;(<span class="stringliteral">&quot;lyso&quot;</span>);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;*&quot;</span>, <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;Event&quot;</span>, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;NHits_F&quot;</span>, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;NHits_B&quot;</span>, <span class="keyword">true</span>);    </div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;T_F&quot;</span>, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;Ch_F&quot;</span>, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;T_B&quot;</span>, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    lyso-&gt;SetBranchStatus(<span class="stringliteral">&quot;Ch_B&quot;</span>, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    Int_t fEvent;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    Int_t fNHits_F, fNHits_B;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    vector&lt;Double_t&gt; *fT_F = 0, *fT_B = 0;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    vector&lt;Int_t&gt; *fCh_F = 0, *fCh_B = 0;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;Event&quot;</span>, &amp;fEvent);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;NHits_F&quot;</span>, &amp;fNHits_F);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;NHits_B&quot;</span>, &amp;fNHits_B);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;Ch_F&quot;</span>, &amp;fCh_F);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;Ch_B&quot;</span>, &amp;fCh_B);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;T_F&quot;</span>, &amp;fT_F);</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    lyso-&gt;SetBranchAddress(<span class="stringliteral">&quot;T_B&quot;</span>, &amp;fT_B);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="comment">// Number of events and initialize containers</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    Int_t nEntries = lyso-&gt;GetEntries();</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    bar-&gt;SetEvents(nEntries);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordflow">if</span>(!isMultithreading)</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        cout &lt;&lt; <span class="stringliteral">&quot;BarST&gt;&gt; Trees loaded. Starting Bartender for &quot;</span> &lt;&lt; nEntries <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; endl;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        cout &lt;&lt; <span class="stringliteral">&quot;BarWT&quot;</span> &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Trees loaded. Starting Bartender for &quot;</span> &lt;&lt; nEntries <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; endl;</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    cout &lt;&lt; <span class="stringliteral">&quot;BarWT&quot;</span> &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Times set!&quot;</span> &lt;&lt; endl;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="comment">// Event loop</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordflow">for</span>(Int_t k = 0; k &lt; nEntries; k++)</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    {</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        lyso-&gt;GetEntry(k);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        bar-&gt;<a class="code hl_function" href="classBarLYSO.html#a8b36718acbc5c65e64d7ab969109f01e">InitializeBaselines</a>(fEvent);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keywordflow">for</span>(Int_t j = 0; j &lt; fNHits_F; j++)</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            bar-&gt;SetFrontWaveform(fCh_F-&gt;data()[j], fT_F-&gt;data()[j]);</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="keywordflow">for</span>(Int_t j = 0; j &lt; fNHits_B; j++)</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            bar-&gt;<a class="code hl_function" href="classBarLYSO.html#a937b454a9f8a8a024242f047d8add2a5">SetBackWaveform</a>(fCh_B-&gt;data()[j], fT_B-&gt;data()[j]);</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        bar-&gt;<a class="code hl_function" href="classBarLYSO.html#a6a510ceebc64d6ddab4dbefbbfd6e92e">SaveEvent</a>();</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        bar-&gt;<a class="code hl_function" href="classBarLYSO.html#aa2939972add63ddb23b25f217f26f806">ClearContainers</a>();</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keywordflow">if</span>(nEntries &lt; 10 || k % (nEntries / 10) == 0)</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            cout &lt;&lt; <span class="stringliteral">&quot;\rBarWT&quot;</span> &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Processed &quot;</span> &lt;&lt; k + 1 &lt;&lt; <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; flush;</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    }</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="comment">// Start with the Bartender</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">auto</span> start_chrono = chrono::high_resolution_clock::now();</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="comment">// Sampling times</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    bar-&gt;SetSamplingTimes();</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="comment">// Event loop</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keywordflow">for</span>(Int_t k = 0; k &lt; nEntries; k++)</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    {</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        lyso-&gt;GetEntry(k);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        bar-&gt;<a class="code hl_function" href="classBarLYSO.html#a8b36718acbc5c65e64d7ab969109f01e">InitializeBaselines</a>(fEvent);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keywordflow">for</span>(Int_t j = 0; j &lt; fNHits_F; j++)</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>            bar-&gt;SetFrontWaveform(fCh_F-&gt;data()[j], fT_F-&gt;data()[j]);</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="keywordflow">for</span>(Int_t j = 0; j &lt; fNHits_B; j++)</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            bar-&gt;<a class="code hl_function" href="classBarLYSO.html#a937b454a9f8a8a024242f047d8add2a5">SetBackWaveform</a>(fCh_B-&gt;data()[j], fT_B-&gt;data()[j]);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        bar-&gt;<a class="code hl_function" href="classBarLYSO.html#a6a510ceebc64d6ddab4dbefbbfd6e92e">SaveEvent</a>();</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        bar-&gt;<a class="code hl_function" href="classBarLYSO.html#aa2939972add63ddb23b25f217f26f806">ClearContainers</a>();</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="comment">// Save data</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    bar-&gt;SaveBar();</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keyword">auto</span> end_chrono = chrono::high_resolution_clock::now();</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    chrono::duration&lt;double&gt; duration = end_chrono - start_chrono;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="comment">// Single-thread summary</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="keywordflow">if</span>(!isMultithreading)</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    {</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        Bartender_Summary(sipmFilename, bar-&gt;<a class="code hl_function" href="classBarLYSO.html#ab7f4db7e2ae81d516c11b055e8304da4">GetID</a>(), duration.count());</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    }</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <span class="comment">// Free memory</span></div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    lyso-&gt;ResetBranchAddresses();</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="keyword">delete</span> fT_F, fT_B, fCh_F, fCh_B;</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    <span class="keyword">delete</span> sipm;</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="keyword">delete</span> bar;</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="comment">// Finally</span></div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>}</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="keywordflow">if</span>(nEntries &lt; 10 || k % (nEntries / 10) == 0)</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        {</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            <span class="keywordflow">if</span>(!isMultithreading)</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                cout &lt;&lt; <span class="stringliteral">&quot;BarST&gt;&gt; Processed &quot;</span> &lt;&lt; k + 1 &lt;&lt; <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; flush;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                cout &lt;&lt; <span class="stringliteral">&quot;\rBarWT&quot;</span> &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Processed &quot;</span> &lt;&lt; k + 1 &lt;&lt; <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; flush;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        }</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    }</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="comment">// Save data</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    bar-&gt;SaveBar();</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <span class="keyword">auto</span> end_chrono = chrono::high_resolution_clock::now();</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    chrono::duration&lt;double&gt; duration = end_chrono - start_chrono;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <span class="comment">// Single-thread summary</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keywordflow">if</span>(!isMultithreading)</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    {</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        Bartender_Summary(sipmFilename, bar-&gt;<a class="code hl_function" href="classBarLYSO.html#ab7f4db7e2ae81d516c11b055e8304da4">GetID</a>(), duration.count());</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    }</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="comment">// Free memory</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    lyso-&gt;ResetBranchAddresses();</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keyword">delete</span> fT_F, fT_B, fCh_F, fCh_B;</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keyword">delete</span> sipm;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="keyword">delete</span> bar;</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="comment">// Finally</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>}</div>
 </div>
 <div class="ttc" id="aSiPM_8hh_html"><div class="ttname"><a href="SiPM_8hh.html">SiPM.hh</a></div><div class="ttdoc">Definition of the struct SiPM.</div></div>
 <div class="ttc" id="abar_8hh_html"><div class="ttname"><a href="bar_8hh.html">bar.hh</a></div><div class="ttdoc">Declaration of the class BarLYSO.</div></div>
 <div class="ttc" id="abartender_8cc_html_a3c04138a5bfe5d72780bb7e82a18e627"><div class="ttname"><a href="bartender_8cc.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div><div class="ttdeci">int main(int argc, char **argv)</div><div class="ttdoc">Main of the application.</div><div class="ttdef"><b>Definition</b> <a href="#l00042">bartender.cc:42</a></div></div>
 <div class="ttc" id="aclassBarLYSO_html"><div class="ttname"><a href="classBarLYSO.html">BarLYSO</a></div><div class="ttdoc">Class for managing waveform construction for all events and channels.</div><div class="ttdef"><b>Definition</b> <a href="bar_8hh_source.html#l00027">bar.hh:28</a></div></div>
-<div class="ttc" id="aclassBarLYSO_html_a6a510ceebc64d6ddab4dbefbbfd6e92e"><div class="ttname"><a href="classBarLYSO.html#a6a510ceebc64d6ddab4dbefbbfd6e92e">BarLYSO::SaveEvent</a></div><div class="ttdeci">void SaveEvent()</div><div class="ttdoc">Saves all the samples from fFront and fBack into a text file.</div><div class="ttdef"><b>Definition</b> <a href="bar_8cc_source.html#l00251">bar.cc:251</a></div></div>
-<div class="ttc" id="aclassBarLYSO_html_a8b36718acbc5c65e64d7ab969109f01e"><div class="ttname"><a href="classBarLYSO.html#a8b36718acbc5c65e64d7ab969109f01e">BarLYSO::InitializeBaselines</a></div><div class="ttdeci">void InitializeBaselines(Int_t event)</div><div class="ttdoc">Method to initialize the entire fFront and fBack with a noise baseline.</div><div class="ttdef"><b>Definition</b> <a href="bar_8cc_source.html#l00198">bar.cc:198</a></div></div>
-<div class="ttc" id="aclassBarLYSO_html_a8ccaeae49d0c14932a1a7c3b72882039"><div class="ttname"><a href="classBarLYSO.html#a8ccaeae49d0c14932a1a7c3b72882039">BarLYSO::SetParsDistro</a></div><div class="ttdeci">void SetParsDistro()</div><div class="ttdoc">Sets the 3D histogram hPars.</div><div class="ttdef"><b>Definition</b> <a href="bar_8cc_source.html#l00145">bar.cc:145</a></div></div>
-<div class="ttc" id="aclassBarLYSO_html_a937b454a9f8a8a024242f047d8add2a5"><div class="ttname"><a href="classBarLYSO.html#a937b454a9f8a8a024242f047d8add2a5">BarLYSO::SetBackWaveform</a></div><div class="ttdeci">void SetBackWaveform(Int_t channel, Double_t start)</div><div class="ttdoc">Method to add a I-Phel waveform to the corresponding event and channel of the Back-Detector.</div><div class="ttdef"><b>Definition</b> <a href="bar_8cc_source.html#l00236">bar.cc:236</a></div></div>
-<div class="ttc" id="aclassBarLYSO_html_aa2939972add63ddb23b25f217f26f806"><div class="ttname"><a href="classBarLYSO.html#aa2939972add63ddb23b25f217f26f806">BarLYSO::ClearContainers</a></div><div class="ttdeci">void ClearContainers()</div><div class="ttdoc">Method to add a I-Phel waveform to the corresponding event and channel of the Front-Detector.</div><div class="ttdef"><b>Definition</b> <a href="bar_8cc_source.html#l00207">bar.cc:207</a></div></div>
+<div class="ttc" id="aclassBarLYSO_html_a6a510ceebc64d6ddab4dbefbbfd6e92e"><div class="ttname"><a href="classBarLYSO.html#a6a510ceebc64d6ddab4dbefbbfd6e92e">BarLYSO::SaveEvent</a></div><div class="ttdeci">void SaveEvent()</div><div class="ttdoc">Saves all the samples from fFront and fBack into a text file.</div><div class="ttdef"><b>Definition</b> <a href="bar_8cc_source.html#l00263">bar.cc:263</a></div></div>
+<div class="ttc" id="aclassBarLYSO_html_a8b36718acbc5c65e64d7ab969109f01e"><div class="ttname"><a href="classBarLYSO.html#a8b36718acbc5c65e64d7ab969109f01e">BarLYSO::InitializeBaselines</a></div><div class="ttdeci">void InitializeBaselines(Int_t event)</div><div class="ttdoc">Method to initialize the entire fFront and fBack with a noise baseline.</div><div class="ttdef"><b>Definition</b> <a href="bar_8cc_source.html#l00210">bar.cc:210</a></div></div>
+<div class="ttc" id="aclassBarLYSO_html_a8ccaeae49d0c14932a1a7c3b72882039"><div class="ttname"><a href="classBarLYSO.html#a8ccaeae49d0c14932a1a7c3b72882039">BarLYSO::SetParsDistro</a></div><div class="ttdeci">void SetParsDistro()</div><div class="ttdoc">Sets the 3D histogram hPars.</div><div class="ttdef"><b>Definition</b> <a href="bar_8cc_source.html#l00157">bar.cc:157</a></div></div>
+<div class="ttc" id="aclassBarLYSO_html_a937b454a9f8a8a024242f047d8add2a5"><div class="ttname"><a href="classBarLYSO.html#a937b454a9f8a8a024242f047d8add2a5">BarLYSO::SetBackWaveform</a></div><div class="ttdeci">void SetBackWaveform(Int_t channel, Double_t start)</div><div class="ttdoc">Method to add a I-Phel waveform to the corresponding event and channel of the Back-Detector.</div><div class="ttdef"><b>Definition</b> <a href="bar_8cc_source.html#l00248">bar.cc:248</a></div></div>
+<div class="ttc" id="aclassBarLYSO_html_aa2939972add63ddb23b25f217f26f806"><div class="ttname"><a href="classBarLYSO.html#aa2939972add63ddb23b25f217f26f806">BarLYSO::ClearContainers</a></div><div class="ttdeci">void ClearContainers()</div><div class="ttdoc">Method to add a I-Phel waveform to the corresponding event and channel of the Front-Detector.</div><div class="ttdef"><b>Definition</b> <a href="bar_8cc_source.html#l00219">bar.cc:219</a></div></div>
 <div class="ttc" id="aclassBarLYSO_html_ab7f4db7e2ae81d516c11b055e8304da4"><div class="ttname"><a href="classBarLYSO.html#ab7f4db7e2ae81d516c11b055e8304da4">BarLYSO::GetID</a></div><div class="ttdeci">Int_t GetID() const</div><div class="ttdoc">Returns the ID of the Monte Carlo.</div><div class="ttdef"><b>Definition</b> <a href="bar_8hh_source.html#l00155">bar.hh:155</a></div></div>
 <div class="ttc" id="aconfigure_8cc_html_abb6b43729bf1fe03afd1e96b78f39961"><div class="ttname"><a href="configure_8cc.html#abb6b43729bf1fe03afd1e96b78f39961">Bartender_Configure</a></div><div class="ttdeci">void Bartender_Configure(const char *filename, BarLYSO *bar, SiPM *sipm)</div><div class="ttdoc">Reads and processes a specific file to populate members of the BarLYSO class and SiPM struct.</div><div class="ttdef"><b>Definition</b> <a href="configure_8cc_source.html#l00044">configure.cc:44</a></div></div>
 <div class="ttc" id="aconfigure_8hh_html"><div class="ttname"><a href="configure_8hh.html">configure.hh</a></div><div class="ttdoc">Declaration of the function Bartender_Configure() (and the auxiliary function extract_value())</div></div>
