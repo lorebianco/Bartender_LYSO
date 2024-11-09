@@ -57,7 +57,7 @@ int main(int argc, char** argv)
         cout << "BarST>> Start" << endl;
     else
         cout << "BarWT" << threadID << ">> Start" << endl; 
-    
+
     // Instances and configuration of SiPM and BarLYSO
     SiPM *sipm = new SiPM();
     BarLYSO *bar = new BarLYSO(mcFilename, threadID);
@@ -96,9 +96,9 @@ int main(int argc, char** argv)
     bar->SetEvents(nEntries);
     
     if(!isMultithreading)
-        cout << "BarST>> Trees loaded. Starting Bartender for " << nEntries " events" << endl;
+        cout << "BarST>> Trees loaded. Starting Bartender for " << nEntries << " events" << endl;
     else
-        cout << "BarWT" << threadID << ">> Trees loaded. Starting Bartender for " << nEntries " events" << endl;
+        cout << "BarWT" << threadID << ">> Trees loaded. Starting Bartender for " << nEntries << " events" << endl;
 
     // Start with the Bartender
     auto start_chrono = chrono::high_resolution_clock::now();
