@@ -137,7 +137,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        cout &lt;&lt; <span class="stringliteral">&quot;BarST&gt;&gt; Start&quot;</span> &lt;&lt; endl;</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        cout &lt;&lt; <span class="stringliteral">&quot;BarWT&quot;</span> &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Start&quot;</span> &lt;&lt; endl; </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="comment">// Instances and configuration of SiPM and BarLYSO</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <a class="code hl_struct" href="structSiPM.html">SiPM</a> *sipm = <span class="keyword">new</span> <a class="code hl_struct" href="structSiPM.html">SiPM</a>();</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_class" href="classBarLYSO.html">BarLYSO</a> *bar = <span class="keyword">new</span> <a class="code hl_class" href="classBarLYSO.html">BarLYSO</a>(mcFilename, threadID);</div>
@@ -176,9 +176,9 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    bar-&gt;SetEvents(nEntries);</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    </div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="keywordflow">if</span>(!isMultithreading)</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        cout &lt;&lt; <span class="stringliteral">&quot;BarST&gt;&gt; Trees loaded. Starting Bartender for &quot;</span> &lt;&lt; nEntries <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; endl;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        cout &lt;&lt; <span class="stringliteral">&quot;BarST&gt;&gt; Trees loaded. Starting Bartender for &quot;</span> &lt;&lt; nEntries &lt;&lt; <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; endl;</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        cout &lt;&lt; <span class="stringliteral">&quot;BarWT&quot;</span> &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Trees loaded. Starting Bartender for &quot;</span> &lt;&lt; nEntries <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; endl;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        cout &lt;&lt; <span class="stringliteral">&quot;BarWT&quot;</span> &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Trees loaded. Starting Bartender for &quot;</span> &lt;&lt; nEntries &lt;&lt; <span class="stringliteral">&quot; events&quot;</span> &lt;&lt; endl;</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="comment">// Start with the Bartender</span></div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">auto</span> start_chrono = chrono::high_resolution_clock::now();</div>
