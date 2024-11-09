@@ -126,7 +126,7 @@ int main(int argc, char** argv)
         if(nEntries < 10 || k % (nEntries / 10) == 0)
         {
             if(!isMultithreading)
-                cout << "BarST>> Processed " << k + 1 << " events" << flush;
+                cout << "\rBarST>> Processed " << k + 1 << " events" << flush;
             else
                 cout << "\rBarWT" << threadID << ">> Processed " << k + 1 << " events" << flush;
         }
