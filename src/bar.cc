@@ -91,10 +91,22 @@ string BarLYSO::GenerateOutputFilename(const char* inputFilename)
 
     // Determine the output filename based on the Bar ID
     string outputFilename;
-    if (fID)
-        outputFilename = "BarID_" + to_string(fID) + "_t" + to_string(fThreadID) + ".root";
+    if(fID)
+    {
+        // If fThreadID is -1, omit the thread ID part in the filename
+        if(fThreadID == -1)
+        {
+            outputFilename = "BarID_" + to_string(fID) + ".root";
+        }
+        else
+        {
+            outputFilename = "BarID_" + to_string(fID) + "_t" + to_string(fThreadID) + ".root";
+        }
+    }
     else
+    {
         outputFilename = "output.root";
+    }
 
     return outputFilename;
 }

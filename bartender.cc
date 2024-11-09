@@ -44,7 +44,7 @@ int main(int argc, char** argv)
     // Get input files
     const char *mcFilename = argv[1];
     const char *sipmFilename = argv[2];
-    Int_t threadID = 0;
+    Int_t threadID = -1;
     bool isMultithreading = false;
 
     if(argc == 4)
@@ -53,7 +53,10 @@ int main(int argc, char** argv)
         isMultithreading = true;
     }
 
-    cout << "BarWT" << threadID << ">> Start" << endl;
+    if(!isMultithreading)
+        cout << "BarST>> Start" << endl;
+    else
+        cout << "BarWT" << threadID << ">> Start" << endl; 
     
     // Instances and configuration of SiPM and BarLYSO
     SiPM *sipm = new SiPM();
@@ -88,19 +91,20 @@ int main(int argc, char** argv)
     lyso->SetBranchAddress("T_F", &fT_F);
     lyso->SetBranchAddress("T_B", &fT_B);
 
-    cout << "BarWT" << threadID << ">> Trees loaded. Starting Bartender" << endl;
-
     // Number of events and initialize containers
     Int_t nEntries = lyso->GetEntries();
     bar->SetEvents(nEntries);
-        
+    
+    if(!isMultithreading)
+        cout << "BarST>> Trees loaded. Starting Bartender for " << nEntries " events" << endl;
+    else
+        cout << "BarWT" << threadID << ">> Trees loaded. Starting Bartender for " << nEntries " events" << endl;
+
     // Start with the Bartender
     auto start_chrono = chrono::high_resolution_clock::now();
 
     // Sampling times
     bar->SetSamplingTimes();
-
-    cout << "BarWT" << threadID << ">> Times set!" << endl;
 
     // Event loop
     for(Int_t k = 0; k < nEntries; k++)
@@ -118,8 +122,14 @@ int main(int argc, char** argv)
         bar->SaveEvent();
         bar->ClearContainers();
 
+
         if(nEntries < 10 || k % (nEntries / 10) == 0)
-            cout << "\rBarWT" << threadID << ">> Processed " << k + 1 << " events" << flush;
+        {
+            if(!isMultithreading)
+                cout << "BarST>> Processed " << k + 1 << " events" << flush;
+            else
+                cout << "\rBarWT" << threadID << ">> Processed " << k + 1 << " events" << flush;
+        }
     }
 
     // Save data
