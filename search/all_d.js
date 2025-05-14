@@ -9,7 +9,7 @@ var searchData=
   ['sethisto_5ftau_5frise_6',['SetHisto_Tau_rise',['../classBarLYSO.html#a99051fd91efd8a282e3c8239aa4a60e6',1,'BarLYSO']]],
   ['setinputfilename_7',['SetInputFilename',['../classBarLYSO.html#a8c7a419e7b23e9ef1249752f0607689f',1,'BarLYSO']]],
   ['setparsdistro_8',['SetParsDistro',['../classBarLYSO.html#a8ccaeae49d0c14932a1a7c3b72882039',1,'BarLYSO']]],
-  ['setsigmanoise_9',['SetSigmaNoise',['../classBarLYSO.html#a4e07288ba5541cc3b3428dcbb1682aed',1,'BarLYSO']]],
+  ['setsigmanoise_9',['SetSigmaNoise',['../classBarLYSO.html#abd5b924cdf8d810d67f48a7a1dc19f85',1,'BarLYSO']]],
   ['simulation_10',['Implementation and Flow of the Simulation',['../index.html#implementation',1,'']]],
   ['simulation_11',['Summary of the Bartender simulation',['../index.html#summary',1,'']]],
   ['sipm_12',['SiPM',['../structSiPM.html',1,'']]],

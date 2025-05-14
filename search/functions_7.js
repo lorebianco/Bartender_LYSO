@@ -8,5 +8,5 @@ var searchData=
   ['sethisto_5ftau_5frise_5',['SetHisto_Tau_rise',['../classBarLYSO.html#a99051fd91efd8a282e3c8239aa4a60e6',1,'BarLYSO']]],
   ['setinputfilename_6',['SetInputFilename',['../classBarLYSO.html#a8c7a419e7b23e9ef1249752f0607689f',1,'BarLYSO']]],
   ['setparsdistro_7',['SetParsDistro',['../classBarLYSO.html#a8ccaeae49d0c14932a1a7c3b72882039',1,'BarLYSO']]],
-  ['setsigmanoise_8',['SetSigmaNoise',['../classBarLYSO.html#a4e07288ba5541cc3b3428dcbb1682aed',1,'BarLYSO']]]
+  ['setsigmanoise_8',['SetSigmaNoise',['../classBarLYSO.html#abd5b924cdf8d810d67f48a7a1dc19f85',1,'BarLYSO']]]
 ];

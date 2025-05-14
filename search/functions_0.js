@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['add_5fnoise_0',['Add_Noise',['../classBarLYSO.html#a91fef55f268049f3373abc45a810b12c',1,'BarLYSO']]]
+  ['add_5fnoise_0',['Add_Noise',['../classBarLYSO.html#a5895c00c56885aa1484121f28363da41',1,'BarLYSO']]]
 ];
