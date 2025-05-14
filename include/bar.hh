@@ -108,7 +108,7 @@ public:
     void SaveEvent();
     void SaveBar();
 
-    inline void SetSigmaNoise(Double_t newSigmaNoise) { fSigmaNoise = newSigmaNoise; } /**< @brief Set @ref fSigmaNoise, the noise of the DAQ. */
+    inline void SetSigmaNoise(Float_t newSigmaNoise) { fSigmaNoise = newSigmaNoise; } /**< @brief Set @ref fSigmaNoise, the noise of the DAQ. */
     inline void SetInputFilename(std::string newInputFilename) { fInputFilename = newInputFilename; } /**< @brief Set the name of the text file of the best fit parameters data. */
     /**
      * @brief Set the cuts in the charge spectrum of input best fit parameters
@@ -161,17 +161,17 @@ private:
     Int_t EVENTS;
     Int_t fThreadID;
 
-    std::vector<std::vector<Double_t>> fFront; /**< @brief Container for Front-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. */  
-    std::vector<std::vector<Double_t>> fBack;  /**< @brief Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. */
-    std::vector<std::vector<Double_t>> fTimes_F;
-    std::vector<std::vector<Double_t>> fTimes_B;
+    std::vector<std::vector<Float_t>> fFront; /**< @brief Container for Front-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. */  
+    std::vector<std::vector<Float_t>> fBack;  /**< @brief Container for Back-Detector waveforms: a 3-dimensional matrix with indices for event, channel, and bin. */
+    std::vector<std::vector<Float_t>> fTimes_F;
+    std::vector<std::vector<Float_t>> fTimes_B;
 
     TH3D *hPars; /**< @brief 3D Histogram of One-Phel waveform parameters from which sampling will occur */
     
     TRandom3 *fRandPars; /**< @brief Random generator for @ref SetFrontWaveform() and @ref SetBackWaveform() */
     TRandom3 *fRandNoise; /**< @brief Random generator for @ref Add_Noise() */
 
-    Double_t fSigmaNoise; /**< @brief Noise of the DAQ, evaluated as the stDev of the pedestal distribution */
+    Float_t fSigmaNoise; /**< @brief Noise of the DAQ, evaluated as the stDev of the pedestal distribution */
 
     std::string fInputFilename; /**< @brief Name of the txt file of the best fit parameters data. See the introduction for more details about the file format */
     Double_t fChargeCuts[2]; /**< @brief Cuts in the charge spectrum of input best fit parameters data; [0] represents the minimum, [1] represents the maximum. */
@@ -185,6 +185,7 @@ private:
  
     TFile *fOutFile = nullptr;
     TTree *fOutTree = nullptr;
+    TTree *fTimesTree = nullptr;
 
     /**
      * @brief Returns the value of the noise.
@@ -194,7 +195,7 @@ private:
      * \f$ \sigma \f$ should be derived from experimental data, based on the
      * pedestal's distribution.
      */
-    inline Double_t Add_Noise() { return fRandNoise->Gaus(BASELINE, fDAQ->fSigmaNoise); };
+    inline Float_t Add_Noise() { return fRandNoise->Gaus(BASELINE, fDAQ->fSigmaNoise); };
     /**
      * @brief Returns the value at t of the analytical form of the One Photo-Electron waveform.
      *
@@ -202,7 +203,7 @@ private:
      * \text{wave}(t) = -A \Bigg( \exp \Bigg( -\frac{t - t_{phel}}{\tau_{\text{RISE}}} \Bigg) - \exp \Bigg( -\frac{t - t_{phel}}{\tau_{\text{DEC}}} \Bigg) \Bigg)  \theta( t - t_{phel} )
      * \f] 
      */
-    Double_t Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Double_t timePhel);
+    Float_t Wave_OnePhel(Float_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Double_t timePhel);
 
 };
 

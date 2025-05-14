@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <cstring>
  
 #include <TFile.h>
 #include <TTree.h>
@@ -46,12 +47,33 @@ int main(int argc, char** argv)
     const char *sipmFilename = argv[2];
     Int_t threadID = -1;
     bool isMultithreading = false;
+    Int_t maxEvents = -1;
 
-    if(argc == 4)
-    {
-        threadID = std::stoi(argv[3]);
-        isMultithreading = true;
+    // Control for multithreading and max events
+    for (int i = 3; i < argc; ++i) {
+    if (std::strcmp(argv[i], "-t") == 0 || std::strcmp(argv[i], "-T") == 0) {
+        if (i + 1 < argc) {
+            try {
+                maxEvents = std::stoi(argv[++i]);
+            } catch (const std::invalid_argument& e) {
+                std::cerr << "Errore: il valore dopo -t o -T non è un numero valido\n";
+                return 1;
+            }
+        } else {
+            std::cerr << "Errore: specificare il numero di eventi dopo -t o -T\n";
+            return 1;
+        }
+    } else if (threadID == -1) {
+        try {
+            threadID = std::stoi(argv[i]);
+            isMultithreading = true;
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Errore: il valore del threadID non è un numero valido\n";
+            return 1;
+        }
     }
+}
+
 
     if(!isMultithreading)
         cout << "BarST>> Start" << endl;
@@ -69,7 +91,6 @@ int main(int argc, char** argv)
     TTree *lyso = mcFile->Get<TTree>("lyso");
     
     lyso->SetBranchStatus("*", false);
-
     lyso->SetBranchStatus("Event", true);
     lyso->SetBranchStatus("NHits_F", true);
     lyso->SetBranchStatus("NHits_B", true);    
@@ -93,6 +114,8 @@ int main(int argc, char** argv)
 
     // Number of events and initialize containers
     Int_t nEntries = lyso->GetEntries();
+    if(maxEvents > 0 && maxEvents < nEntries)
+        nEntries = maxEvents;
     bar->SetEvents(nEntries);
     
     if(!isMultithreading)
@@ -122,7 +145,6 @@ int main(int argc, char** argv)
         bar->SaveEvent();
         bar->ClearContainers();
 
-
         if(nEntries < 10 || k % (nEntries / 10) == 0)
         {
             if(!isMultithreading)
@@ -131,6 +153,7 @@ int main(int argc, char** argv)
                 cout << "\rBarWT" << threadID << ">> Processed " << k + 1 << " events" << flush;
         }
     }
+    cout << endl;
 
     // Save data
     bar->SaveBar();

@@ -23,11 +23,20 @@ file(GLOB MACRO_FILES "*.mac")
 file(COPY ${MACRO_FILES} DESTINATION ${PROJECT_BINARY_DIR})
 
 # Aggiungi l'eseguibile bartender
-add_executable(bartender bartender.cc ${sources} ${headers})
-target_link_libraries(bartender ${ROOT_LIBRARIES})
+add_executable(bartender_lyso bartender.cc ${sources} ${headers})
+target_link_libraries(bartender_lyso ${ROOT_LIBRARIES})
 
-# Aggiungi l'eseguibile bartenderMT includendo solo summary.hh
-add_executable(bartenderMT bartenderMT.cc ${PROJECT_SOURCE_DIR}/include/summary.hh  ${PROJECT_SOURCE_DIR}/src/summary.cc)
+#Attach dictionaries to the executable. First, tell it where to look for headers required by the dictionaries:
+ROOT_GENERATE_DICTIONARY(bartender_dict ${headers} MODULE bartender_lyso LINKDEF LinkDef.h)
+
+add_library(bartenderlib SHARED ${sources} bartender_dict.cxx)
+target_link_libraries(bartenderlib ${ROOT_LIBRARIES})
+
 
 # Definisci il target personalizzato per la generazione di entrambi gli eseguibili
-add_custom_target(my_Bartender ALL DEPENDS bartender bartenderMT)
+add_custom_target(my_Bartender DEPENDS bartender_lyso)
+
+
+# Aggiungi l'eseguibile bartenderMT includendo solo summary.hh
+#add_executable(bartenderMT bartenderMT.cc ${PROJECT_SOURCE_DIR}/include/summary.hh  ${PROJECT_SOURCE_DIR}/src/summary.cc)
+#add_custom_target(my_Bartender ALL DEPENDS bartender bartenderMT)

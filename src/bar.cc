@@ -22,22 +22,25 @@ BarLYSO::BarLYSO(const char*inputFilename, Int_t threadID)
 
     // Initialize whole WF containers [CHANNELS]x[SAMPLINGS]
     fEvent = -1;
-    fFront.resize(CHANNELS, vector<Double_t>(SAMPLINGS, 0));
-    fBack.resize(CHANNELS, vector<Double_t>(SAMPLINGS, 0)); 
-    fTimes_F.resize(CHANNELS, vector<Double_t>(SAMPLINGS, 0)); 
-    fTimes_B.resize(CHANNELS, vector<Double_t>(SAMPLINGS, 0)); 
+    fFront.resize(CHANNELS, vector<Float_t>(SAMPLINGS, 0));
+    fBack.resize(CHANNELS, vector<Float_t>(SAMPLINGS, 0)); 
+    fTimes_F.resize(CHANNELS, vector<Float_t>(SAMPLINGS, 0)); 
+    fTimes_B.resize(CHANNELS, vector<Float_t>(SAMPLINGS, 0)); 
 
     // Determine the output filename based on the BarLYSO ID
     string outputFilename = GenerateOutputFilename(inputFilename);
 
-    // Create the file.root and the TTree
+    // Create the file.root and the TTrees
     fOutFile = TFile::Open(outputFilename.c_str(), "RECREATE");        
+    
     fOutTree = new TTree("lyso_wfs", "lyso_wfs");
     fOutTree->Branch("Event", &fEvent);
-    fOutTree->Branch("Time_F", &fTimes_F);
-    fOutTree->Branch("Time_B", &fTimes_B);
     fOutTree->Branch("Front", &fFront);
     fOutTree->Branch("Back", &fBack);
+
+    fTimesTree = new TTree("lyso_wfs_times", "lyso_wfs_times");
+    fTimesTree->Branch("Time_F", &fTimes_F);
+    fTimesTree->Branch("Time_B", &fTimes_B);
 }
 
 
@@ -55,6 +58,11 @@ BarLYSO::~BarLYSO()
     {
         fOutTree->ResetBranchAddresses();  // Reset any attached branches if needed
         delete fOutTree;
+    }
+    if(fTimesTree)
+    {
+        fTimesTree->ResetBranchAddresses();  // Reset any attached branches if needed
+        delete fTimesTree;
     }
     if(fOutFile)
     {
@@ -96,16 +104,16 @@ string BarLYSO::GenerateOutputFilename(const char* inputFilename)
         // If fThreadID is -1, omit the thread ID part in the filename
         if(fThreadID == -1)
         {
-            outputFilename = "BarID_" + to_string(fID) + ".root";
+            outputFilename = "./RootFiles/BarID_" + to_string(fID) + ".root";
         }
         else
         {
-            outputFilename = "BarID_" + to_string(fID) + "_t" + to_string(fThreadID) + ".root";
+            outputFilename = "./RootFiles/BarID_" + to_string(fID) + "_t" + to_string(fThreadID) + ".root";
         }
     }
     else
     {
-        outputFilename = "output.root";
+        outputFilename = "./RootFiles/output.root";
     }
 
     return outputFilename;
@@ -122,8 +130,8 @@ void BarLYSO::SetSamplingTimes()
         {
             for(Int_t i = 0; i < SAMPLINGS; i++)
             {
-                fTimes_F[j][i] = (Double_t) i / fDAQ->fSamplingSpeed;
-                fTimes_B[j][i] = (Double_t) i / fDAQ->fSamplingSpeed;
+                fTimes_F[j][i] = (Float_t) i / fDAQ->fSamplingSpeed;
+                fTimes_B[j][i] = (Float_t) i / fDAQ->fSamplingSpeed;
             }
         }
         else
@@ -134,7 +142,7 @@ void BarLYSO::SetSamplingTimes()
 
             for(Int_t i = 0; i < SAMPLINGS - 1; i++)  // Up to SAMPLINGS - 1
             {
-                Double_t bin_F, bin_B;
+                Float_t bin_F, bin_B;
                 do
                 {
                     bin_F = fDAQ->binRand->Gaus(1.0 / fDAQ->fSamplingSpeed, fDAQ->fSigmaBinSize);
@@ -150,6 +158,8 @@ void BarLYSO::SetSamplingTimes()
             }
         }
     }
+
+    fTimesTree->Fill();
 }
 
 
@@ -157,17 +167,17 @@ void BarLYSO::SetSamplingTimes()
 void BarLYSO::SetParsDistro()
 {
     Int_t status;
-    Double_t my_charge, A, tau_rise, tau_dec;
+    Double_t charge, A, tau_rise, tau_dec;
     
     // Get a TTree from the text file of parameters
     TTree *tree = new TTree("tree", "mytree");
     tree->ReadFile(fInputFilename.c_str());
  
     tree->SetBranchAddress("Status", &status);
-    tree->SetBranchAddress("my_charge", &my_charge);
+    tree->SetBranchAddress("Charge", &charge);
     tree->SetBranchAddress("A", &A);
     tree->SetBranchAddress("Tau_rise", &tau_rise);
-    tree->SetBranchAddress("Tau_dec", &tau_dec);
+    tree->SetBranchAddress("Tau_fall", &tau_dec);
     
     // Create hPars
     hPars = new TH3D("hPars", "Fitted All", fHisto_A[0], fHisto_A[1], fHisto_A[2], fHisto_Tau_rise[0], fHisto_Tau_rise[1], fHisto_Tau_rise[2], fHisto_Tau_dec[0], fHisto_Tau_dec[1], fHisto_Tau_dec[2]);
@@ -178,7 +188,7 @@ void BarLYSO::SetParsDistro()
         tree->GetEntry(i);
 
         // Check conditions about charge
-        if(status==0 && my_charge >= fChargeCuts[0] && my_charge <= fChargeCuts[1])       
+        if(status==0 && charge >= fChargeCuts[0] && charge <= fChargeCuts[1])       
         {
             hPars->Fill(A, tau_rise, tau_dec);
         }
@@ -190,18 +200,18 @@ void BarLYSO::SetParsDistro()
 
 
 
-Double_t BarLYSO::Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Double_t timePhel)
+Float_t BarLYSO::Wave_OnePhel(Float_t t, Double_t A, Double_t tau_rise, Double_t tau_dec, Double_t timePhel)
 {
-    Double_t funcVal;
+    Float_t funcVal;
     Double_t expRise = Exp(-(t-timePhel)/tau_rise);
     Double_t expDec = Exp(-(t-timePhel)/tau_dec);
 
-    // It happens sometimes when t << timePhel or t >> timePhel, so it's just a numerical fixing
-    if(expRise > DBL_MAX || expRise < DBL_MIN) expRise = 0;
-    if(expDec > DBL_MAX || expDec < DBL_MIN) expDec = 0;
-
     // 1-Phel function
-    funcVal = A*(expRise-expDec)*((t > timePhel) ? 1:0);    
+    funcVal = static_cast<Float_t>(A*(expRise-expDec)*((t > timePhel) ? 1:0));
+    
+    // Numerical fixing
+    if(funcVal > 0 || IsNaN(funcVal)) funcVal = 0;
+    
     return funcVal;
 }
 
@@ -210,8 +220,8 @@ Double_t BarLYSO::Wave_OnePhel(Double_t t, Double_t A, Double_t tau_rise, Double
 void BarLYSO::InitializeBaselines(Int_t event)
 {
     fEvent = event;
-    fFront.assign(CHANNELS, std::vector<Double_t>(SAMPLINGS, 0.));
-    fBack.assign(CHANNELS, std::vector<Double_t>(SAMPLINGS, 0.));
+    fFront.assign(CHANNELS, std::vector<Float_t>(SAMPLINGS, 0.));
+    fBack.assign(CHANNELS, std::vector<Float_t>(SAMPLINGS, 0.));
 }
 
 
@@ -263,7 +273,7 @@ void BarLYSO::SetBackWaveform(Int_t channel, Double_t start)
 void BarLYSO::SaveEvent()
 {   
     // Recompute the gain and add noise
-    Double_t k = fDAQ->ComputeFactorOfGainConversion();
+    Float_t k = fDAQ->ComputeFactorOfGainConversion();
     for(Int_t ch = 0; ch < CHANNELS; ch++)
     {
         for(Int_t bin = 0; bin < SAMPLINGS; bin++)
@@ -283,4 +293,5 @@ void BarLYSO::SaveBar()
 {
     fOutFile->cd();
     fOutTree->Write("lyso_wfs");
+    fTimesTree->Write("lyso_wfs_times");
 }

@@ -1,16 +1,16 @@
 # SiPM
 # From here the real parameters are defined:
 Brand: Hamamatsu
-TypeNo: S13360-6050CS
+TypeNo: S13360-6025PE
 #
 # Environment working point
-V = 54.78 V
+V = 57.00 V
 T = 20°C
 #
 # DAQ working point
 Sampling speed = 1 GSPS
 R_shaper = 1.58E3 Ohm
-Gain = 60 dB
+Gain = 74 dB
 #
 #
 # From here the simulation DAQ parameters are defined:
@@ -19,16 +19,16 @@ Sampling speed_sim = 1 GSPS
 BinSize sigma = 0.01 ns
 Use shaping = false
 Tau_shaping = 1 ns
-Gain_sim = 10 dB
-Noise (sigma) = 0.02 V
+Gain_sim = 28 dB
+Noise (sigma) = 0.005 V
 #
 # inputFile for best-fit parameters
-PathToFile: /home/lorenzo/MEG_Project/Acquisizioni/Studio_SIPM/Preamp_Ext/Dati19_10/Dati_root/dati_spectrum_T20_V5478_1pe_fit_params.txt
+PathToFile: ../pars_datasets/FitParams_T20_V570.txt
 #
 # Cuts in the charge spectrum: min max
-Charge cuts: 0 1.5
+Charge cuts: 0.7 2.4
 #
 # Histograms of parameters: nbins min max
-A histo: 50 0 0.6
-Tau_rise histo: 50 0 1.5
-Tau_dec histo: 50 0 11
+A histo: 50 0 5
+Tau_rise histo: 50 0 6
+Tau_dec histo: 50 0 25

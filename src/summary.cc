@@ -35,7 +35,6 @@ void Bartender_Summary(const std::string &macrofile, int MCID, double duration) 
     time_t now = time(0);
     tm* current_time = localtime(&now);
     outfile << "Date: " << asctime(current_time);
-    outfile << "User Name: " << getlogin() << "\n";
     outfile << "Duration of the simulation: " << duration << " s\n\n";
 
     std::ifstream run_file(macrofile);

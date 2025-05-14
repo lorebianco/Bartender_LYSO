@@ -91,7 +91,7 @@ void Bartender_Configure(const char* filename, BarLYSO* bar, SiPM* sipm)
         }
         else if(line.find("BinSize sigma =") != string::npos && !bar->GetDAQ()->fIsBinSizeConstant)
         {
-            bar->GetDAQ()->fSigmaBinSize = stod(extract_value(line, "BinSize sigma ="));
+            bar->GetDAQ()->fSigmaBinSize = stof(extract_value(line, "BinSize sigma ="));
         }
         else if(line.find("Use shaping =") != string::npos)
         {
